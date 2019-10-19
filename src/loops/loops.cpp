@@ -111,20 +111,25 @@ void loops::run(void)
 		}
 
 		// Check if we have anything to tick.
-		if (this_tick < next_tick) {
+		int next_tick_snap = next_tick;
+		if (this_tick < next_tick_snap) {
 			// Tick it.
 			next_loop_state = this_loop->tick();
 			this_tick += 1;
-		}
 
-		// Do tick and draw.
-		if (this_tick >= next_tick) {
-			// Draw and flip.
-			this_loop->draw();
-			gfx::flip();
-		}
+			// Draw it if we're fast enough.
+			if (this_tick >= next_tick_snap) {
+				// Draw and flip.
+				this_loop->draw();
+				gfx::flip();
+			}
 
-		// Update next loop state.
-		loop_state = next_loop_state;
+			// Update next loop state.
+			loop_state = next_loop_state;
+
+		} else {
+			// Idle for a bit.
+			rest(1);
+		}
 	}
 }
