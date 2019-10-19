@@ -12,10 +12,8 @@ namespace loops
 	Player player(320-12, 180-12, direction::SOUTH);
 }
 
-loops::MainLoopState loops::game_loop(bool state_changed)
+loops::MainLoopState loops::GameLoop::tick(void)
 {
-	(void)state_changed;
-
 	//
 	// Update input
 	//
@@ -35,6 +33,12 @@ loops::MainLoopState loops::game_loop(bool state_changed)
 	//
 	player.move(player_dx, player_dy);
 
+	// Continue with the game
+	return mainloop::GAME;
+}
+
+void loops::GameLoop::draw(void)
+{
 	//
 	// Draw
 	//
@@ -50,6 +54,4 @@ loops::MainLoopState loops::game_loop(bool state_changed)
 		"80 columns barely fit: TICK!");
 
 	player.draw();
-
-	return mainloop::GAME;
 }

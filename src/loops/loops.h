@@ -15,6 +15,15 @@ namespace loops
 
 	using mainloop::MainLoopState;
 
+	class Loop
+	{
+	public:
+		virtual void init(void);
+		virtual void deinit(void);
+		virtual MainLoopState tick(void) = 0;
+		virtual void draw(void) = 0;
+	};
+
 	constexpr int TICKS_PER_SECOND = 60;
 
 	void run(void);

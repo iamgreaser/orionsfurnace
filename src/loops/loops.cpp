@@ -16,7 +16,17 @@ namespace loops
 	int this_tick = 0;
 	volatile int next_tick = 0;
 
+	GameLoop game_loop;
+
 	void int_update_tick(void);
+}
+
+void loops::Loop::init(void)
+{
+}
+
+void loops::Loop::deinit(void)
+{
 }
 
 void loops::int_update_tick(void)
@@ -72,7 +82,15 @@ void loops::run(void)
 
 		switch (loop_state) {
 			case mainloop::GAME:
-				loop_state = game_loop(state_changed);
+				// FIXME: THIS IS A KLUDGE
+				if (state_changed) {
+					game_loop.init();
+				}
+				loop_state = game_loop.tick();
+				game_loop.draw();
+				if (loop_state != mainloop::GAME) {
+					game_loop.deinit();
+				}
 				break;
 			default:
 				cerr << "FATAL: Unhandled loop state \"" << loop_state << "\"." << endl;

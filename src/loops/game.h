@@ -5,7 +5,12 @@
 
 namespace loops
 {
-	MainLoopState game_loop(bool state_changed);
+	class GameLoop : public Loop
+	{
+	public:
+		MainLoopState tick(void);
+		void draw(void);
+	};
 }
 
 #endif /* if !defined(_LOOPS_GAME_H) */
