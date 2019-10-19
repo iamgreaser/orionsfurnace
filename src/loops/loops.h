@@ -18,8 +18,8 @@ namespace loops
 	class Loop
 	{
 	public:
-		virtual void init(void);
-		virtual void deinit(void);
+		virtual void init(void) {};
+		virtual void deinit(void) {};
 		virtual MainLoopState tick(void) = 0;
 		virtual void draw(void) = 0;
 	};

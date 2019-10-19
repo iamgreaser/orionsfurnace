@@ -6,6 +6,7 @@
 #include <allegro.h>
 
 #include <cassert>
+#include <cstdlib>
 #include <iostream>
 
 using std::cerr;
@@ -19,14 +20,8 @@ namespace loops
 	GameLoop game_loop;
 
 	void int_update_tick(void);
-}
 
-void loops::Loop::init(void)
-{
-}
-
-void loops::Loop::deinit(void)
-{
+	Loop *get_loop_for_state(MainLoopState loop_state);
 }
 
 void loops::int_update_tick(void)
@@ -34,6 +29,23 @@ void loops::int_update_tick(void)
 	next_tick += 1;
 }
 END_OF_FUNCTION(loops::int_update_tick)
+
+loops::Loop *loops::get_loop_for_state(MainLoopState loop_state)
+{
+	switch (loop_state) {
+		case mainloop::EXIT:
+			return NULL;
+
+		case mainloop::GAME:
+			return &game_loop;
+
+		default:
+			cerr << "FATAL: Unhandled loop state \"" << loop_state << "\"." << endl;
+			cerr.flush();
+			abort();
+			return NULL;
+	}
+}
 
 void loops::run(void)
 {
@@ -66,9 +78,7 @@ void loops::run(void)
 
 	MainLoopState loop_state = mainloop::GAME;
 	MainLoopState prev_loop_state = mainloop::EXIT;
-	while (loop_state != mainloop::EXIT) {
-		bool state_changed = (loop_state != prev_loop_state);
-
+	for (;;) {
 		if (keyboard_needs_poll()) {
 			poll_keyboard();
 		}
@@ -80,25 +90,31 @@ void loops::run(void)
 		}
 		this_tick += 1;
 
-		switch (loop_state) {
-			case mainloop::GAME:
-				// FIXME: THIS IS A KLUDGE
-				if (state_changed) {
-					game_loop.init();
-				}
-				loop_state = game_loop.tick();
-				game_loop.draw();
-				if (loop_state != mainloop::GAME) {
-					game_loop.deinit();
-				}
-				break;
-			default:
-				cerr << "FATAL: Unhandled loop state \"" << loop_state << "\"." << endl;
-				cerr.flush();
-				abort();
-				break;
+		Loop *prev_loop = get_loop_for_state(prev_loop_state);
+		Loop *this_loop = get_loop_for_state(loop_state);
+
+		// Deinit and init for loop state transition.
+		if (prev_loop != this_loop) {
+			if (prev_loop != NULL) {
+				prev_loop->deinit();
+			}
+			if (this_loop != NULL) {
+				this_loop->init();
+			}
 		}
 
+		// If there is no loop, exit.
+		if (this_loop == NULL) {
+			break;
+		}
+
+		// Do tick and draw.
+		// FIXME: Separate these two out depending on tick status
+		MainLoopState next_loop_state = this_loop->tick();
+		this_loop->draw();
 		gfx::flip();
+
+		// Update next loop state.
+		loop_state = next_loop_state;
 	}
 }
