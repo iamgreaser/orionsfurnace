@@ -1,0 +1,14 @@
+# vim: set sts=4 sw=4 et :
+
+Import("env")
+env.Program(
+    "guitest",
+    [
+        env.Glob("*.cpp"),
+        env.Glob("gfx/*.cpp"),
+        env.Glob("loops/*.cpp"),
+    ],
+    CPPPATH = [
+        env.Dir(".").srcnode(),
+    ]
+)

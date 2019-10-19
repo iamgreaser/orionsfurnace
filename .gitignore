@@ -1,0 +1,10 @@
+# Output
+build/
+
+# SCons
+.sconsign.dblite
+
+# VIM
+.sw?
+.*.sw?
+
