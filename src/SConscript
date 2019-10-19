@@ -5,6 +5,7 @@ env.Program(
     "guitest",
     [
         env.Glob("*.cpp"),
+        env.Glob("core/*.cpp"),
         env.Glob("gfx/*.cpp"),
         env.Glob("loops/*.cpp"),
     ],

@@ -1,5 +1,6 @@
 #include "loops/game.h"
 
+#include "core/core.h"
 #include "gfx/gfx.h"
 #include "loops/loops.h"
 
