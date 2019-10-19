@@ -79,17 +79,15 @@ void loops::run(void)
 	MainLoopState loop_state = mainloop::GAME;
 	MainLoopState prev_loop_state = mainloop::EXIT;
 	for (;;) {
+		// Poll our input sources if necessary.
 		if (keyboard_needs_poll()) {
 			poll_keyboard();
 		}
-
-		// TODO: Separate video and logic.
-		// For now, this'll have to do.
-		if (this_tick >= next_tick) {
-			continue;
+		if (mouse_needs_poll()) {
+			poll_mouse();
 		}
-		this_tick += 1;
 
+		// Get our loops.
 		Loop *prev_loop = get_loop_for_state(prev_loop_state);
 		Loop *this_loop = get_loop_for_state(loop_state);
 
@@ -103,16 +101,28 @@ void loops::run(void)
 			}
 		}
 
+		// Update the previous loop state, and track the next.
+		prev_loop_state = loop_state;
+		MainLoopState next_loop_state = loop_state;
+
 		// If there is no loop, exit.
 		if (this_loop == NULL) {
 			break;
 		}
 
+		// Check if we have anything to tick.
+		if (this_tick < next_tick) {
+			// Tick it.
+			next_loop_state = this_loop->tick();
+			this_tick += 1;
+		}
+
 		// Do tick and draw.
-		// FIXME: Separate these two out depending on tick status
-		MainLoopState next_loop_state = this_loop->tick();
-		this_loop->draw();
-		gfx::flip();
+		if (this_tick >= next_tick) {
+			// Draw and flip.
+			this_loop->draw();
+			gfx::flip();
+		}
 
 		// Update next loop state.
 		loop_state = next_loop_state;
