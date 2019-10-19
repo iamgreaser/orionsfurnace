@@ -1,6 +1,7 @@
 #include "loops/game.h"
 
 #include "core/core.h"
+#include "core/player.h"
 #include "gfx/gfx.h"
 #include "loops/loops.h"
 
@@ -8,9 +9,7 @@
 
 namespace loops
 {
-	int player_x = 320-12;
-	int player_y = 180-12;
-	Direction player_direction = direction::SOUTH;
+	Player player(320-12, 180-12, direction::SOUTH);
 }
 
 loops::MainLoopState loops::game_loop(bool state_changed)
@@ -34,13 +33,7 @@ loops::MainLoopState loops::game_loop(bool state_changed)
 	//
 	// Update logic
 	//
-	if (player_dy < 0) { player_direction = direction::NORTH; }
-	if (player_dy > 0) { player_direction = direction::SOUTH; }
-	if (player_dx < 0) { player_direction = direction::WEST; }
-	if (player_dx > 0) { player_direction = direction::EAST; }
-
-	player_x += player_dx;
-	player_y += player_dy;
+	player.move(player_dx, player_dy);
 
 	//
 	// Draw
@@ -56,9 +49,7 @@ loops::MainLoopState loops::game_loop(bool state_changed)
 		makecol(255,255,0), -1,
 		"80 columns barely fit: TICK!");
 
-	draw_sprite(backbuf,
-		gfx::player_gfx[player_direction],
-		player_x, player_y);
+	player.draw();
 
 	return mainloop::GAME;
 }
