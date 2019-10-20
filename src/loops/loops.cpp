@@ -6,16 +6,18 @@
 #include <allegro.h>
 
 #include <cassert>
+#include <chrono>
 #include <cstdlib>
 #include <iostream>
+#include <thread>
 
-using std::cerr;
-using std::endl;
+using std::chrono::time_point;
+using std::chrono::microseconds;
+using std::chrono::steady_clock;
 
 namespace loops
 {
 	int this_tick = 0;
-	volatile int next_tick = 0;
 
 	GameLoop game_loop;
 
@@ -23,12 +25,6 @@ namespace loops
 
 	Loop *get_loop_for_state(MainLoopState loop_state);
 }
-
-void loops::int_update_tick(void)
-{
-	next_tick += 1;
-}
-END_OF_FUNCTION(loops::int_update_tick)
 
 loops::Loop *loops::get_loop_for_state(MainLoopState loop_state)
 {
@@ -40,8 +36,8 @@ loops::Loop *loops::get_loop_for_state(MainLoopState loop_state)
 			return &game_loop;
 
 		default:
-			cerr << "FATAL: Unhandled loop state \"" << loop_state << "\"." << endl;
-			cerr.flush();
+			std::cerr << "FATAL: Unhandled loop state \"" << loop_state << "\"." << std::endl;
+			std::cerr.flush();
 			abort();
 			return NULL;
 	}
@@ -49,32 +45,9 @@ loops::Loop *loops::get_loop_for_state(MainLoopState loop_state)
 
 void loops::run(void)
 {
-	// Install timer interrupt hook.
-	//
-	// OK, this used to literally be a timer interrupt hook.
-	// And if this ever gets a DOS port (read: it probably won't),
-	// it could still literally be a timer interrupt hook.
-	//
-	// Anyway, this pattern is standard in Allegro 4.
-	// I'd like to read the time instead,
-	// but Allegro doesn't appear to provide that.
-	//
-	// Meanwhile, SDL gives you SDL_GetTicks,
-	// which unfortunately has 100Hz granularity.
-	//
-	// This gives you 1193181Hz granularity.
-	// Slightly overkill and probably not that accurate,
-	// but comparable to using gettimeofday.
-	//
-	// Which might not be usable on Windows...
-	//
-	// C++11 has some offerings which may be more appropriate.
-	// std::chrono::steady_timer is looking promising.
-	//
-	int install_int_result = install_int_ex(
-		int_update_tick,
-		BPS_TO_TIMER(TICKS_PER_SECOND));
-	assert(install_int_result == 0);
+	time_point<steady_clock> time_now = steady_clock::now();
+	time_point<steady_clock> time_next = time_now;
+	constexpr microseconds time_step(1000000/TICKS_PER_SECOND);
 
 	MainLoopState loop_state = mainloop::GAME;
 	MainLoopState prev_loop_state = mainloop::EXIT;
@@ -110,27 +83,31 @@ void loops::run(void)
 			break;
 		}
 
+		// Update time.
+		time_now = steady_clock::now();
+
 		// Check if we have anything to tick.
-		int next_tick_snap = next_tick;
-		if (this_tick < next_tick_snap) {
+		if (time_next <= time_now) {
 			// Tick it.
 			next_loop_state = this_loop->tick();
 			this_tick += 1;
-
-			// Draw it if we're fast enough.
-			if (this_tick >= next_tick_snap) {
-				// Draw and flip.
-				this_loop->draw();
-				gfx::flip();
-			}
-
-			// Update next loop state.
-			loop_state = next_loop_state;
-
-		} else {
-			// Idle for a bit.
-			//rest(1);
-			vsync();
+			time_next += time_step;
 		}
+
+		// Draw if we're fast enough.
+		if (time_now < time_next) {
+			// Draw and flip.
+			this_loop->draw();
+			gfx::flip();
+
+			// Idle if we can.
+			time_now = steady_clock::now();
+			if (time_now < time_next) {
+				std::this_thread::sleep_for(time_next - time_now);
+			}
+		}
+
+		// Update next loop state.
+		loop_state = next_loop_state;
 	}
 }
