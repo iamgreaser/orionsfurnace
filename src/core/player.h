@@ -40,6 +40,9 @@ public:
 	void tick(void);
 
 	void draw(void);
+
+protected:
+	void calc_interp_pos(int *px, int *py);
 };
 
 #endif /* if !defined(_CORE_PLAYER_H) */

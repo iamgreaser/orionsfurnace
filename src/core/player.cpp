@@ -46,12 +46,15 @@ void Player::tick(void)
 			m_cy += dy;
 			m_input_cooldown = 12;
 
-			// TODO: Snap to the current point, not the final point
-			m_pos_interp_x0 = m_pos_interp_x1;
-			m_pos_interp_y0 = m_pos_interp_y1;
+			int new_px = m_pos_interp_x1;
+			int new_py = m_pos_interp_y1;
+			calc_interp_pos(&new_px, &new_py);
+			m_pos_interp_x0 = new_px;
+			m_pos_interp_y0 = new_py;
+
 			m_pos_interp_x1 = m_cx*CELL_W;
 			m_pos_interp_y1 = m_cy*CELL_H;
-			m_pos_interp_remain = m_input_cooldown;
+			m_pos_interp_remain = m_input_cooldown+4;
 			m_pos_interp_len = m_pos_interp_remain;
 		}
 	}
@@ -79,15 +82,22 @@ void Player::draw(void)
 	// Calculate position
 	int px = m_pos_interp_x1;
 	int py = m_pos_interp_y1;
+	calc_interp_pos(&px, &py);
+	gfx::player_gfx.draw(px, py, m_dir, 0);
+}
+
+void Player::calc_interp_pos(int *px, int *py)
+{
+	// Calculate position
+	*px = m_pos_interp_x1;
+	*py = m_pos_interp_y1;
 
 	if (m_pos_interp_remain > 0) {
 		int dpx = (m_pos_interp_x1 - m_pos_interp_x0);
 		int dpy = (m_pos_interp_y1 - m_pos_interp_y0);
 		int t = m_pos_interp_remain;
 		int l = m_pos_interp_len;
-		px -= (2*dpx*t+l)/(2*l);
-		py -= (2*dpy*t+l)/(2*l);
+		*px -= (2*dpx*t+l)/(2*l);
+		*py -= (2*dpy*t+l)/(2*l);
 	}
-
-	gfx::player_gfx.draw(px, py, m_dir, 0);
 }
