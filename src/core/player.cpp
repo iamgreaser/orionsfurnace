@@ -127,6 +127,11 @@ bool Player::attempt_move_by(int dx, int dy)
 
 bool Player::attempt_move_to(int cx, int cy)
 {
+	// TEST: Is this in range of the map?
+	if (cx < 0 || cy < 0 || cx >= 15 || cy >= 15) {
+		return false;
+	}
+
 	// Is there a player at the given cell?
 	Player *other = m_game->get_player_at(cx, cy);
 	if (other != NULL) {
