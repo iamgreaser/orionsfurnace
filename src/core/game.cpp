@@ -27,6 +27,7 @@ Game::~Game()
 
 void Game::set_player_input_move(int player_idx, Direction dir, bool v)
 {
+	assert(player_idx >= 0 && player_idx < (int)m_players.size());
 	m_players[player_idx].set_input_move(dir, v);
 }
 
@@ -46,14 +47,23 @@ void Game::draw(void)
 
 void Game::load_this(istream &ips)
 {
-	uint8_t player_count = 0;
+	uint16_t player_count = 0;
 	load(ips, player_count);
+	m_players.clear();
+
+	for (uint16_t i = 0; i < player_count; i++) {
+		m_players.push_back(Player(this, ips));
+	}
 }
 
 void Game::save_this(ostream &ops)
 {
-	uint8_t player_count = m_players.size();
+	uint16_t player_count = m_players.size();
 	save(ops, player_count);
+
+	for (uint16_t i = 0; i < player_count; i++) {
+		save(ops, m_players[i]);
+	}
 }
 
 Player *Game::get_player_at(int cx, int cy)

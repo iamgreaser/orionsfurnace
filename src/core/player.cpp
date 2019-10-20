@@ -23,6 +23,12 @@ Player::Player(Game *game, int cx, int cy, Direction dir)
 {
 }
 
+Player::Player(Game *game, std::istream &ips)
+	: m_game(game)
+{
+	load(ips, *this);
+}
+
 void Player::tick(void)
 {
 	// Calculate movement direction

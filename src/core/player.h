@@ -29,6 +29,7 @@ private:
 
 public:
 	Player(Game *game, int cx, int cy, Direction dir);
+	Player(Game *game, std::istream &ips);
 
 	int get_x(void) { return m_cx; }
 	int get_y(void) { return m_cy; }
