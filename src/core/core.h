@@ -12,4 +12,11 @@ namespace direction
 }
 using direction::Direction;
 
+namespace game
+{
+	class Game;
+}
+
+class Player;
+
 #endif /* if !defined(_CORE_CORE_H) */

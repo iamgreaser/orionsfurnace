@@ -1,6 +1,7 @@
 #include "loops/game.h"
 
 #include "core/core.h"
+#include "core/game.h"
 #include "core/player.h"
 #include "gfx/gfx.h"
 #include "gfx/sprite.h"
@@ -12,7 +13,7 @@
 
 namespace loops
 {
-	Player player(7, 7, direction::SOUTH);
+	Game game;
 }
 
 loops::MainLoopState loops::GameLoop::tick(void)
@@ -37,25 +38,29 @@ loops::MainLoopState loops::GameLoop::tick(void)
 					break;
 
 				case SDLK_UP:
-					player.set_input_move(
+					game.set_player_input_move(
+						0,
 						direction::NORTH,
 						ev.type == SDL_KEYDOWN);
 					break;
 
 				case SDLK_DOWN:
-					player.set_input_move(
+					game.set_player_input_move(
+						0,
 						direction::SOUTH,
 						ev.type == SDL_KEYDOWN);
 					break;
 
 				case SDLK_LEFT:
-					player.set_input_move(
+					game.set_player_input_move(
+						0,
 						direction::WEST,
 						ev.type == SDL_KEYDOWN);
 					break;
 
 				case SDLK_RIGHT:
-					player.set_input_move(
+					game.set_player_input_move(
+						0,
 						direction::EAST,
 						ev.type == SDL_KEYDOWN);
 					break;
@@ -67,7 +72,7 @@ loops::MainLoopState loops::GameLoop::tick(void)
 	//
 	// Update logic
 	//
-	player.tick();
+	game.tick();
 
 	// Continue with the game
 	return mainloop::GAME;
@@ -102,8 +107,8 @@ void loops::GameLoop::draw_playfield(void)
 		}
 	}
 
-	// Draw players
-	player.draw();
+	// Draw game
+	game.draw();
 
 	// Clear clipping rectangle
 	gfx::clip_nothing();
@@ -118,15 +123,21 @@ void loops::GameLoop::draw_sidebar(void)
 
 	// Draw our sidebar
 	gfx::clear(0, 0, 0);
-	std::stringstream ss;
-	ss << "Player pos: (";
-	ss << player.get_x() << ", ";
-	ss << player.get_y() << ")";
-	gfx::draw_text(
-		SIDEBAR_X+1*8,
-		SIDEBAR_Y+1*8,
-		170, 170, 255,
-		ss.str());
+
+	for (int pidx = 0; pidx < game.get_player_count(); pidx++)
+	{
+		Player *player = game.get_player_ptr(pidx);
+
+		std::stringstream ss;
+		ss << "Player pos: (";
+		ss << player->get_x() << ", ";
+		ss << player->get_y() << ")";
+		gfx::draw_text(
+			SIDEBAR_X+1*8,
+			SIDEBAR_Y+(1+pidx*1)*12,
+			170, 170, 255,
+			ss.str());
+	}
 
 	// Clear clipping rectangle
 	gfx::clip_nothing();
