@@ -8,16 +8,19 @@
 class Player
 {
 private:
-	int m_x;
-	int m_y;
+	int m_cx;
+	int m_cy;
+	int m_px;
+	int m_py;
 	Direction m_dir;
 	bool m_input_move[4] = {};
+	int m_input_cooldown = 0;
 
 public:
 	Player(int cx, int cy, Direction dir);
 
-	int get_x(void) { return m_x; }
-	int get_y(void) { return m_y; }
+	int get_x(void) { return m_cx; }
+	int get_y(void) { return m_cy; }
 	Direction get_dir(void) { return m_dir; }
 	bool get_input_move(Direction dir) {
 		assert(dir >= 0 && dir < 4);
