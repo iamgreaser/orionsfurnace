@@ -3,7 +3,7 @@
 #include "gfx/gfx.h"
 #include "loops/game.h"
 
-#include <allegro.h>
+#include <SDL.h>
 
 #include <cassert>
 #include <chrono>
@@ -52,14 +52,6 @@ void loops::run(void)
 	MainLoopState loop_state = mainloop::GAME;
 	MainLoopState prev_loop_state = mainloop::EXIT;
 	for (;;) {
-		// Poll our input sources if necessary.
-		if (keyboard_needs_poll()) {
-			poll_keyboard();
-		}
-		if (mouse_needs_poll()) {
-			poll_mouse();
-		}
-
 		// Get our loops.
 		Loop *prev_loop = get_loop_for_state(prev_loop_state);
 		Loop *this_loop = get_loop_for_state(loop_state);

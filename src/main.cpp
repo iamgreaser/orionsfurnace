@@ -1,7 +1,8 @@
 #include <cstddef>
 #include <iostream>
+#include <signal.h>
 
-#include <allegro.h>
+#include <SDL.h>
 
 #include "gfx/gfx.h"
 #include "loops/loops.h"
@@ -16,11 +17,11 @@ int main(int argc, char *argv[])
 
 	cout << "Starting!" << endl;
 
-	allegro_init();
+	SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO);
 
-	install_timer();
-	install_keyboard();
-	install_mouse();
+	// Even after all these years, SDL *still* does this bullshit I have to undo. --GM
+	signal(SIGINT,  SIG_DFL);
+	signal(SIGTERM, SIG_DFL);
 
 	gfx::init();
 
@@ -28,4 +29,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-END_OF_MAIN()

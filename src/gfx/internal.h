@@ -1,11 +1,13 @@
 #ifndef _GFX_INTERNAL_H
 #define _GFX_INTERNAL_H
 
-#include <allegro.h>
+#include <SDL.h>
 
 namespace gfx
 {
-	extern BITMAP *backbuf;
+	extern SDL_Window *window;
+	extern SDL_Renderer *renderer;
+	extern SDL_Texture *backbuf;
 }
 using gfx::backbuf;
 

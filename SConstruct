@@ -11,9 +11,9 @@
 WARNINGS_ARE_ERRORS = True
 
 env = Environment(
-    COMMON_FLAGS = ["-g", "-Og", "-std=c++11",],
-    CFLAGS = ["${COMMON_FLAGS}", "-Wall", "-Wextra", "-pedantic",],
-    CXXFLAGS = ["${COMMON_FLAGS}", "-Wall", "-Wextra", "-pedantic",],
+    COMMON_FLAGS = ["-g", "-Og"],
+    CFLAGS = ["${COMMON_FLAGS}", "-Wall", "-Wextra", "-pedantic", "-std=c11",],
+    CXXFLAGS = ["${COMMON_FLAGS}", "-Wall", "-Wextra", "-pedantic", "-std=c++11",],
     LINKFLAGS = ["${COMMON_FLAGS}",],
 )
 
@@ -22,9 +22,15 @@ env.Replace(
 )
 
 env.MergeFlags([
-    "!allegro-config --cflags",
-    "!allegro-config --libs",
+    "!sdl2-config --cflags",
+    "!sdl2-config --libs",
 ])
+
+env.Append(
+    LIBS=[
+        "SDL2_image",
+    ],
+)
 
 if WARNINGS_ARE_ERRORS:
     env.MergeFlags(["-Werror",])

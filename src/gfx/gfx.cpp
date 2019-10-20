@@ -1,11 +1,10 @@
 #include "gfx/gfx.h"
 
-#include "gfx/png.h"
 #include "gfx/sprite.h"
 
 #include "gfx/internal.h"
 
-#include <allegro.h>
+#include <SDL.h>
 
 #include <cassert>
 #include <string>
@@ -19,7 +18,9 @@ namespace gfx
 	int current_window_width = BASE_SCREEN_WIDTH*INITIAL_SCREEN_SCALE;
 	int current_window_height = BASE_SCREEN_HEIGHT*INITIAL_SCREEN_SCALE;
 
-	BITMAP *backbuf = NULL;
+	SDL_Window *window = NULL;
+	SDL_Renderer *renderer = NULL;
+	SDL_Texture *backbuf = NULL;
 
 #if 0
 	BITMAP *vidbufs[2] = {};
@@ -30,48 +31,40 @@ namespace gfx
 
 void gfx::init(void)
 {
-	// Set our mode
-	set_color_depth(32);
-	set_display_switch_mode(SWITCH_BACKAMNESIA);
-	set_gfx_mode(
-		GFX_AUTODETECT_WINDOWED,
+	// Create a window
+	window = SDL_CreateWindow("game",
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
 		current_window_width,
 		current_window_height,
-		0,
-		0);
+		(0
+			//| SDL_WINDOW_RESIZABLE;
+			));
+	assert(window != NULL);
 
-	// Install a PNG loader BEFORE attempting to load any images
-	install_png_loader();
+	// Create a renderer for the window
+	renderer = SDL_CreateRenderer(
+		window,
+		-1,
+		(0
+			| SDL_RENDERER_PRESENTVSYNC
+			| SDL_RENDERER_TARGETTEXTURE
+			));
+	assert(renderer != NULL);
 
 	// Create our backbuffer
-	backbuf = create_bitmap_ex(
-		32,
+	backbuf = SDL_CreateTexture(
+		renderer,
+		SDL_PIXELFORMAT_BGRA8888,
+		SDL_TEXTUREACCESS_TARGET,
 		BASE_SCREEN_WIDTH,
 		BASE_SCREEN_HEIGHT);
 	assert(backbuf != NULL);
 
-	// TODO: Move away from Allegro 4.
-	//
-	// On My Machine(tm), I get tearing.
-	// - It's not possible to enable triple-buffering.
-	// - It's not possible to allocate video bitmaps for page flipping.
-	// - V-Sync doesn't actually work.
-	//
-	// I would have liked to have messed w/ the Allegro GUI.
-	// For the replacement I think I'll need to either:
-	// - find a nice GUI widget kit, or
-	// - roll my own.
-	//
-	// As for font rendering? SDL_ttf exists.
-	// The world can do with more DejaVu Sans.
-	// --GM
-#if 0
-	// Create our video buffers
-	for (int i = 0; i < 2; i++) {
-		vidbufs[i] = create_video_bitmap(SCREEN_W, SCREEN_H);
-		assert(vidbufs[i] != NULL);
-	}
-#endif
+	// Target the backbuffer by default
+	int did_set_render_target = SDL_SetRenderTarget(
+		renderer, backbuf);
+	assert(did_set_render_target == 0);
 
 	// Load some assets
 	tile_gfx_floor.ensure_loaded();
@@ -81,47 +74,65 @@ void gfx::init(void)
 void gfx::clear(int r, int g, int b)
 {
 	// Clear screen
-	clear_to_color(backbuf, makecol(r, g, b));
+	SDL_SetRenderDrawColor(renderer, r, g, b, 0xFF);
+	SDL_RenderClear(renderer);
 }
 
 void gfx::clip_nothing(void)
 {
 	// Clear clipping rectangle
-	set_clip_state(backbuf, 0);
+	int did_set_clip_rect = SDL_RenderSetClipRect(renderer, NULL);
+	assert(did_set_clip_rect == 0);
 }
 
 void gfx::clip_rect(int px, int py, int pw, int ph)
 {
 	// Set clipping rectangle
-	set_clip_rect(backbuf, px, py, px+pw-1, py+ph-1);
-	set_clip_state(backbuf, 1);
+	SDL_Rect rect = {};
+	rect.x = px;
+	rect.y = py;
+	rect.w = pw;
+	rect.h = ph;
+
+	int did_set_clip_rect = SDL_RenderSetClipRect(renderer, &rect);
+	assert(did_set_clip_rect == 0);
 }
 
 void gfx::draw_text(int px, int py, int r, int g, int b, const std::string text)
 {
-	// Clear screen
+	// Draw text
+	// TODO!
+	(void)px;
+	(void)py;
+	(void)r;
+	(void)g;
+	(void)b;
+	(void)text;
+#if 0
 	textout_ex(
 		backbuf, font, text.c_str(),
 		px, py,
 		makecol(r, g, b), -1);
+#endif
 }
 
 void gfx::flip(void)
 {
+	// Clear render target back to default
+	int did_clear_render_target = SDL_SetRenderTarget(
+		renderer, NULL);
+	assert(did_clear_render_target == 0);
+
 	// Blit
-	stretch_blit(
-		backbuf,
+	int did_blit = SDL_RenderCopy(
+		renderer, backbuf, NULL, NULL);
+	assert(did_blit == 0);
 
-		screen,
-		//vidbufs[vidbuf_in],
+	// Present
+	SDL_RenderPresent(renderer);
 
-		0, 0, backbuf->w, backbuf->h,
-		0, 0, screen->w, screen->h);
-
-#if 0
-	// Swap buffers
-	vidbuf_out = vidbuf_in;
-	vidbuf_in = (vidbuf_in + 1) % 2;
-	show_video_bitmap(vidbufs[vidbuf_out]);
-#endif
+	// Set render target again
+	int did_set_render_target = SDL_SetRenderTarget(
+		renderer, backbuf);
+	assert(did_set_render_target == 0);
 }

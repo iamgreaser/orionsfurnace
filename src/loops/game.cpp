@@ -6,7 +6,7 @@
 #include "gfx/sprite.h"
 #include "loops/loops.h"
 
-#include <allegro.h>
+#include <SDL.h>
 
 #include <sstream>
 
@@ -20,14 +20,49 @@ loops::MainLoopState loops::GameLoop::tick(void)
 	//
 	// Update input
 	//
-	if (key[KEY_ESC]) {
-		return mainloop::EXIT;
-	}
+	SDL_Event ev;
+	while (SDL_PollEvent(&ev)) {
+		switch (ev.type) {
+			case SDL_QUIT:
+				return mainloop::EXIT;
 
-	player.set_input_move(direction::NORTH, key[KEY_UP]);
-	player.set_input_move(direction::SOUTH, key[KEY_DOWN]);
-	player.set_input_move(direction::WEST,  key[KEY_LEFT]);
-	player.set_input_move(direction::EAST,  key[KEY_RIGHT]);
+			case SDL_KEYUP:
+			case SDL_KEYDOWN:
+			switch(ev.key.keysym.sym)
+			{
+				case SDLK_ESCAPE:
+					if (ev.type == SDL_KEYUP) {
+						return mainloop::EXIT;
+					}
+					break;
+
+				case SDLK_UP:
+					player.set_input_move(
+						direction::NORTH,
+						ev.type == SDL_KEYDOWN);
+					break;
+
+				case SDLK_DOWN:
+					player.set_input_move(
+						direction::SOUTH,
+						ev.type == SDL_KEYDOWN);
+					break;
+
+				case SDLK_LEFT:
+					player.set_input_move(
+						direction::WEST,
+						ev.type == SDL_KEYDOWN);
+					break;
+
+				case SDLK_RIGHT:
+					player.set_input_move(
+						direction::EAST,
+						ev.type == SDL_KEYDOWN);
+					break;
+
+			} break;
+		}
+	}
 
 	//
 	// Update logic

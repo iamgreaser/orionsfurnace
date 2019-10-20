@@ -4,9 +4,11 @@
 
 #include "gfx/internal.h"
 
-#include <allegro.h>
+#include <SDL.h>
+#include <SDL_image.h>
 
 #include <cassert>
+#include <iostream>
 #include <string>
 
 namespace gfx
@@ -24,24 +26,37 @@ Sprite::Sprite(const string filename, int pw, int ph)
 
 Sprite::~Sprite()
 {
-	if (m_loaded_sprite != NULL) {
-		// FIXME: For some reason, Allegro seems to free these when done.
-		// Once we move to SDL 2, reinstate this as its SDL equivalent. --GM
+	if (m_loaded_texture != NULL) {
+		SDL_Texture *texture = static_cast<SDL_Texture *>(m_loaded_texture);
+		SDL_DestroyTexture(texture);
+		m_loaded_texture = NULL;
+	}
 
-		//std::cout << "Destroying bitmap " << m_loaded_sprite << std::endl;
-		//BITMAP *bmp = static_cast<BITMAP *>(m_loaded_sprite);
-		//destroy_bitmap(bmp);
-
-		m_loaded_sprite = NULL;
+	if (m_loaded_surface != NULL) {
+		SDL_Surface *surface = static_cast<SDL_Surface *>(m_loaded_surface);
+		SDL_FreeSurface(surface);
+		m_loaded_surface = NULL;
 	}
 }
 
 void Sprite::ensure_loaded(void)
 {
-	if (m_loaded_sprite == NULL) {
-		BITMAP *bmp = load_bitmap(m_filename.c_str(), NULL);
-		assert(bmp != NULL);
-		m_loaded_sprite = static_cast<void *>(bmp);
+	if (m_loaded_texture == NULL) {
+		if (m_loaded_surface == NULL) {
+			SDL_Surface *surface = IMG_Load(m_filename.c_str());
+			if (surface == NULL)
+			{
+				std::cerr << "SDL ERROR: Attempting to load \"" << m_filename << "\": \"" << SDL_GetError() << "\"" << std::endl;
+				std::cerr.flush();
+			}
+			assert(surface != NULL);
+			m_loaded_surface = static_cast<void *>(surface);
+		}
+		SDL_Texture *texture = SDL_CreateTextureFromSurface(
+			renderer,
+			static_cast<SDL_Surface *>(m_loaded_surface));
+		assert(texture != NULL);
+		m_loaded_texture = static_cast<void *>(texture);
 	}
 }
 
@@ -49,9 +64,9 @@ void Sprite::draw(int px, int py, int tx, int ty)
 {
 	this->ensure_loaded();
 
-	BITMAP *bmp = static_cast<BITMAP *>(m_loaded_sprite);
-	masked_blit(bmp, backbuf,
-		tx*m_pw, ty*m_ph,
-		px, py,
-		m_pw, m_ph);
+	// TODO!
+	(void)px;
+	(void)py;
+	(void)tx;
+	(void)ty;
 }

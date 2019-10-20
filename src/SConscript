@@ -11,5 +11,6 @@ env.Program(
     ],
     CPPPATH = [
         env.Dir(".").srcnode(),
+        env["CPPPATH"],
     ]
 )
