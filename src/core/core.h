@@ -16,6 +16,7 @@ namespace game
 {
 	class Game;
 }
+using game::Game;
 
 class Player;
 

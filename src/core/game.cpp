@@ -11,8 +11,8 @@ namespace game
 
 Game::Game()
 {
-	m_players.push_back(Player( 4,  8, direction::SOUTH));
-	m_players.push_back(Player(10,  6, direction::SOUTH));
+	m_players.push_back(Player(this,  4,  8, direction::SOUTH));
+	m_players.push_back(Player(this, 10,  6, direction::SOUTH));
 }
 
 Game::~Game()

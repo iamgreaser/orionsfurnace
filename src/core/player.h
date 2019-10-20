@@ -8,6 +8,7 @@
 class Player
 {
 private:
+	Game *m_game;
 	int m_cx;
 	int m_cy;
 	Direction m_dir;
@@ -23,7 +24,7 @@ private:
 	int m_input_cooldown = 0;
 
 public:
-	Player(int cx, int cy, Direction dir);
+	Player(Game *game, int cx, int cy, Direction dir);
 
 	int get_x(void) { return m_cx; }
 	int get_y(void) { return m_cy; }

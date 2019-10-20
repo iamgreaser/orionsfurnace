@@ -6,8 +6,9 @@
 
 #include <cassert>
 
-Player::Player(int cx, int cy, Direction dir)
-	: m_cx(cx)
+Player::Player(Game *game, int cx, int cy, Direction dir)
+	: m_game(game)
+	, m_cx(cx)
 	, m_cy(cy)
 	, m_dir(dir)
 	, m_pos_interp_x0(cx*CELL_W)

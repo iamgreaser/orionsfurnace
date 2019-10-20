@@ -30,7 +30,5 @@ namespace game
 	};
 }
 
-using game::Game;
-
 #endif /* if !defined(_CORE_GAME_H) */
 
