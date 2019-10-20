@@ -75,7 +75,7 @@ void gfx::clear(int r, int g, int b)
 {
 	// Clear screen
 	SDL_SetRenderDrawColor(renderer, r, g, b, 0xFF);
-	SDL_RenderClear(renderer);
+	SDL_RenderFillRect(renderer, NULL);
 }
 
 void gfx::clip_nothing(void)
