@@ -26,14 +26,14 @@ void Game::set_player_input_move(int player_idx, Direction dir, bool v)
 
 void Game::tick(void)
 {
-	for (Player p : m_players) {
+	for (Player &p : m_players) {
 		p.tick();
 	}
 }
 
 void Game::draw(void)
 {
-	for (Player p : m_players) {
+	for (Player &p : m_players) {
 		p.draw();
 	}
 }
