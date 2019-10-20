@@ -2,6 +2,7 @@
 
 #include "core/core.h"
 #include "core/helpers.h"
+#include "core/save.h"
 
 #include <cstdint>
 #include <iostream>
@@ -43,15 +44,16 @@ void Game::draw(void)
 	}
 }
 
-void Game::load(istream &ips)
+void Game::load_this(istream &ips)
 {
 	uint8_t player_count = 0;
-	get_u8(ips, player_count);
+	load(ips, player_count);
 }
 
-void Game::save(ostream &ops)
+void Game::save_this(ostream &ops)
 {
-	put_u8(ops, m_players.size());
+	uint8_t player_count = m_players.size();
+	save(ops, player_count);
 }
 
 Player *Game::get_player_at(int cx, int cy)

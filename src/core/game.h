@@ -4,6 +4,7 @@
 #include "core/core.h"
 
 #include "core/player.h"
+#include "core/save.h"
 
 #include <iostream>
 #include <vector>
@@ -14,7 +15,7 @@ namespace game
 	using std::ostream;
 	using std::vector;
 
-	class Game
+	class Game : public Saveable
 	{
 	private:
 		vector<Player> m_players;
@@ -32,10 +33,9 @@ namespace game
 		void tick(void);
 		void draw(void);
 
-		void load(istream &ips);
-		void save(ostream &ops);
+		void load_this(istream &ips);
+		void save_this(ostream &ops);
 	};
 }
 
 #endif /* if !defined(_CORE_GAME_H) */
-
