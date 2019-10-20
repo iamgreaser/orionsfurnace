@@ -23,6 +23,8 @@ namespace gfx
 	int vidbuf_out = 1;
 #endif
 
+	BITMAP *tile_gfx_floor = NULL;
+
 	BITMAP *player_gfx_base = NULL;
 	BITMAP *player_gfx[4] = {};
 }
@@ -73,6 +75,8 @@ void gfx::init(void)
 #endif
 
 	// Load some assets
+	tile_gfx_floor = load_bitmap("dat/gfx/tiles/floor001.png", NULL);
+	assert(tile_gfx_floor != NULL);
 	player_gfx_base = load_bitmap("dat/gfx/player/base.png", NULL);
 	assert(player_gfx_base != NULL);
 	for(int i = 0; i < 4; i++) {

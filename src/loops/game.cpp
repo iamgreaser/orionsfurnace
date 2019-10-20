@@ -57,28 +57,15 @@ void loops::GameLoop::draw_playfield(void)
 	set_clip_state(backbuf, 1);
 
 	// Draw tiles
-	int c_tile_flat = makecol(170, 170, 170);
-	int c_tile_light = makecol(255, 255, 255);
-	int c_tile_dark = makecol(85, 85, 85);
 	for (int cy = 0; cy < CAM_H_CELLS; cy++) {
 		int py = CAM_Y + (cy*CELL_H);
 
 		for (int cx = 0; cx < CAM_W_CELLS; cx++) {
 			int px = CAM_X + (cx*CELL_W);
 
-			rectfill(backbuf, px, py, px+CELL_W-1, py+CELL_H-1, c_tile_flat);
-			vline(backbuf,
-				px+CELL_W*0/3, py+CELL_H*0/3, py+CELL_H*1/3,
-				c_tile_light);
-			hline(backbuf,
-				px+CELL_W*0/3, py+CELL_H*0/3, px+CELL_W*1/3,
-				c_tile_light);
-			vline(backbuf,
-				px+CELL_W*3/3-1, py+CELL_H*2/3-1, py+CELL_H*3/3-1,
-				c_tile_dark);
-			hline(backbuf,
-				px+CELL_W*2/3-1, py+CELL_H*3/3-1, px+CELL_W*3/3-1,
-				c_tile_dark);
+			draw_sprite(backbuf,
+				gfx::tile_gfx_floor,
+				px, py);
 		}
 	}
 
