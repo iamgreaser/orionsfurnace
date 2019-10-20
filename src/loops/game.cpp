@@ -96,6 +96,22 @@ loops::MainLoopState loops::GameLoop::tick(void)
 						ev.type == SDL_KEYDOWN);
 					break;
 
+				case SDLK_F2:
+					if(ev.type == SDL_KEYDOWN) {
+						std::ofstream fp("quick.save");
+						save(fp, game);
+						fp.close();
+					}
+					break;
+
+				case SDLK_F3:
+					if(ev.type == SDL_KEYDOWN) {
+						std::ifstream fp("quick.save");
+						load(fp, game);
+						fp.close();
+					}
+					break;
+
 			} break;
 		}
 	}
