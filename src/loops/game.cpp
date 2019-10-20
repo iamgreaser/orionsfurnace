@@ -37,30 +37,58 @@ loops::MainLoopState loops::GameLoop::tick(void)
 					}
 					break;
 
-				case SDLK_UP:
+				case SDLK_w:
 					game.set_player_input_move(
 						0,
 						direction::NORTH,
 						ev.type == SDL_KEYDOWN);
 					break;
 
-				case SDLK_DOWN:
+				case SDLK_s:
 					game.set_player_input_move(
 						0,
 						direction::SOUTH,
 						ev.type == SDL_KEYDOWN);
 					break;
 
-				case SDLK_LEFT:
+				case SDLK_a:
 					game.set_player_input_move(
 						0,
 						direction::WEST,
 						ev.type == SDL_KEYDOWN);
 					break;
 
-				case SDLK_RIGHT:
+				case SDLK_d:
 					game.set_player_input_move(
 						0,
+						direction::EAST,
+						ev.type == SDL_KEYDOWN);
+					break;
+
+				case SDLK_UP:
+					game.set_player_input_move(
+						1,
+						direction::NORTH,
+						ev.type == SDL_KEYDOWN);
+					break;
+
+				case SDLK_DOWN:
+					game.set_player_input_move(
+						1,
+						direction::SOUTH,
+						ev.type == SDL_KEYDOWN);
+					break;
+
+				case SDLK_LEFT:
+					game.set_player_input_move(
+						1,
+						direction::WEST,
+						ev.type == SDL_KEYDOWN);
+					break;
+
+				case SDLK_RIGHT:
+					game.set_player_input_move(
+						1,
 						direction::EAST,
 						ev.type == SDL_KEYDOWN);
 					break;
