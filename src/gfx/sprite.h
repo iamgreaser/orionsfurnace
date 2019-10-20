@@ -13,7 +13,6 @@ namespace gfx
 	{
 	private:
 		const string m_filename;
-		void *m_loaded_surface = NULL;
 		void *m_loaded_texture = NULL;
 		int m_xtiles;
 		int m_ytiles;

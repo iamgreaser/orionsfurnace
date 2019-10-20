@@ -31,32 +31,29 @@ Sprite::~Sprite()
 		SDL_DestroyTexture(texture);
 		m_loaded_texture = NULL;
 	}
-
-	if (m_loaded_surface != NULL) {
-		SDL_Surface *surface = static_cast<SDL_Surface *>(m_loaded_surface);
-		SDL_FreeSurface(surface);
-		m_loaded_surface = NULL;
-	}
 }
 
 void Sprite::ensure_loaded(void)
 {
 	if (m_loaded_texture == NULL) {
-		if (m_loaded_surface == NULL) {
-			SDL_Surface *surface = IMG_Load(m_filename.c_str());
-			if (surface == NULL)
-			{
-				std::cerr << "SDL ERROR: Attempting to load \"" << m_filename << "\": \"" << SDL_GetError() << "\"" << std::endl;
-				std::cerr.flush();
-			}
-			assert(surface != NULL);
-			m_loaded_surface = static_cast<void *>(surface);
+		// Load image
+		SDL_Surface *surface = IMG_Load(m_filename.c_str());
+		if (surface == NULL)
+		{
+			std::cerr << "SDL ERROR: Attempting to load \"" << m_filename << "\": \"" << SDL_GetError() << "\"" << std::endl;
+			std::cerr.flush();
 		}
+		assert(surface != NULL);
+
+		// Create texture
 		SDL_Texture *texture = SDL_CreateTextureFromSurface(
-			renderer,
-			static_cast<SDL_Surface *>(m_loaded_surface));
+			renderer, surface);
 		assert(texture != NULL);
 		m_loaded_texture = static_cast<void *>(texture);
+
+		// Free surface as per the SDL manual recommendations
+		// This should save... a little bit of RAM?
+		SDL_FreeSurface(surface);
 	}
 }
 
