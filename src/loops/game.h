@@ -10,6 +10,11 @@ namespace loops
 	public:
 		MainLoopState tick(void);
 		void draw(void);
+
+	protected:
+		void draw_playfield(void);
+		void draw_sidebar(void);
+		void draw_gui(void);
 	};
 }
 

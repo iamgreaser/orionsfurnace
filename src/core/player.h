@@ -12,6 +12,10 @@ private:
 public:
 	Player(int x, int y, Direction dir);
 
+	int get_x(void) { return m_x; }
+	int get_y(void) { return m_y; }
+	Direction get_dir(void) { return m_dir; }
+
 	void move(int dx, int dy);
 
 	void draw(void);
