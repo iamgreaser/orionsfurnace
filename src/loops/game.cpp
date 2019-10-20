@@ -1,3 +1,4 @@
+#define _LOOPS_GAME_INTERNAL 1
 #include "loops/game.h"
 
 #include "core/core.h"
@@ -32,87 +33,12 @@ loops::MainLoopState loops::GameLoop::tick(void)
 
 			case SDL_KEYUP:
 			case SDL_KEYDOWN:
-			switch(ev.key.keysym.sym)
-			{
-				case SDLK_ESCAPE:
-					if (ev.type == SDL_KEYUP) {
-						return mainloop::EXIT;
-					}
-					break;
-
-				case SDLK_w:
-					game.set_player_input_move(
-						0,
-						direction::NORTH,
-						ev.type == SDL_KEYDOWN);
-					break;
-
-				case SDLK_s:
-					game.set_player_input_move(
-						0,
-						direction::SOUTH,
-						ev.type == SDL_KEYDOWN);
-					break;
-
-				case SDLK_a:
-					game.set_player_input_move(
-						0,
-						direction::WEST,
-						ev.type == SDL_KEYDOWN);
-					break;
-
-				case SDLK_d:
-					game.set_player_input_move(
-						0,
-						direction::EAST,
-						ev.type == SDL_KEYDOWN);
-					break;
-
-				case SDLK_UP:
-					game.set_player_input_move(
-						1,
-						direction::NORTH,
-						ev.type == SDL_KEYDOWN);
-					break;
-
-				case SDLK_DOWN:
-					game.set_player_input_move(
-						1,
-						direction::SOUTH,
-						ev.type == SDL_KEYDOWN);
-					break;
-
-				case SDLK_LEFT:
-					game.set_player_input_move(
-						1,
-						direction::WEST,
-						ev.type == SDL_KEYDOWN);
-					break;
-
-				case SDLK_RIGHT:
-					game.set_player_input_move(
-						1,
-						direction::EAST,
-						ev.type == SDL_KEYDOWN);
-					break;
-
-				case SDLK_F2:
-					if(ev.type == SDL_KEYDOWN) {
-						std::ofstream fp("quick.save");
-						save(fp, game);
-						fp.close();
-					}
-					break;
-
-				case SDLK_F3:
-					if(ev.type == SDL_KEYDOWN) {
-						std::ifstream fp("quick.save");
-						load(fp, game);
-						fp.close();
-					}
-					break;
-
-			} break;
+				if (ev.key.keysym.sym == SDLK_ESCAPE && ev.type == SDL_KEYUP) {
+					return mainloop::EXIT;
+				} else {
+					this->tick_key_event(ev);
+				}
+				break;
 		}
 	}
 
@@ -138,6 +64,85 @@ loops::MainLoopState loops::GameLoop::tick(void)
 
 	// Continue with the game
 	return mainloop::GAME;
+}
+
+void loops::GameLoop::tick_key_event(SDL_Event &ev)
+{
+	switch(ev.key.keysym.sym)
+	{
+		case SDLK_w:
+			game.set_player_input_move(
+				0,
+				direction::NORTH,
+				ev.type == SDL_KEYDOWN);
+			break;
+
+		case SDLK_s:
+			game.set_player_input_move(
+				0,
+				direction::SOUTH,
+				ev.type == SDL_KEYDOWN);
+			break;
+
+		case SDLK_a:
+			game.set_player_input_move(
+				0,
+				direction::WEST,
+				ev.type == SDL_KEYDOWN);
+			break;
+
+		case SDLK_d:
+			game.set_player_input_move(
+				0,
+				direction::EAST,
+				ev.type == SDL_KEYDOWN);
+			break;
+
+		case SDLK_UP:
+			game.set_player_input_move(
+				1,
+				direction::NORTH,
+				ev.type == SDL_KEYDOWN);
+			break;
+
+		case SDLK_DOWN:
+			game.set_player_input_move(
+				1,
+				direction::SOUTH,
+				ev.type == SDL_KEYDOWN);
+			break;
+
+		case SDLK_LEFT:
+			game.set_player_input_move(
+				1,
+				direction::WEST,
+				ev.type == SDL_KEYDOWN);
+			break;
+
+		case SDLK_RIGHT:
+			game.set_player_input_move(
+				1,
+				direction::EAST,
+				ev.type == SDL_KEYDOWN);
+			break;
+
+		case SDLK_F2:
+			if(ev.type == SDL_KEYDOWN) {
+				std::ofstream fp("quick.save");
+				save(fp, game);
+				fp.close();
+			}
+			break;
+
+		case SDLK_F3:
+			if(ev.type == SDL_KEYDOWN) {
+				std::ifstream fp("quick.save");
+				load(fp, game);
+				fp.close();
+			}
+			break;
+
+	}
 }
 
 void loops::GameLoop::draw(void)
