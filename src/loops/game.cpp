@@ -41,7 +41,7 @@ loops::MainLoopState loops::GameLoop::tick(void)
 void loops::GameLoop::draw(void)
 {
 	// Clear screen
-	clear_to_color(backbuf, makecol(85,85,255));
+	gfx::clear(85,85,255);
 
 	// Draw things
 	draw_playfield();
@@ -52,12 +52,9 @@ void loops::GameLoop::draw(void)
 void loops::GameLoop::draw_playfield(void)
 {
 	// Set clipping rectangle
-	set_clip_rect(backbuf,
-		CAM_X,
-		CAM_Y,
-		CAM_W-1,
-		CAM_H-1);
-	set_clip_state(backbuf, 1);
+	gfx::clip_rect(
+		CAM_X, CAM_Y,
+		CAM_W, CAM_H);
 
 	// Draw tiles
 	for (int cy = 0; cy < CAM_H_CELLS; cy++) {
@@ -74,23 +71,20 @@ void loops::GameLoop::draw_playfield(void)
 	player.draw();
 
 	// Clear clipping rectangle
-	set_clip_state(backbuf, 0);
+	gfx::clip_nothing();
 }
 
 void loops::GameLoop::draw_sidebar(void)
 {
 	// Set clipping rectangle
-	set_clip_rect(backbuf,
-		SIDEBAR_X,
-		SIDEBAR_Y,
-		SIDEBAR_X+SIDEBAR_W-1,
-		SIDEBAR_Y+SIDEBAR_H-1);
-	set_clip_state(backbuf, 1);
+	gfx::clip_rect(
+		SIDEBAR_X, SIDEBAR_Y,
+		SIDEBAR_W, SIDEBAR_H);
 
 	// Draw our sidebar
-	int c_bg = makecol(0, 0, 0);
 	int c_fg = makecol(170, 170, 255);
-	clear_to_color(backbuf, c_bg);
+	int c_bg = makecol(  0,   0,   0);
+	gfx::clear(0, 0, 0);
 	textprintf_ex(backbuf, font,
 		SIDEBAR_X+1*8,
 		SIDEBAR_Y+1*8,
@@ -100,7 +94,7 @@ void loops::GameLoop::draw_sidebar(void)
 		player.get_y());
 
 	// Clear clipping rectangle
-	set_clip_state(backbuf, 0);
+	gfx::clip_nothing();
 }
 
 void loops::GameLoop::draw_gui(void)

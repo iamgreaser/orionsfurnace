@@ -77,6 +77,25 @@ void gfx::init(void)
 	player_gfx.ensure_loaded();
 }
 
+void gfx::clear(int r, int g, int b)
+{
+	// Clear screen
+	clear_to_color(backbuf, makecol(r, g, b));
+}
+
+void gfx::clip_nothing(void)
+{
+	// Clear clipping rectangle
+	set_clip_state(backbuf, 0);
+}
+
+void gfx::clip_rect(int px, int py, int pw, int ph)
+{
+	// Set clipping rectangle
+	set_clip_rect(backbuf, px, py, px+pw-1, py+ph-1);
+	set_clip_state(backbuf, 1);
+}
+
 void gfx::flip(void)
 {
 	// Blit

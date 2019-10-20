@@ -21,6 +21,10 @@ namespace gfx
 
 	void init(void);
 
+	void clear(int r, int g, int b);
+	void clip_nothing(void);
+	void clip_rect(int px, int py, int pw, int ph);
+
 	void flip(void);
 }
 
