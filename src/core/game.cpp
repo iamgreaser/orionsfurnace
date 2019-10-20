@@ -37,3 +37,14 @@ void Game::draw(void)
 		p.draw();
 	}
 }
+
+Player *Game::get_player_at(int cx, int cy)
+{
+	for (Player &p : m_players) {
+		if (p.get_x() == cx && p.get_y() == cy) {
+			return &p;
+		}
+	}
+
+	return NULL;
+}

@@ -42,9 +42,10 @@ public:
 
 	void draw(void);
 
-protected:
 	bool attempt_move_by(int dx, int dy);
 	bool attempt_move_to(int cx, int cy);
+
+protected:
 	void calc_interp_pos(int *px, int *py);
 };
 

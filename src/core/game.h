@@ -25,6 +25,7 @@ namespace game
 		void set_player_input_move(
 			int player_idx, Direction dir, bool v);
 
+		Player *get_player_at(int cx, int cy);
 		void tick(void);
 		void draw(void);
 	};
