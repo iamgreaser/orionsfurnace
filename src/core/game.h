@@ -5,10 +5,13 @@
 
 #include "core/player.h"
 
+#include <iostream>
 #include <vector>
 
 namespace game
 {
+	using std::istream;
+	using std::ostream;
 	using std::vector;
 
 	class Game
@@ -28,6 +31,9 @@ namespace game
 		Player *get_player_at(int cx, int cy);
 		void tick(void);
 		void draw(void);
+
+		void load(istream &ips);
+		void save(ostream &ops);
 	};
 }
 
