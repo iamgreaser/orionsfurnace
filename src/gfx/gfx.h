@@ -22,8 +22,6 @@ namespace gfx
 	constexpr int SIDEBAR_H = BASE_SCREEN_HEIGHT;
 
 	extern BITMAP *backbuf;
-	extern BITMAP *tile_gfx_floor;
-	extern BITMAP *player_gfx[4];
 
 	void init(void);
 

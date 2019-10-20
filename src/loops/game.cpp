@@ -3,6 +3,7 @@
 #include "core/core.h"
 #include "core/player.h"
 #include "gfx/gfx.h"
+#include "gfx/sprite.h"
 #include "loops/loops.h"
 
 #include <allegro.h>
@@ -63,9 +64,7 @@ void loops::GameLoop::draw_playfield(void)
 		for (int cx = 0; cx < CAM_W_CELLS; cx++) {
 			int px = CAM_X + (cx*CELL_W);
 
-			draw_sprite(backbuf,
-				gfx::tile_gfx_floor,
-				px, py);
+			gfx::tile_gfx_floor.draw(0, 0, px, py);
 		}
 	}
 

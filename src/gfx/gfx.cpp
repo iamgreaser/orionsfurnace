@@ -1,6 +1,7 @@
 #include "gfx/gfx.h"
 
 #include "gfx/png.h"
+#include "gfx/sprite.h"
 
 #include <allegro.h>
 
@@ -22,11 +23,6 @@ namespace gfx
 	int vidbuf_in = 0;
 	int vidbuf_out = 1;
 #endif
-
-	BITMAP *tile_gfx_floor = NULL;
-
-	BITMAP *player_gfx_base = NULL;
-	BITMAP *player_gfx[4] = {};
 }
 
 void gfx::init(void)
@@ -75,17 +71,8 @@ void gfx::init(void)
 #endif
 
 	// Load some assets
-	tile_gfx_floor = load_bitmap("dat/gfx/tiles/floor001.png", NULL);
-	assert(tile_gfx_floor != NULL);
-	player_gfx_base = load_bitmap("dat/gfx/player/base.png", NULL);
-	assert(player_gfx_base != NULL);
-	for(int i = 0; i < 4; i++) {
-		player_gfx[i] = create_sub_bitmap(
-			player_gfx_base,
-			i*24, 0,
-			24, 24);
-		assert(player_gfx[i] != NULL);
-	}
+	tile_gfx_floor.ensure_loaded();
+	player_gfx.ensure_loaded();
 }
 
 void gfx::flip(void)

@@ -2,6 +2,7 @@
 
 #include "core/core.h"
 #include "gfx/gfx.h"
+#include "gfx/sprite.h"
 
 #include <allegro.h>
 
@@ -38,7 +39,5 @@ void Player::tick(void)
 
 void Player::draw(void)
 {
-	draw_sprite(backbuf,
-		gfx::player_gfx[m_dir],
-		m_x, m_y);
+	gfx::player_gfx.draw(m_dir, 0, m_x, m_y);
 }
