@@ -4,8 +4,6 @@
 #include "gfx/gfx.h"
 #include "gfx/sprite.h"
 
-#include <allegro.h>
-
 #include <cassert>
 
 Player::Player(int cx, int cy, Direction dir)

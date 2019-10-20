@@ -1,8 +1,6 @@
 #ifndef _GFX_GFX_H
 #define _GFX_GFX_H
 
-#include <allegro.h>
-
 namespace gfx
 {
 	constexpr int BASE_SCREEN_WIDTH = 640;
@@ -20,8 +18,6 @@ namespace gfx
 	constexpr int SIDEBAR_Y = 0;
 	constexpr int SIDEBAR_W = BASE_SCREEN_WIDTH-SIDEBAR_X;
 	constexpr int SIDEBAR_H = BASE_SCREEN_HEIGHT;
-
-	extern BITMAP *backbuf;
 
 	void init(void);
 
@@ -41,7 +37,4 @@ using gfx::SIDEBAR_Y;
 using gfx::SIDEBAR_W;
 using gfx::SIDEBAR_H;
 
-using gfx::backbuf;
-
 #endif /* if !defined(_GFX_GFX_H) */
-

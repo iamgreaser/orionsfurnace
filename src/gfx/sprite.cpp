@@ -2,6 +2,8 @@
 
 #include "gfx/gfx.h"
 
+#include "gfx/internal.h"
+
 #include <allegro.h>
 
 #include <cassert>

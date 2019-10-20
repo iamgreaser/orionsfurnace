@@ -3,6 +3,8 @@
 #include "gfx/png.h"
 #include "gfx/sprite.h"
 
+#include "gfx/internal.h"
+
 #include <allegro.h>
 
 #include <cassert>

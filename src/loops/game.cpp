@@ -6,6 +6,8 @@
 #include "gfx/sprite.h"
 #include "loops/loops.h"
 
+#include "gfx/internal.h"
+
 #include <allegro.h>
 
 namespace loops
