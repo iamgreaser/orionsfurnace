@@ -11,6 +11,7 @@
 #include <SDL.h>
 
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 namespace loops
@@ -113,6 +114,7 @@ loops::MainLoopState loops::GameLoop::tick(void)
 		// FIXME: get this working
 		//fp << (std::istream)game_ss;
 		fp << game_ss.str();
+		std::cout << "Save: " << game_ss.str().size() << " bytes" << std::endl;
 		fp.close();
 	}
 	game_ss.seekg(0);
