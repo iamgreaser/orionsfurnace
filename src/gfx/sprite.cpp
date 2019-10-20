@@ -64,9 +64,21 @@ void Sprite::draw(int px, int py, int tx, int ty)
 {
 	this->ensure_loaded();
 
-	// TODO!
-	(void)px;
-	(void)py;
-	(void)tx;
-	(void)ty;
+	// Build blit rectangles
+	SDL_Rect srcrect = {};
+	SDL_Rect dstrect = {};
+	srcrect.x = tx*m_pw;
+	srcrect.y = ty*m_ph;
+	srcrect.w = m_pw;
+	srcrect.h = m_ph;
+	dstrect.x = px;
+	dstrect.y = py;
+	dstrect.w = m_pw;
+	dstrect.h = m_ph;
+
+	// Now use them to actually blit
+	SDL_Texture *texture = static_cast<SDL_Texture *>(m_loaded_texture);
+	int did_blit = SDL_RenderCopy(
+		renderer, texture, &srcrect, &dstrect);
+	assert(did_blit == 0);
 }
