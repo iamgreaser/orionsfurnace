@@ -10,9 +10,15 @@ class Player
 private:
 	int m_cx;
 	int m_cy;
-	int m_px;
-	int m_py;
 	Direction m_dir;
+
+	int m_pos_interp_x0;
+	int m_pos_interp_y0;
+	int m_pos_interp_x1;
+	int m_pos_interp_y1;
+	int m_pos_interp_remain = 0;
+	int m_pos_interp_len = 0;
+
 	bool m_input_move[4] = {};
 	int m_input_cooldown = 0;
 

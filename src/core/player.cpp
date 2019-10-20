@@ -9,9 +9,11 @@
 Player::Player(int cx, int cy, Direction dir)
 	: m_cx(cx)
 	, m_cy(cy)
-	, m_px(cx*CELL_W)
-	, m_py(cy*CELL_H)
 	, m_dir(dir)
+	, m_pos_interp_x0(cx*CELL_W)
+	, m_pos_interp_y0(cy*CELL_H)
+	, m_pos_interp_x1(cx*CELL_W)
+	, m_pos_interp_y1(cy*CELL_H)
 {
 }
 
@@ -42,18 +44,50 @@ void Player::tick(void)
 		if (dx != 0 || dy != 0) {
 			m_cx += dx;
 			m_cy += dy;
-			m_px += dx*CELL_W;
-			m_py += dy*CELL_H;
-			m_input_cooldown = 5;
+			m_input_cooldown = 12;
+
+			// TODO: Snap to the current point, not the final point
+			m_pos_interp_x0 = m_pos_interp_x1;
+			m_pos_interp_y0 = m_pos_interp_y1;
+			m_pos_interp_x1 = m_cx*CELL_W;
+			m_pos_interp_y1 = m_cy*CELL_H;
+			m_pos_interp_remain = m_input_cooldown;
+			m_pos_interp_len = m_pos_interp_remain;
 		}
 	}
 
 	if (m_input_cooldown > 0) {
 		m_input_cooldown -= 1;
 	}
+
+	// Apply pixel position interpolation
+	// TODO: Make a timestamp and do the interp in draw()
+	if (m_pos_interp_remain > 0) {
+		m_pos_interp_remain -= 1;
+		if (m_pos_interp_remain == 0) {
+			// We're done with interpolation.
+			// Snap to position.
+			m_pos_interp_len = 0;
+			m_pos_interp_x0 = m_pos_interp_x1;
+			m_pos_interp_y0 = m_pos_interp_y1;
+		}
+	}
 }
 
 void Player::draw(void)
 {
-	gfx::player_gfx.draw(m_px, m_py, m_dir, 0);
+	// Calculate position
+	int px = m_pos_interp_x1;
+	int py = m_pos_interp_y1;
+
+	if (m_pos_interp_remain > 0) {
+		int dpx = (m_pos_interp_x1 - m_pos_interp_x0);
+		int dpy = (m_pos_interp_y1 - m_pos_interp_y0);
+		int t = m_pos_interp_remain;
+		int l = m_pos_interp_len;
+		px -= (2*dpx*t+l)/(2*l);
+		py -= (2*dpy*t+l)/(2*l);
+	}
+
+	gfx::player_gfx.draw(px, py, m_dir, 0);
 }
