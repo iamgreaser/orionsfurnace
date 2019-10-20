@@ -129,7 +129,8 @@ void loops::run(void)
 
 		} else {
 			// Idle for a bit.
-			rest(1);
+			//rest(1);
+			vsync();
 		}
 	}
 }
