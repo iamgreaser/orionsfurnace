@@ -101,21 +101,25 @@ bool Player::attempt_move_by(int dx, int dy)
 
 	// Is there a player at the given cell?
 	Player *other = m_game->get_player_at(cx, cy);
-	if (other == NULL) {
-		// Move to the next cell.
-		return this->attempt_move_to(cx, cy);
+	if (other != NULL) {
+		// Is it us?
+		if (other == this) {
+			// Don't push ourselves, that causes stack overflows.
+			// I've crashed ZZT enough times to know to do this. --GM
+			return false;
+		}
+
+		// Can we push it?
+		if (!other->attempt_move_by(dx, dy)) {
+			return false;
+		}
 	}
 
-	// Is it us?
-	if (other == this) {
-		// I've crashed ZZT enough times to know to do this. --GM
-		return false;
-	}
-
-	// Can we push it?
-	if (!other->attempt_move_by(dx, dy)) {
-		return false;
-	}
+	// Face this direction.
+	if (dy < 0) { m_dir = direction::NORTH; }
+	if (dy > 0) { m_dir = direction::SOUTH; }
+	if (dx < 0) { m_dir = direction::WEST; }
+	if (dx > 0) { m_dir = direction::EAST; }
 
 	// Move to the next cell.
 	return this->attempt_move_to(cx, cy);
