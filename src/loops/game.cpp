@@ -6,9 +6,9 @@
 #include "gfx/sprite.h"
 #include "loops/loops.h"
 
-#include "gfx/internal.h"
-
 #include <allegro.h>
+
+#include <sstream>
 
 namespace loops
 {
@@ -82,16 +82,16 @@ void loops::GameLoop::draw_sidebar(void)
 		SIDEBAR_W, SIDEBAR_H);
 
 	// Draw our sidebar
-	int c_fg = makecol(170, 170, 255);
-	int c_bg = makecol(  0,   0,   0);
 	gfx::clear(0, 0, 0);
-	textprintf_ex(backbuf, font,
+	std::stringstream ss;
+	ss << "Player pos: (";
+	ss << player.get_x() << ", ";
+	ss << player.get_y() << ")";
+	gfx::draw_text(
 		SIDEBAR_X+1*8,
 		SIDEBAR_Y+1*8,
-		c_fg, c_bg,
-		"Player pos: (%d, %d)",
-		player.get_x(),
-		player.get_y());
+		170, 170, 255,
+		ss.str());
 
 	// Clear clipping rectangle
 	gfx::clip_nothing();

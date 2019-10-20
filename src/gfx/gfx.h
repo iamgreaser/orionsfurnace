@@ -1,6 +1,8 @@
 #ifndef _GFX_GFX_H
 #define _GFX_GFX_H
 
+#include <string>
+
 namespace gfx
 {
 	constexpr int BASE_SCREEN_WIDTH = 640;
@@ -24,6 +26,7 @@ namespace gfx
 	void clear(int r, int g, int b);
 	void clip_nothing(void);
 	void clip_rect(int px, int py, int pw, int ph);
+	void draw_text(int px, int py, int r, int g, int b, const std::string text);
 
 	void flip(void);
 }

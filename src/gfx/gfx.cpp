@@ -8,6 +8,7 @@
 #include <allegro.h>
 
 #include <cassert>
+#include <string>
 
 namespace gfx
 {
@@ -94,6 +95,15 @@ void gfx::clip_rect(int px, int py, int pw, int ph)
 	// Set clipping rectangle
 	set_clip_rect(backbuf, px, py, px+pw-1, py+ph-1);
 	set_clip_state(backbuf, 1);
+}
+
+void gfx::draw_text(int px, int py, int r, int g, int b, const std::string text)
+{
+	// Clear screen
+	textout_ex(
+		backbuf, font, text.c_str(),
+		px, py,
+		makecol(r, g, b), -1);
 }
 
 void gfx::flip(void)
