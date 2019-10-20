@@ -1,6 +1,9 @@
 # Output
 build/
 
+# Game output
+*.save
+
 # SCons
 .sconsign.dblite
 

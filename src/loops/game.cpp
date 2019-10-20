@@ -3,12 +3,14 @@
 #include "core/core.h"
 #include "core/game.h"
 #include "core/player.h"
+#include "core/save.h"
 #include "gfx/gfx.h"
 #include "gfx/sprite.h"
 #include "loops/loops.h"
 
 #include <SDL.h>
 
+#include <fstream>
 #include <sstream>
 
 namespace loops
@@ -101,6 +103,20 @@ loops::MainLoopState loops::GameLoop::tick(void)
 	// Update logic
 	//
 	game.tick();
+
+	// TEST: Save then load the game
+	std::stringstream game_ss;
+	save(game_ss, game);
+	{
+		std::ofstream fp("test.save");
+		game_ss.seekg(0);
+		// FIXME: get this working
+		//fp << (std::istream)game_ss;
+		fp << game_ss.str();
+		fp.close();
+	}
+	game_ss.seekg(0);
+	load(game_ss, game);
 
 	// Continue with the game
 	return mainloop::GAME;
