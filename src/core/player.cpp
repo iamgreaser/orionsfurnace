@@ -43,20 +43,20 @@ void Player::tick(void)
 	if (m_input_cooldown <= 0) {
 		// If we're moving, then move.
 		if (dx != 0 || dy != 0) {
-			m_cx += dx;
-			m_cy += dy;
-			m_input_cooldown = 12;
+			if (this->attempt_move_by(dx, dy)) {
+				m_input_cooldown = 12;
 
-			int new_px = m_pos_interp_x1;
-			int new_py = m_pos_interp_y1;
-			calc_interp_pos(&new_px, &new_py);
-			m_pos_interp_x0 = new_px;
-			m_pos_interp_y0 = new_py;
+				int new_px = m_pos_interp_x1;
+				int new_py = m_pos_interp_y1;
+				this->calc_interp_pos(&new_px, &new_py);
+				m_pos_interp_x0 = new_px;
+				m_pos_interp_y0 = new_py;
 
-			m_pos_interp_x1 = m_cx*CELL_W;
-			m_pos_interp_y1 = m_cy*CELL_H;
-			m_pos_interp_remain = m_input_cooldown+4;
-			m_pos_interp_len = m_pos_interp_remain;
+				m_pos_interp_x1 = m_cx*CELL_W;
+				m_pos_interp_y1 = m_cy*CELL_H;
+				m_pos_interp_remain = m_input_cooldown+4;
+				m_pos_interp_len = m_pos_interp_remain;
+			}
 		}
 	}
 
@@ -83,7 +83,7 @@ void Player::draw(void)
 	// Calculate position
 	int px = m_pos_interp_x1;
 	int py = m_pos_interp_y1;
-	calc_interp_pos(&px, &py);
+	this->calc_interp_pos(&px, &py);
 	gfx::player_gfx.draw(px, py, m_dir, 0);
 }
 
@@ -101,4 +101,17 @@ void Player::calc_interp_pos(int *px, int *py)
 		*px -= (2*dpx*t+l)/(2*l);
 		*py -= (2*dpy*t+l)/(2*l);
 	}
+}
+
+bool Player::attempt_move_by(int dx, int dy)
+{
+	return this->attempt_move_to(m_cx+dx, m_cy+dy);
+}
+
+bool Player::attempt_move_to(int cx, int cy)
+{
+	// TODO: Actually check if we can go there
+	m_cx = cx;
+	m_cy = cy;
+	return true;
 }
