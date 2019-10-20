@@ -96,8 +96,29 @@ void Player::calc_interp_pos(int *px, int *py)
 
 bool Player::attempt_move_by(int dx, int dy)
 {
-	// TODO: Allow pushing
-	return this->attempt_move_to(m_cx+dx, m_cy+dy);
+	int cx = m_cx + dx;
+	int cy = m_cy + dy;
+
+	// Is there a player at the given cell?
+	Player *other = m_game->get_player_at(cx, cy);
+	if (other == NULL) {
+		// Move to the next cell.
+		return this->attempt_move_to(cx, cy);
+	}
+
+	// Is it us?
+	if (other == this) {
+		// I've crashed ZZT enough times to know to do this. --GM
+		return false;
+	}
+
+	// Can we push it?
+	if (!other->attempt_move_by(dx, dy)) {
+		return false;
+	}
+
+	// Move to the next cell.
+	return this->attempt_move_to(cx, cy);
 }
 
 bool Player::attempt_move_to(int cx, int cy)
