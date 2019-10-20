@@ -8,6 +8,8 @@ namespace gfx
 	extern SDL_Window *window;
 	extern SDL_Renderer *renderer;
 	extern SDL_Texture *backbuf;
+
+	void init_font(void);
 }
 using gfx::backbuf;
 

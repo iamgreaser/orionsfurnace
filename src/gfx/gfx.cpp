@@ -1,5 +1,6 @@
 #include "gfx/gfx.h"
 
+#include "gfx/font.h"
 #include "gfx/sprite.h"
 
 #include "gfx/internal.h"
@@ -66,6 +67,9 @@ void gfx::init(void)
 		renderer, backbuf);
 	assert(did_set_render_target == 0);
 
+	// Initialise SDL_ttf
+	init_font();
+
 	// Load some assets
 	tile_gfx_floor.ensure_loaded();
 	player_gfx.ensure_loaded();
@@ -101,19 +105,7 @@ void gfx::clip_rect(int px, int py, int pw, int ph)
 void gfx::draw_text(int px, int py, int r, int g, int b, const std::string text)
 {
 	// Draw text
-	// TODO!
-	(void)px;
-	(void)py;
-	(void)r;
-	(void)g;
-	(void)b;
-	(void)text;
-#if 0
-	textout_ex(
-		backbuf, font, text.c_str(),
-		px, py,
-		makecol(r, g, b), -1);
-#endif
+	font_base.draw(px, py, r, g, b, text);
 }
 
 void gfx::flip(void)

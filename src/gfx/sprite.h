@@ -1,6 +1,7 @@
 #ifndef _GFX_SPRITE_H
 #define _GFX_SPRITE_H
 
+#include <cstddef>
 #include <string>
 
 #include "gfx/gfx.h"

@@ -29,6 +29,7 @@ env.MergeFlags([
 env.Append(
     LIBS=[
         "SDL2_image",
+        "SDL2_ttf",
     ],
 )
 
