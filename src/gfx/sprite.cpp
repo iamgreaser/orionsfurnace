@@ -9,22 +9,27 @@
 
 namespace gfx
 {
-	Sprite tile_gfx_floor("dat/gfx/tiles/floor001.png", 1, 1);
-	Sprite player_gfx("dat/gfx/player/base.png", 4, 4);
+	Sprite tile_gfx_floor("dat/gfx/tiles/floor001.png");
+	Sprite player_gfx("dat/gfx/player/base.png");
 }
 
-Sprite::Sprite(const string filename, int xtiles, int ytiles)
+Sprite::Sprite(const string filename, int pw, int ph)
 	: m_filename(filename)
-	, m_xtiles(xtiles)
-	, m_ytiles(ytiles)
+	, m_pw(pw)
+	, m_ph(ph)
 {
 }
 
 Sprite::~Sprite()
 {
 	if (m_loaded_sprite != NULL) {
-		BITMAP *bmp = static_cast<BITMAP *>(m_loaded_sprite);
-		destroy_bitmap(bmp);
+		// FIXME: For some reason, Allegro seems to free these when done.
+		// Once we move to SDL 2, reinstate this as its SDL equivalent. --GM
+
+		//std::cout << "Destroying bitmap " << m_loaded_sprite << std::endl;
+		//BITMAP *bmp = static_cast<BITMAP *>(m_loaded_sprite);
+		//destroy_bitmap(bmp);
+
 		m_loaded_sprite = NULL;
 	}
 }
@@ -38,14 +43,13 @@ void Sprite::ensure_loaded(void)
 	}
 }
 
-void Sprite::draw(int tx, int ty, int px, int py)
+void Sprite::draw(int px, int py, int tx, int ty)
 {
-	ensure_loaded();
-
-	// TODO: use tx, ty
-	(void)tx;
-	(void)ty;
+	this->ensure_loaded();
 
 	BITMAP *bmp = static_cast<BITMAP *>(m_loaded_sprite);
-	draw_sprite(backbuf, bmp, px, py);
+	masked_blit(bmp, backbuf,
+		tx*m_pw, ty*m_ph,
+		px, py,
+		m_pw, m_ph);
 }

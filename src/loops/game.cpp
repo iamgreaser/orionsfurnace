@@ -64,7 +64,7 @@ void loops::GameLoop::draw_playfield(void)
 		for (int cx = 0; cx < CAM_W_CELLS; cx++) {
 			int px = CAM_X + (cx*CELL_W);
 
-			gfx::tile_gfx_floor.draw(0, 0, px, py);
+			gfx::tile_gfx_floor.draw(px, py);
 		}
 	}
 

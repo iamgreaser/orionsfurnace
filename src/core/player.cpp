@@ -39,5 +39,5 @@ void Player::tick(void)
 
 void Player::draw(void)
 {
-	gfx::player_gfx.draw(m_dir, 0, m_x, m_y);
+	gfx::player_gfx.draw(m_x, m_y, m_dir, 0);
 }

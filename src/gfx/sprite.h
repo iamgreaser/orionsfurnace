@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "gfx/gfx.h"
+
 namespace gfx
 {
 	using std::string;
@@ -14,13 +16,15 @@ namespace gfx
 		void *m_loaded_sprite = NULL;
 		int m_xtiles;
 		int m_ytiles;
+		int m_pw;
+		int m_ph;
 	public:
-		Sprite(const string filename, int xtiles, int ytiles);
+		Sprite(const string filename, int pw = CELL_W, int ph = CELL_H);
 		~Sprite();
 
 		void ensure_loaded(void);
 
-		void draw(int tx, int ty, int px, int py);
+		void draw(int px, int py, int tx = 0, int ty = 0);
 	};
 
 	extern Sprite tile_gfx_floor;
