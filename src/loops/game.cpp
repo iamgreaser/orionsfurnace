@@ -51,24 +51,36 @@ void loops::GameLoop::draw(void)
 void loops::GameLoop::draw_playfield(void)
 {
 	// Set clipping rectangle
-	set_clip_rect(backbuf, 0, 0, 15*24-1, 15*24-1);
+	set_clip_rect(backbuf,
+		CAM_X,
+		CAM_Y,
+		CAM_W-1,
+		CAM_H-1);
 	set_clip_state(backbuf, 1);
 
 	// Draw tiles
 	int c_tile_flat = makecol(170, 170, 170);
 	int c_tile_light = makecol(255, 255, 255);
 	int c_tile_dark = makecol(85, 85, 85);
-	for (int y = 0; y < 15; y++) {
-		int py = y*24;
+	for (int cy = 0; cy < CAM_H_CELLS; cy++) {
+		int py = CAM_Y + (cy*CELL_H);
 
-		for (int x = 0; x < 15; x++) {
-			int px = x*24;
+		for (int cx = 0; cx < CAM_W_CELLS; cx++) {
+			int px = CAM_X + (cx*CELL_W);
 
-			rectfill(backbuf, px, py, px+24-1, py+24-1, c_tile_flat);
-			vline(backbuf, px+ 0, py+ 0, py+ 8, c_tile_light);
-			hline(backbuf, px+ 0, py+ 0, px+ 8, c_tile_light);
-			vline(backbuf, px+23, py+15, py+23, c_tile_dark);
-			hline(backbuf, px+15, py+23, px+23, c_tile_dark);
+			rectfill(backbuf, px, py, px+CELL_W-1, py+CELL_H-1, c_tile_flat);
+			vline(backbuf,
+				px+CELL_W*0/3, py+CELL_H*0/3, py+CELL_H*1/3,
+				c_tile_light);
+			hline(backbuf,
+				px+CELL_W*0/3, py+CELL_H*0/3, px+CELL_W*1/3,
+				c_tile_light);
+			vline(backbuf,
+				px+CELL_W*3/3-1, py+CELL_H*2/3-1, py+CELL_H*3/3-1,
+				c_tile_dark);
+			hline(backbuf,
+				px+CELL_W*2/3-1, py+CELL_H*3/3-1, px+CELL_W*3/3-1,
+				c_tile_dark);
 		}
 	}
 
@@ -82,14 +94,20 @@ void loops::GameLoop::draw_playfield(void)
 void loops::GameLoop::draw_sidebar(void)
 {
 	// Set clipping rectangle
-	set_clip_rect(backbuf, 15*24, 0, 640-1, 15*24-1);
+	set_clip_rect(backbuf,
+		SIDEBAR_X,
+		SIDEBAR_Y,
+		SIDEBAR_X+SIDEBAR_W-1,
+		SIDEBAR_Y+SIDEBAR_H-1);
 	set_clip_state(backbuf, 1);
 
 	// Draw our sidebar
 	int c_bg = makecol(0, 0, 0);
 	int c_fg = makecol(170, 170, 255);
 	clear_to_color(backbuf, c_bg);
-	textprintf_ex(backbuf, font, 15*24+1*8, 0+1*8,
+	textprintf_ex(backbuf, font,
+		SIDEBAR_X+1*8,
+		SIDEBAR_Y+1*8,
 		c_fg, c_bg,
 		"Player pos: (%d, %d)",
 		player.get_x(),

@@ -11,8 +11,6 @@ namespace gfx
 	// 1x = 640x360
 	// 2x = 1280x720
 	// 3x = 1920x1080
-	constexpr int BASE_SCREEN_WIDTH = 640;
-	constexpr int BASE_SCREEN_HEIGHT = 360;
 	constexpr int INITIAL_SCREEN_SCALE = 2;
 	int current_window_width = BASE_SCREEN_WIDTH*INITIAL_SCREEN_SCALE;
 	int current_window_height = BASE_SCREEN_HEIGHT*INITIAL_SCREEN_SCALE;
