@@ -9,7 +9,7 @@
 
 namespace loops
 {
-	Player player(24*7, 24*7, direction::SOUTH);
+	Player player(7, 7, direction::SOUTH);
 }
 
 loops::MainLoopState loops::GameLoop::tick(void)

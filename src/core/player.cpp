@@ -5,9 +5,9 @@
 
 #include <allegro.h>
 
-Player::Player(int x, int y, Direction dir)
-	: m_x(x)
-	, m_y(y)
+Player::Player(int cx, int cy, Direction dir)
+	: m_x(cx*24)
+	, m_y(cy*24)
 	, m_dir(dir)
 {
 }

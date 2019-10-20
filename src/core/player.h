@@ -10,7 +10,7 @@ private:
 	int m_y;
 	Direction m_dir;
 public:
-	Player(int x, int y, Direction dir);
+	Player(int cx, int cy, Direction dir);
 
 	int get_x(void) { return m_x; }
 	int get_y(void) { return m_y; }
