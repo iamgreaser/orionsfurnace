@@ -21,17 +21,15 @@ loops::MainLoopState loops::GameLoop::tick(void)
 		return mainloop::EXIT;
 	}
 
-	int player_dx = 0;
-	int player_dy = 0;
-	if (key[KEY_UP]) { player_dy -= 1; }
-	if (key[KEY_DOWN]) { player_dy += 1; }
-	if (key[KEY_LEFT]) { player_dx -= 1; }
-	if (key[KEY_RIGHT]) { player_dx += 1; }
+	player.set_input_move(direction::NORTH, key[KEY_UP]);
+	player.set_input_move(direction::SOUTH, key[KEY_DOWN]);
+	player.set_input_move(direction::WEST,  key[KEY_LEFT]);
+	player.set_input_move(direction::EAST,  key[KEY_RIGHT]);
 
 	//
 	// Update logic
 	//
-	player.move(player_dx, player_dy);
+	player.tick();
 
 	// Continue with the game
 	return mainloop::GAME;
