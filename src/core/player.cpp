@@ -6,6 +6,10 @@
 #include "gfx/sprite.h"
 
 #include <cassert>
+#include <cstdint>
+#include <iostream>
+using std::istream;
+using std::ostream;
 
 Player::Player(Game *game, int cx, int cy, Direction dir)
 	: m_game(game)
@@ -76,6 +80,44 @@ void Player::draw(void)
 	int py = m_pos_interp_y1;
 	this->calc_interp_pos(&px, &py);
 	gfx::player_gfx.draw(px, py, m_dir, 0);
+}
+
+void Player::load_this(istream &ips)
+{
+	load(ips, m_cx);
+	load(ips, m_cy);
+	uint8_t ui_dir = 0;
+	load(ips, ui_dir);
+	assert(ui_dir < 4);
+	m_dir = (Direction)ui_dir;
+	load(ips, m_pos_interp_x0);
+	load(ips, m_pos_interp_y0);
+	load(ips, m_pos_interp_x1);
+	load(ips, m_pos_interp_y1);
+	load(ips, m_pos_interp_remain);
+	load(ips, m_pos_interp_len);
+	for (int i = 0; i < 4; i++) {
+		load(ips, m_input_move[i]);
+	}
+	load(ips, m_input_cooldown);
+}
+
+void Player::save_this(ostream &ops)
+{
+	save(ops, m_cx);
+	save(ops, m_cy);
+	uint8_t ui_dir = (uint8_t)m_dir;
+	save(ops, ui_dir);
+	save(ops, m_pos_interp_x0);
+	save(ops, m_pos_interp_y0);
+	save(ops, m_pos_interp_x1);
+	save(ops, m_pos_interp_y1);
+	save(ops, m_pos_interp_remain);
+	save(ops, m_pos_interp_len);
+	for (int i = 0; i < 4; i++) {
+		save(ops, m_input_move[i]);
+	}
+	save(ops, m_input_cooldown);
 }
 
 void Player::calc_interp_pos(int *px, int *py)

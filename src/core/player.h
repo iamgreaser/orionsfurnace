@@ -3,25 +3,29 @@
 
 #include "core/core.h"
 
-#include <cassert>
+#include "core/save.h"
 
-class Player
+#include <cassert>
+#include <cstdint>
+#include <iostream>
+
+class Player : public Saveable
 {
 private:
 	Game *m_game;
-	int m_cx;
-	int m_cy;
+	int32_t m_cx;
+	int32_t m_cy;
 	Direction m_dir;
 
-	int m_pos_interp_x0;
-	int m_pos_interp_y0;
-	int m_pos_interp_x1;
-	int m_pos_interp_y1;
-	int m_pos_interp_remain = 0;
-	int m_pos_interp_len = 0;
+	int32_t m_pos_interp_x0;
+	int32_t m_pos_interp_y0;
+	int32_t m_pos_interp_x1;
+	int32_t m_pos_interp_y1;
+	int32_t m_pos_interp_remain = 0;
+	int32_t m_pos_interp_len = 0;
 
 	bool m_input_move[4] = {};
-	int m_input_cooldown = 0;
+	int32_t m_input_cooldown = 0;
 
 public:
 	Player(Game *game, int cx, int cy, Direction dir);
@@ -41,6 +45,9 @@ public:
 	void tick(void);
 
 	void draw(void);
+
+	void load_this(std::istream &ips);
+	void save_this(std::ostream &ops);
 
 	bool attempt_move_by(int dx, int dy);
 	bool attempt_move_to(int cx, int cy);
