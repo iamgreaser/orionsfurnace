@@ -15,12 +15,6 @@
 #include <iostream>
 #include <sstream>
 
-namespace loops
-{
-	Game game;
-	PlayerInput player_inputs[2];
-}
-
 using loops::GameLoop;
 
 loops::MainLoopState GameLoop::tick(void)
@@ -48,14 +42,14 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	// Update logic
 	//
-	GameFrame game_frame(game.get_player_count());
-	game_frame.player_set_all_inputs(0, player_inputs[0]);
-	game_frame.player_set_all_inputs(1, player_inputs[1]);
-	game.tick(game_frame);
+	GameFrame game_frame(m_game.get_player_count());
+	game_frame.player_set_all_inputs(0, m_player_inputs[0]);
+	game_frame.player_set_all_inputs(1, m_player_inputs[1]);
+	m_game.tick(game_frame);
 
 	// TEST: Save then load the game
 	std::stringstream game_ss;
-	save(game_ss, game);
+	save(game_ss, m_game);
 	{
 		std::ofstream fp("test.save");
 		game_ss.seekg(0);
@@ -66,7 +60,7 @@ loops::MainLoopState GameLoop::tick(void)
 		fp.close();
 	}
 	game_ss.seekg(0);
-	load(game_ss, game);
+	load(game_ss, m_game);
 
 	// Continue with the game
 	return mainloop::GAME;
@@ -77,49 +71,49 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 	switch(ev.key.keysym.sym)
 	{
 		case SDLK_w:
-			player_inputs[0].set_input_move(
+			m_player_inputs[0].set_input_move(
 				direction::NORTH,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_s:
-			player_inputs[0].set_input_move(
+			m_player_inputs[0].set_input_move(
 				direction::SOUTH,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_a:
-			player_inputs[0].set_input_move(
+			m_player_inputs[0].set_input_move(
 				direction::WEST,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_d:
-			player_inputs[0].set_input_move(
+			m_player_inputs[0].set_input_move(
 				direction::EAST,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_UP:
-			player_inputs[1].set_input_move(
+			m_player_inputs[1].set_input_move(
 				direction::NORTH,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_DOWN:
-			player_inputs[1].set_input_move(
+			m_player_inputs[1].set_input_move(
 				direction::SOUTH,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_LEFT:
-			player_inputs[1].set_input_move(
+			m_player_inputs[1].set_input_move(
 				direction::WEST,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_RIGHT:
-			player_inputs[1].set_input_move(
+			m_player_inputs[1].set_input_move(
 				direction::EAST,
 				ev.type == SDL_KEYDOWN);
 			break;
@@ -127,7 +121,7 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 		case SDLK_F2:
 			if(ev.type == SDL_KEYDOWN) {
 				std::ofstream fp("quick.save");
-				save(fp, game);
+				save(fp, m_game);
 				fp.close();
 			}
 			break;
@@ -135,7 +129,7 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 		case SDLK_F3:
 			if(ev.type == SDL_KEYDOWN) {
 				std::ifstream fp("quick.save");
-				load(fp, game);
+				load(fp, m_game);
 				fp.close();
 			}
 			break;
@@ -173,7 +167,7 @@ void GameLoop::draw_playfield(void)
 	}
 
 	// Draw game
-	game.draw();
+	m_game.draw();
 
 	// Clear clipping rectangle
 	gfx::clip_nothing();
@@ -189,9 +183,9 @@ void GameLoop::draw_sidebar(void)
 	// Draw our sidebar
 	gfx::clear(0, 0, 0);
 
-	for (int pidx = 0; pidx < game.get_player_count(); pidx++)
+	for (int pidx = 0; pidx < m_game.get_player_count(); pidx++)
 	{
-		Player *player = game.get_player_ptr(pidx);
+		Player *player = m_game.get_player_ptr(pidx);
 
 		std::stringstream ss;
 		ss << "Player pos: (";
