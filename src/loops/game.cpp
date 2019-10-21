@@ -53,8 +53,8 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	if (m_demo_fp == NULL) {
 		m_demo_fp = new std::ofstream("test.demo");
-		net::GamePacket game_packet(m_game);
-		save(*m_demo_fp, game_packet);
+		net::GameSnapshotPacket game_snapshot_packet(m_game);
+		save(*m_demo_fp, game_snapshot_packet);
 	}
 
 	//
@@ -164,8 +164,8 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 				if (m_demo_fp == NULL) {
 					m_demo_fp = new std::ofstream("test.demo");
 				}
-				net::GamePacket game_packet(m_game);
-				save(*m_demo_fp, game_packet);
+				net::GameSnapshotPacket game_snapshot_packet(m_game);
+				save(*m_demo_fp, game_snapshot_packet);
 			}
 			break;
 
