@@ -212,3 +212,23 @@ bool Player::attempt_move_to(int cx, int cy)
 	// Acknowledge.
 	return true;
 }
+
+PlayerInput::PlayerInput(void) {}
+PlayerInput::PlayerInput(std::istream &ips)
+{
+	load(ips, *this);
+}
+
+void PlayerInput::load_this(std::istream &ips)
+{
+	for (int i = 0; i < 4; i++) {
+		load(ips, m_input_move[i]);
+	}
+}
+
+void PlayerInput::save_this(std::ostream &ops)
+{
+	for (int i = 0; i < 4; i++) {
+		save(ops, m_input_move[i]);
+	}
+}

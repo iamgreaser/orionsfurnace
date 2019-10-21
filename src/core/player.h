@@ -58,11 +58,14 @@ protected:
 	void calc_interp_pos(int *px, int *py);
 };
 
-class PlayerInput
+class PlayerInput : public Saveable
 {
 private:
 	bool m_input_move[4] = {};
 public:
+	PlayerInput(void);
+	PlayerInput(std::istream &ips);
+
 	bool get_input_move(Direction dir) {
 		assert(dir >= 0 && dir < 4);
 		return m_input_move[dir];
@@ -71,6 +74,9 @@ public:
 		assert(dir >= 0 && dir < 4);
 		m_input_move[dir] = v;
 	}
+
+	void load_this(std::istream &ips);
+	void save_this(std::ostream &ops);
 };
 
 #endif /* if !defined(_CORE_PLAYER_H) */
