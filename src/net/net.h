@@ -93,6 +93,18 @@ namespace net
 
 	typedef class ClassPacket<packets::GAME_SNAPSHOT, Game> GameSnapshotPacket;
 	typedef class ClassPacket<packets::GAME_FRAME, GameFrame> GameFramePacket;
+
+	class Node
+	{
+	protected:
+		Game *m_game;
+		std::istream *m_ips;
+		std::ostream *m_ops;
+	public:
+		Node(std::istream &ips, std::ostream &ops);
+		virtual ~Node(void);
+		virtual void update(void) = 0;
+	};
 }
 
 #endif /* if !defined(_NET_NET_H) */

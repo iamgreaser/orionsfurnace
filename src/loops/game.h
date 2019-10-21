@@ -6,6 +6,9 @@
 #include "core/core.h"
 #include "core/game.h"
 #include "core/player.h"
+#include "net/client.h"
+#include "net/net.h"
+#include "net/server.h"
 
 #ifdef _LOOPS_GAME_INTERNAL
 #include <SDL.h>
@@ -21,7 +24,12 @@ namespace loops
 		Game m_game;
 		PlayerInput m_player_inputs[2];
 		std::ofstream *m_demo_fp = NULL;
+		std::stringstream m_stream_c2s;
+		std::stringstream m_stream_s2c;
+		net::Client *m_client = NULL;
+		net::Server *m_server = NULL;
 	public:
+		GameLoop(void);
 		~GameLoop(void);
 		MainLoopState tick(void);
 		void draw(void);

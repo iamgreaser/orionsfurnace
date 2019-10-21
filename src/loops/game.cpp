@@ -8,7 +8,9 @@
 #include "gfx/gfx.h"
 #include "gfx/sprite.h"
 #include "loops/loops.h"
+#include "net/client.h"
 #include "net/net.h"
+#include "net/server.h"
 
 #include <SDL.h>
 
@@ -18,11 +20,28 @@
 
 using loops::GameLoop;
 
+GameLoop::GameLoop(void)
+{
+	m_client = new net::Client(m_stream_s2c, m_stream_c2s);
+	m_server = new net::Server(m_stream_c2s, m_stream_s2c);
+}
+
 GameLoop::~GameLoop(void)
 {
 	if (m_demo_fp != NULL) {
 		m_demo_fp->close();
+		delete m_demo_fp;
 		m_demo_fp = NULL;
+	}
+
+	if (m_client != NULL) {
+		delete m_client;
+		m_client = NULL;
+	}
+
+	if (m_server != NULL) {
+		delete m_server;
+		m_server = NULL;
 	}
 }
 
