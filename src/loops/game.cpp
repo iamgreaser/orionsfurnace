@@ -159,6 +159,13 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 				std::ifstream fp("quick.save");
 				load(fp, m_game);
 				fp.close();
+
+				// Also load in demo
+				if (m_demo_fp == NULL) {
+					m_demo_fp = new std::ofstream("test.demo");
+				}
+				net::GamePacket game_packet(m_game);
+				save(*m_demo_fp, game_packet);
 			}
 			break;
 
