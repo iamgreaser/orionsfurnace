@@ -17,6 +17,14 @@
 
 using loops::GameLoop;
 
+GameLoop::~GameLoop(void)
+{
+	if (m_demo_fp != NULL) {
+		m_demo_fp->close();
+		m_demo_fp = NULL;
+	}
+}
+
 loops::MainLoopState GameLoop::tick(void)
 {
 	//
@@ -40,6 +48,14 @@ loops::MainLoopState GameLoop::tick(void)
 	}
 
 	//
+	// TEST: Start recording demo if we haven't yet
+	//
+	if (m_demo_fp == NULL) {
+		m_demo_fp = new std::ofstream("test.demo");
+		save(*m_demo_fp, m_game);
+	}
+
+	//
 	// Update logic
 	//
 	GameFrame game_frame(m_game.get_player_count());
@@ -47,6 +63,12 @@ loops::MainLoopState GameLoop::tick(void)
 	game_frame.player_set_all_inputs(1, m_player_inputs[1]);
 	m_game.tick(game_frame);
 
+	//
+	// TEST: Add input to demo
+	//
+	save(*m_demo_fp, game_frame);
+
+#if 0
 	// TEST: Save then load the game
 	std::stringstream game_ss;
 	save(game_ss, m_game);
@@ -61,6 +83,7 @@ loops::MainLoopState GameLoop::tick(void)
 	}
 	game_ss.seekg(0);
 	load(game_ss, m_game);
+#endif
 
 	// Continue with the game
 	return mainloop::GAME;

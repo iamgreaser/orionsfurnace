@@ -8,6 +8,7 @@ build/
 *.toc
 
 # Game output
+*.demo
 *.save
 
 # SCons

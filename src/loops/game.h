@@ -11,6 +11,8 @@
 #include <SDL.h>
 #endif
 
+#include <fstream>
+
 namespace loops
 {
 	class GameLoop : public Loop
@@ -18,7 +20,9 @@ namespace loops
 	private:
 		Game m_game;
 		PlayerInput m_player_inputs[2];
+		std::ofstream *m_demo_fp = NULL;
 	public:
+		~GameLoop(void);
 		MainLoopState tick(void);
 		void draw(void);
 
