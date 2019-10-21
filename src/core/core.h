@@ -19,5 +19,6 @@ namespace game
 using game::Game;
 
 class Player;
+class PlayerInput;
 
 #endif /* if !defined(_CORE_CORE_H) */

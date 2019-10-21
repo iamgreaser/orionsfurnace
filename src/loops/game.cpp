@@ -18,6 +18,7 @@
 namespace loops
 {
 	Game game;
+	PlayerInput player_inputs[2];
 }
 
 loops::MainLoopState loops::GameLoop::tick(void)
@@ -41,6 +42,9 @@ loops::MainLoopState loops::GameLoop::tick(void)
 				break;
 		}
 	}
+
+	game.player_set_all_inputs(0, player_inputs[0]);
+	game.player_set_all_inputs(1, player_inputs[1]);
 
 	//
 	// Update logic
@@ -71,57 +75,49 @@ void loops::GameLoop::tick_key_event(SDL_Event &ev)
 	switch(ev.key.keysym.sym)
 	{
 		case SDLK_w:
-			game.set_player_input_move(
-				0,
+			player_inputs[0].set_input_move(
 				direction::NORTH,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_s:
-			game.set_player_input_move(
-				0,
+			player_inputs[0].set_input_move(
 				direction::SOUTH,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_a:
-			game.set_player_input_move(
-				0,
+			player_inputs[0].set_input_move(
 				direction::WEST,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_d:
-			game.set_player_input_move(
-				0,
+			player_inputs[0].set_input_move(
 				direction::EAST,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_UP:
-			game.set_player_input_move(
-				1,
+			player_inputs[1].set_input_move(
 				direction::NORTH,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_DOWN:
-			game.set_player_input_move(
-				1,
+			player_inputs[1].set_input_move(
 				direction::SOUTH,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_LEFT:
-			game.set_player_input_move(
-				1,
+			player_inputs[1].set_input_move(
 				direction::WEST,
 				ev.type == SDL_KEYDOWN);
 			break;
 
 		case SDLK_RIGHT:
-			game.set_player_input_move(
-				1,
+			player_inputs[1].set_input_move(
 				direction::EAST,
 				ev.type == SDL_KEYDOWN);
 			break;

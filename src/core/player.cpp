@@ -29,6 +29,14 @@ Player::Player(Game *game, std::istream &ips)
 	load(ips, *this);
 }
 
+void Player::set_all_inputs(PlayerInput player_input)
+{
+	for (int i = 0; i < 4; i++) {
+		m_input_move[i] = player_input.get_input_move(
+			static_cast<Direction>(i));
+	}
+}
+
 void Player::tick(void)
 {
 	// Calculate movement direction

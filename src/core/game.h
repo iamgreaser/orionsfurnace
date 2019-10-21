@@ -26,8 +26,8 @@ namespace game
 		int get_player_count(void) { return m_players.size(); }
 		Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
 
-		void set_player_input_move(
-			int player_idx, Direction dir, bool v);
+		void player_set_all_inputs(int player_idx,
+			PlayerInput player_input);
 
 		Player *get_player_at(int cx, int cy);
 		void tick(void);

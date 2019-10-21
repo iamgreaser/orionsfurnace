@@ -42,6 +42,7 @@ public:
 		assert(dir >= 0 && dir < 4);
 		m_input_move[dir] = v;
 	}
+	void set_all_inputs(PlayerInput player_input);
 
 	void tick(void);
 
@@ -55,6 +56,21 @@ public:
 
 protected:
 	void calc_interp_pos(int *px, int *py);
+};
+
+class PlayerInput
+{
+private:
+	bool m_input_move[4] = {};
+public:
+	bool get_input_move(Direction dir) {
+		assert(dir >= 0 && dir < 4);
+		return m_input_move[dir];
+	}
+	void set_input_move(Direction dir, bool v) {
+		assert(dir >= 0 && dir < 4);
+		m_input_move[dir] = v;
+	}
 };
 
 #endif /* if !defined(_CORE_PLAYER_H) */

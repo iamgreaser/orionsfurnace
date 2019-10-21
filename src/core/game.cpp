@@ -25,10 +25,10 @@ Game::~Game()
 {
 }
 
-void Game::set_player_input_move(int player_idx, Direction dir, bool v)
+void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)
 {
 	assert(player_idx >= 0 && player_idx < (int)m_players.size());
-	m_players[player_idx].set_input_move(dir, v);
+	m_players[player_idx].set_all_inputs(player_input);
 }
 
 void Game::tick(void)
