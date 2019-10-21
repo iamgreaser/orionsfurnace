@@ -21,7 +21,9 @@ namespace loops
 	PlayerInput player_inputs[2];
 }
 
-loops::MainLoopState loops::GameLoop::tick(void)
+using loops::GameLoop;
+
+loops::MainLoopState GameLoop::tick(void)
 {
 	//
 	// Update input
@@ -70,7 +72,7 @@ loops::MainLoopState loops::GameLoop::tick(void)
 	return mainloop::GAME;
 }
 
-void loops::GameLoop::tick_key_event(SDL_Event &ev)
+void GameLoop::tick_key_event(SDL_Event &ev)
 {
 	switch(ev.key.keysym.sym)
 	{
@@ -141,7 +143,7 @@ void loops::GameLoop::tick_key_event(SDL_Event &ev)
 	}
 }
 
-void loops::GameLoop::draw(void)
+void GameLoop::draw(void)
 {
 	// Clear screen
 	gfx::clear(85,85,255);
@@ -152,7 +154,7 @@ void loops::GameLoop::draw(void)
 	draw_gui();
 }
 
-void loops::GameLoop::draw_playfield(void)
+void GameLoop::draw_playfield(void)
 {
 	// Set clipping rectangle
 	gfx::clip_rect(
@@ -177,7 +179,7 @@ void loops::GameLoop::draw_playfield(void)
 	gfx::clip_nothing();
 }
 
-void loops::GameLoop::draw_sidebar(void)
+void GameLoop::draw_sidebar(void)
 {
 	// Set clipping rectangle
 	gfx::clip_rect(
@@ -206,7 +208,7 @@ void loops::GameLoop::draw_sidebar(void)
 	gfx::clip_nothing();
 }
 
-void loops::GameLoop::draw_gui(void)
+void GameLoop::draw_gui(void)
 {
 	// TODO!
 }
