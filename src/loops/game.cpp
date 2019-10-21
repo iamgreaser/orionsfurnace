@@ -8,6 +8,7 @@
 #include "gfx/gfx.h"
 #include "gfx/sprite.h"
 #include "loops/loops.h"
+#include "net/net.h"
 
 #include <SDL.h>
 
@@ -52,7 +53,8 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	if (m_demo_fp == NULL) {
 		m_demo_fp = new std::ofstream("test.demo");
-		save(*m_demo_fp, m_game);
+		net::GamePacket game_packet(m_game);
+		save(*m_demo_fp, game_packet);
 	}
 
 	//
@@ -66,7 +68,10 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	// TEST: Add input to demo
 	//
-	save(*m_demo_fp, game_frame);
+	{
+		net::GameFramePacket game_frame_packet(game_frame);
+		save(*m_demo_fp, game_frame_packet);
+	}
 
 #if 0
 	// TEST: Save then load the game

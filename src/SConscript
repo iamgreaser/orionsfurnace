@@ -8,6 +8,7 @@ env.Program(
         env.Glob("core/*.cpp"),
         env.Glob("gfx/*.cpp"),
         env.Glob("loops/*.cpp"),
+        env.Glob("net/*.cpp"),
     ],
     CPPPATH = [
         env.Dir(".").srcnode(),

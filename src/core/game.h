@@ -5,7 +5,9 @@
 
 #include "core/player.h"
 #include "core/save.h"
+#include "net/net.h"
 
+#include <cstdint>
 #include <iostream>
 #include <vector>
 
