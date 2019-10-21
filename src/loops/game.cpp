@@ -43,13 +43,13 @@ loops::MainLoopState loops::GameLoop::tick(void)
 		}
 	}
 
-	game.player_set_all_inputs(0, player_inputs[0]);
-	game.player_set_all_inputs(1, player_inputs[1]);
-
 	//
 	// Update logic
 	//
-	game.tick();
+	GameFrame game_frame(game.get_player_count());
+	game_frame.player_set_all_inputs(0, player_inputs[0]);
+	game_frame.player_set_all_inputs(1, player_inputs[1]);
+	game.tick(game_frame);
 
 	// TEST: Save then load the game
 	std::stringstream game_ss;

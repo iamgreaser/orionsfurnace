@@ -15,8 +15,10 @@ using direction::Direction;
 namespace game
 {
 	class Game;
+	class GameFrame;
 }
 using game::Game;
+using game::GameFrame;
 
 class Player;
 class PlayerInput;

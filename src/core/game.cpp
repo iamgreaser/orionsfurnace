@@ -31,8 +31,15 @@ void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)
 	m_players[player_idx].set_all_inputs(player_input);
 }
 
-void Game::tick(void)
+void Game::tick(const GameFrame &game_frame)
 {
+	assert(game_frame.get_player_count() == this->get_player_count());
+
+	for (int i = 0; i < this->get_player_count(); i++) {
+		this->player_set_all_inputs(i,
+			game_frame.player_get_all_inputs(i));
+	}
+
 	for (Player &p : m_players) {
 		p.tick();
 	}
@@ -75,4 +82,36 @@ Player *Game::get_player_at(int cx, int cy)
 	}
 
 	return NULL;
+}
+
+GameFrame::GameFrame(int player_count)
+{
+	for (int i = 0; i < player_count; i++) {
+		m_player_inputs.push_back(PlayerInput());
+	}
+}
+GameFrame::GameFrame(std::istream &ips)
+{
+	load(ips, *this);
+}
+
+void GameFrame::load_this(istream &ips)
+{
+	uint16_t player_count = 0;
+	load(ips, player_count);
+	m_player_inputs.clear();
+
+	for (uint16_t i = 0; i < player_count; i++) {
+		m_player_inputs.push_back(PlayerInput(ips));
+	}
+}
+
+void GameFrame::save_this(ostream &ops)
+{
+	uint16_t player_count = m_player_inputs.size();
+	save(ops, player_count);
+
+	for (uint16_t i = 0; i < player_count; i++) {
+		save(ops, m_player_inputs[i]);
+	}
 }

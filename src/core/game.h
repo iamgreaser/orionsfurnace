@@ -30,8 +30,33 @@ namespace game
 			PlayerInput player_input);
 
 		Player *get_player_at(int cx, int cy);
-		void tick(void);
+		void tick(const GameFrame &game_frame);
 		void draw(void);
+
+		void load_this(istream &ips);
+		void save_this(ostream &ops);
+	};
+
+	class GameFrame : public Saveable
+	{
+	private:
+		vector<PlayerInput> m_player_inputs;
+	public:
+		GameFrame(int player_count);
+		GameFrame(std::istream &ips);
+
+		int get_player_count(void) const { return m_player_inputs.size(); }
+
+		void player_set_all_inputs(int player_idx,
+			PlayerInput player_input)
+		{
+			m_player_inputs[player_idx] = player_input;
+		}
+
+		PlayerInput player_get_all_inputs(int player_idx) const
+		{
+			return m_player_inputs[player_idx];
+		}
 
 		void load_this(istream &ips);
 		void save_this(ostream &ops);
