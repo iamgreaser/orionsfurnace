@@ -221,14 +221,20 @@ PlayerInput::PlayerInput(std::istream &ips)
 
 void PlayerInput::load_this(std::istream &ips)
 {
+	uint8_t dirmask = 0;
+	load(ips, dirmask);
 	for (int i = 0; i < 4; i++) {
-		load(ips, m_input_move[i]);
+		m_input_move[i] = ((dirmask & (1<<i)) != 0);
 	}
 }
 
 void PlayerInput::save_this(std::ostream &ops)
 {
+	uint8_t dirmask = 0;
 	for (int i = 0; i < 4; i++) {
-		save(ops, m_input_move[i]);
+		if (m_input_move[i]) {
+			dirmask |= (1<<i);
+		}
 	}
+	save(ops, dirmask);
 }
