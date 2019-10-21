@@ -31,10 +31,7 @@ Player::Player(Game *game, std::istream &ips)
 
 void Player::set_all_inputs(PlayerInput player_input)
 {
-	for (int i = 0; i < 4; i++) {
-		m_input_move[i] = player_input.get_input_move(
-			static_cast<Direction>(i));
-	}
+	m_input = player_input;
 }
 
 void Player::tick(void)
@@ -43,10 +40,10 @@ void Player::tick(void)
 	int dx = 0;
 	int dy = 0;
 
-	if (m_input_move[direction::NORTH]) { dy -= 1; }
-	if (m_input_move[direction::SOUTH]) { dy += 1; }
-	if (m_input_move[direction::WEST]) { dx -= 1; }
-	if (m_input_move[direction::EAST]) { dx += 1; }
+	if (this->get_input_move(direction::NORTH)) { dy -= 1; }
+	if (this->get_input_move(direction::SOUTH)) { dy += 1; }
+	if (this->get_input_move(direction::WEST)) { dx -= 1; }
+	if (this->get_input_move(direction::EAST)) { dx += 1; }
 
 	assert (dx >= -1 && dx <= +1);
 	assert (dy >= -1 && dy <= +1);
@@ -110,9 +107,7 @@ void Player::load_this(istream &ips)
 	load(ips, m_pos_interp_y1);
 	load(ips, m_pos_interp_remain);
 	load(ips, m_pos_interp_len);
-	for (int i = 0; i < 4; i++) {
-		load(ips, m_input_move[i]);
-	}
+	load(ips, m_input);
 	load(ips, m_input_cooldown);
 }
 
@@ -128,9 +123,7 @@ void Player::save_this(ostream &ops)
 	save(ops, m_pos_interp_y1);
 	save(ops, m_pos_interp_remain);
 	save(ops, m_pos_interp_len);
-	for (int i = 0; i < 4; i++) {
-		save(ops, m_input_move[i]);
-	}
+	save(ops, m_input);
 	save(ops, m_input_cooldown);
 }
 
