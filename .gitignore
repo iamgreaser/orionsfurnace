@@ -1,6 +1,12 @@
 # Output
 build/
 
+# TeX output
+*.aux
+*.log
+*.pdf
+*.toc
+
 # Game output
 *.save
 

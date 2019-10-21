@@ -1,0 +1,199 @@
+% vim: set sts=2 sw=2 et :
+\documentclass[a4paper,draft]{article}
+\title{Protocol specification}
+\author{Ben "GreaseMonkey" Russell \& contributors}
+\begin{document}
+\setlength{\parskip}{0.5\baselineskip}
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\begin{section}{How bytes work}
+  \begin{enumerate}
+    \item The base unit is \texttt{uint8\_t} . This is an octet, and also our byte.
+    \begin{enumerate}
+      \item These days it tends to be redundant to say that a byte is an octet, but a bit of precision is nice.
+      \item But just for completeness, an octet is a group of 8 bits, and a bit is a value which can be either a 0 or a 1.
+    \end{enumerate}
+
+    \item Some units directly map onto a \texttt{uint8\_t} or a subset.
+    \begin{enumerate}
+      \item \texttt{bool} is a \texttt{uint8\_t} with a value of \texttt{0} for \texttt{false} and a value of \texttt{1} for \texttt{true} .
+      \item Many \texttt{enum} types map to a subset of a \texttt{uint8\_t} . However, these cases will be made explicit.
+      \item \texttt{int8\_t} is a \texttt{uint8\_t} except two's-complement-signed.
+    \end{enumerate}
+
+    \item Larger integers are supported.
+    \begin{enumerate}
+      \item All multiple-byte integers are encoded as little-endian.
+      \item There also exist readers and writers for \texttt{uint16\_t}, \texttt{uint32\_t}, \\
+        \texttt{uint64\_t}, \texttt{int16\_t}, \texttt{int32\_t}, and \texttt{int64\_t} .
+    \end{enumerate}
+
+    \item Various data structures are also supported. These are composed of any of these types mentioned, including other structures.
+    \begin{enumerate}
+      \item A \texttt{pstring8} is a string prefixed with a \texttt{uint8\_t} denoting the length. No \texttt{0x00} byte follows.
+    \end{enumerate}
+
+    \item At this stage, TCP will be used for networking.
+    \begin{enumerate}
+      \item We will likely use UDP in future considering just how much of a pile of flaming hot garbage TCP can be for gaming from a latency perspective.
+      \item In the meantime, using TCP means we can think of this as
+    \end{enumerate}
+  \end{enumerate}
+\end{section}
+
+\begin{section}{How bytes get smashed together}
+  Due to the evolving state of the game it is best to consult the relevant source code.
+  Your starting point is \texttt{src/core/game.h} .
+
+  The actual serialisation takes place within their respective \texttt{load\_this()} and \texttt{save\_this()} methods as part of the \texttt{Saveable} class API.
+
+  Here, we have the most important classes and enumerations which form the base protocol.
+
+  \begin{subsection}{\texttt{Game} objects}
+    A \texttt{Game} object contains an entire snapshot of the game state.
+
+    Contents:
+
+    \begin{itemize}
+      \item A number of \texttt{Player} objects.
+      \item \textit{TODO: A} \texttt{World} \textit{object, when I get around to making that.}
+    \end{itemize}
+  \end{subsection}
+
+  \begin{subsection}{\texttt{GameFrame} objects}
+    A \texttt{GameFrame} object contains all of the input required to turn one game state into another via \texttt{Game::tick(const GameFrame \&game\_frame)}.
+
+    Contents:
+
+    \begin{itemize}
+      \item A number of \texttt{PlayerInput} objects.
+    \end{itemize}
+  \end{subsection}
+
+  \begin{subsection}{\texttt{Direction} enums}
+    A \texttt{Direction} enum contains one of the 4 cardinal directions.
+
+    The possible values of this are:
+
+    \begin{itemize}
+      \item \texttt{direction::NORTH} = \texttt{0}
+      \item \texttt{direction::SOUTH} = \texttt{0}
+      \item \texttt{direction::WEST} = \texttt{0}
+      \item \texttt{direction::EAST} = \texttt{0}
+    \end{itemize}
+  \end{subsection}
+
+  \begin{subsection}{\texttt{PlayerInput} objects}
+    A \texttt{PlayerInput} object contains all of the input required to control one player.
+    This is the main object that a client will be sending to a server in order to control their player.
+
+    Contents:
+
+    \begin{itemize}
+      \item An array of 4 \texttt{bool} s which indicate, for each \texttt{Direction} , whether a cardinal direction is being held down or not.
+    \end{itemize}
+  \end{subsection}
+\end{section}
+
+\begin{section}{Structure of a message}
+  A message appears in the following form:
+
+  \begin{tabular}{lll}
+    \hline
+    Type & Name & Description \\
+    \hline
+    \texttt{uint32\_t} & \texttt{msg\_length} & The length of this message \\
+    \texttt{uint8\_t} & \texttt{msg\_type} & The type of this message \\
+    \texttt{uint8\_t[msg\_length-1]} & \texttt{msg\_body} & The contents of this message \\
+    \hline
+  \end{tabular}
+
+  Pretty simple.
+\end{section}
+
+\begin{section}{Per-type message reference}
+  This covers the contents of the \texttt{msg\_body} field.
+
+  \begin{subsection}{Disconnect (0x00) (C and S)}
+    Tells the other end that you're about to disconnect. Reason is optional.
+
+    \begin{tabular}{lll}
+      \hline
+      Type & Name & Description \\
+      \hline
+      \texttt{pstring8} & \texttt{reason} & A text reason for the disconnection \\
+      \hline
+    \end{tabular}
+  \end{subsection}
+
+  \begin{subsection}{Hello (0x01) (C)}
+    Tells the server that you're about to connect. Details will need to be provided.
+
+    \begin{tabular}{lll}
+      \hline
+      Type & Name & Description \\
+      \hline
+      \texttt{pstring8} & \texttt{game\_version} & The version of the game \\
+      \texttt{pstring8} & \texttt{nickname} & A nickname to give to the player \\
+      \hline
+    \end{tabular}
+
+    Different game versions are assumed to be incompatible with each other. It is better to tell people to update their game than it is to try to force them to somehow cooperate. They probably won't. If they appear to cooperate, they will probably desync.
+
+  \end{subsection}
+
+  \begin{subsection}{This Is You (0x02) (S)}
+    Tells the client which player they are.
+    May be sent at any time during the session.
+
+    \begin{tabular}{lll}
+      \hline
+      Type & Name & Description \\
+      \hline
+      \texttt{uint16\_t} & \texttt{pidx} & The index that this player is going to use \\
+      \hline
+    \end{tabular}
+  \end{subsection}
+
+  \begin{subsection}{Provide input (0x10) (C)}
+    Tells the server what input you wish to provide.
+
+    \begin{tabular}{lll}
+      \hline
+      Type & Name & Description \\
+      \hline
+      \texttt{PlayerInput} & \texttt{player\_input} & The input you're providing \\
+      \hline
+    \end{tabular}
+  \end{subsection}
+
+  \begin{subsection}{Game snapshot (0x20) (S)}
+    Gives the client a game snapshot to load.
+
+    \begin{tabular}{lll}
+      \hline
+      Type & Name & Description \\
+      \hline
+      \texttt{Game} & \texttt{game} & The game state to load\\
+      \hline
+    \end{tabular}
+
+    NOTE: When moving to UDP, this will most likely be split up into multiple packets.
+  \end{subsection}
+
+  \begin{subsection}{Game frame (0x30) (S)}
+    Gives the client a frame with input.
+
+    \begin{tabular}{lll}
+      \hline
+      Type & Name & Description \\
+      \hline
+      \texttt{GameFrame} & \texttt{game\_frame} & The game frame to apply to the game state \\
+      \hline
+    \end{tabular}
+  \end{subsection}
+\end{section}
+\end{document}
