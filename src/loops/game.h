@@ -22,7 +22,6 @@ namespace loops
 	{
 	private:
 		PlayerInput m_player_inputs[2];
-		std::ofstream *m_demo_fp = NULL;
 		std::stringstream m_stream_c2s;
 		std::stringstream m_stream_s2c;
 		net::Client *m_client = NULL;

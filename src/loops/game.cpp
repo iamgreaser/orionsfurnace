@@ -35,12 +35,6 @@ GameLoop::GameLoop(void)
 
 GameLoop::~GameLoop(void)
 {
-	if (m_demo_fp != NULL) {
-		m_demo_fp->close();
-		delete m_demo_fp;
-		m_demo_fp = NULL;
-	}
-
 	if (m_client != NULL) {
 		delete m_client;
 		m_client = NULL;
@@ -75,15 +69,6 @@ loops::MainLoopState GameLoop::tick(void)
 	}
 
 	//
-	// TEST: Start recording demo if we haven't yet
-	//
-	if (m_demo_fp == NULL) {
-		m_demo_fp = new std::ofstream("test.demo");
-		net::GameSnapshotPacket game_snapshot_packet(m_server->game());
-		save(*m_demo_fp, game_snapshot_packet);
-	}
-
-	//
 	// Update logic
 	// TODO: Separate input handling between client and server
 	//
@@ -99,14 +84,6 @@ loops::MainLoopState GameLoop::tick(void)
 	if (m_client != NULL) {
 		m_client->update();
 		m_client->game().tick(game_frame);
-	}
-
-	//
-	// TEST: Add input to demo
-	//
-	{
-		net::GameFramePacket game_frame_packet(game_frame);
-		save(*m_demo_fp, game_frame_packet);
 	}
 
 	// Continue with the game
@@ -167,24 +144,13 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 
 		case SDLK_F2:
 			if (ev.type == SDL_KEYDOWN) {
-				std::ofstream fp("quick.save");
-				save(fp, m_server->game());
-				fp.close();
+				m_server->quicksave();
 			}
 			break;
 
 		case SDLK_F3:
 			if (ev.type == SDL_KEYDOWN) {
-				std::ifstream fp("quick.save");
-				load(fp, m_server->game());
-				fp.close();
-
-				// Also load in demo
-				if (m_demo_fp == NULL) {
-					m_demo_fp = new std::ofstream("test.demo");
-				}
-				net::GameSnapshotPacket game_snapshot_packet(m_server->game());
-				save(*m_demo_fp, game_snapshot_packet);
+				m_server->quickload();
 
 				// FIXME: Load this from the network
 				if (m_client != NULL) {

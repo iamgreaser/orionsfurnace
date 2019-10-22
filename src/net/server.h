@@ -4,6 +4,8 @@
 #include "core/core.h"
 #include "core/game.h"
 
+#include <iostream>
+#include <fstream>
 #include <vector>
 
 namespace net
@@ -19,6 +21,7 @@ namespace net
 	class Server
 	{
 	private:
+		std::ofstream *m_demo_fp = NULL;
 		std::vector<ServerClient> m_clients;
 		Game m_game;
 	public:
@@ -28,6 +31,9 @@ namespace net
 		Game &game(void);
 
 		void add_client(std::istream &ips, std::ostream &ops);
+
+		void quicksave(void);
+		void quickload(void);
 
 		void game_tick(GameFrame game_frame);
 		void update(void);

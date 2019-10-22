@@ -4,6 +4,8 @@
 #include "core/core.h"
 #include "core/game.h"
 
+#include <iostream>
+
 namespace net
 {
 	class Client : public Node
