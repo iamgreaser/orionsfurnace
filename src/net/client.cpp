@@ -68,7 +68,7 @@ void Client::update(void)
 
 		// Get packet data.
 		std::cout << "Client packet:" << full_packet_size << std::endl;
-		std::string packet_s(m_input_buf, 0, full_packet_size);
+		std::string packet_s(m_input_buf, 4+1, full_packet_size-(4+1));
 		m_input_buf.erase(m_input_buf.begin(), m_input_buf.begin()+full_packet_size);
 		assert(m_input_buf.size() != buffer_size);
 		std::stringstream packet_ss(packet_s);
@@ -79,15 +79,13 @@ void Client::update(void)
 			case packets::GAME_SNAPSHOT: {
 				// Load game.
 				std::cout << "Load game" << std::endl;
-				GameSnapshotPacket game_snapshot_packet(packet_ss);
-				m_game = game_snapshot_packet.get_value();
+				load(packet_ss, m_game);
 			} break;
 
 			case packets::GAME_FRAME: {
 				// Apply frame inputs.
 				std::cout << "Apply frame inputs" << std::endl;
-				GameFramePacket game_frame_packet(packet_ss);
-				GameFrame game_frame = game_frame_packet.get_value();
+				GameFrame game_frame(packet_ss);
 				m_game.tick(game_frame);
 			} break;
 
