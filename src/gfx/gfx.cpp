@@ -33,7 +33,7 @@ namespace gfx
 void gfx::init(void)
 {
 	// Create a window
-	window = SDL_CreateWindow("game",
+	window = SDL_CreateWindow("orion's furnace",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		current_window_width,
