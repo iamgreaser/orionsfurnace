@@ -30,6 +30,8 @@ void Server::add_client(std::istream &ips, std::ostream &ops)
 {
 	m_clients.push_back(ServerClient(ips, ops));
 	net::GameSnapshotPacket game_snapshot_packet(m_game);
+
+	// NOTE: Comment the following line out if you wish to test client pre-game-snapshot state.
 	m_clients[m_clients.size()-1].send_packet(game_snapshot_packet);
 }
 

@@ -7,6 +7,7 @@
 class Saveable
 {
 public:
+	virtual ~Saveable(void) {}
 	virtual void load_this(std::istream &ips) = 0;
 	virtual void save_this(std::ostream &ops) = 0;
 };

@@ -20,12 +20,25 @@ Client::Client(std::istream &ips, std::ostream &ops)
 
 Client::~Client(void)
 {
-
+	if (m_game != NULL) {
+		delete m_game;
+		m_game = NULL;
+	}
 }
 
-Game &Client::game(void)
+Game *Client::game(void)
 {
 	return m_game;
+}
+
+void Client::load_game(std::istream &ips)
+{
+	if (m_game != NULL) {
+		delete m_game;
+		m_game = NULL;
+	}
+
+	m_game = new Game(ips);
 }
 
 void Client::update(void)
@@ -79,14 +92,16 @@ void Client::update(void)
 			case packets::GAME_SNAPSHOT: {
 				// Load game.
 				std::cout << "Load game" << std::endl;
-				load(packet_ss, m_game);
+				this->load_game(packet_ss);
 			} break;
 
 			case packets::GAME_FRAME: {
 				// Apply frame inputs.
 				std::cout << "Apply frame inputs" << std::endl;
 				GameFrame game_frame(packet_ss);
-				m_game.tick(game_frame);
+				if (m_game != NULL) {
+					m_game->tick(game_frame);
+				}
 			} break;
 
 			default: {

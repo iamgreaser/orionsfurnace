@@ -19,6 +19,11 @@ Game::Game(void)
 {
 }
 
+Game::Game(std::istream &ips)
+{
+	load(ips, *this);
+}
+
 Game::~Game(void)
 {
 }

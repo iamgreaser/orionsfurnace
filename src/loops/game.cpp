@@ -27,10 +27,12 @@ GameLoop::GameLoop(void)
 	m_server = new net::Server();
 	m_server->add_client(m_stream_c2s, m_stream_s2c);
 
+#if 0
 	std::stringstream ss;
 	save(ss, m_server->game());
 	ss.seekg(0);
 	load(ss, m_client->game());
+#endif
 }
 
 GameLoop::~GameLoop(void)
@@ -187,7 +189,10 @@ void GameLoop::draw_playfield(void)
 
 	// Draw game
 	if (m_client != NULL) {
-		m_client->game().draw();
+		Game *game = m_client->game();
+		if (game != NULL) {
+			game->draw();
+		}
 	}
 
 	// Clear clipping rectangle
@@ -205,19 +210,21 @@ void GameLoop::draw_sidebar(void)
 	gfx::clear(0, 0, 0);
 
 	if (m_client != NULL) {
-		for (int pidx = 0; pidx < m_client->game().get_player_count(); pidx++)
-		{
-			Player *player = m_client->game().get_player_ptr(pidx);
+		Game *game = m_client->game();
+		if (game != NULL) {
+			for (int pidx = 0; pidx < game->get_player_count(); pidx++) {
+				Player *player = game->get_player_ptr(pidx);
 
-			std::stringstream ss;
-			ss << "Player pos: (";
-			ss << player->get_x() << ", ";
-			ss << player->get_y() << ")";
-			gfx::draw_text(
-				SIDEBAR_X+1*8,
-				SIDEBAR_Y+(1+pidx*1)*12,
-				170, 170, 255,
-				ss.str());
+				std::stringstream ss;
+				ss << "Player pos: (";
+				ss << player->get_x() << ", ";
+				ss << player->get_y() << ")";
+				gfx::draw_text(
+					SIDEBAR_X+1*8,
+					SIDEBAR_Y+(1+pidx*1)*12,
+					170, 170, 255,
+					ss.str());
+			}
 		}
 	}
 

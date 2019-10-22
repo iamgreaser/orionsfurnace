@@ -23,6 +23,7 @@ namespace game
 		vector<Player> m_players;
 	public:
 		Game(void);
+		Game(std::istream &ips);
 		~Game(void);
 
 		int get_player_count(void) { return m_players.size(); }
