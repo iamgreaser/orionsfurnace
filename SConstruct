@@ -1,5 +1,8 @@
 # vim: set sts=4 sw=4 et :
 
+import sys
+import subprocess
+
 # WARNINGS_ARE_ERRORS:
 # Setting this to True will treat all warnings as errors.
 #
@@ -35,6 +38,28 @@ env.Append(
 
 if WARNINGS_ARE_ERRORS:
     env.MergeFlags(["-Werror",])
+
+# Get engine version
+engine_version = "0.0"
+pfp = subprocess.Popen(
+    [ "git", "show", "-s", "--format=%h", "HEAD" ],
+    stdout=subprocess.PIPE,
+)
+try:
+    git_stdout, git_stderr, = pfp.communicate()
+    git_commit_version = git_stdout.strip()
+    assert " " not in git_commit_version
+    assert "\t" not in git_commit_version
+    assert "\n" not in git_commit_version
+    assert "\r" not in git_commit_version
+    assert "\x00" not in git_commit_version
+finally:
+    git_return = pfp.wait()
+    assert git_return == 0
+engine_version += "+" + git_commit_version
+env.Append(
+    COMMON_FLAGS = ["-DENGINE_VERSION=%s" % (engine_version,),],
+)
 
 Export("env")
 
