@@ -8,9 +8,14 @@ namespace net
 {
 	class Client : public Node
 	{
+	private:
+		Game m_game;
 	public:
 		Client(std::istream &ips, std::ostream &ops);
 		~Client(void);
+
+		Game &game(void);
+
 		void update(void);
 	};
 }

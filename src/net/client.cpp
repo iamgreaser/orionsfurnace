@@ -16,6 +16,11 @@ Client::~Client(void)
 
 }
 
+Game &Client::game(void)
+{
+	return m_game;
+}
+
 void Client::update(void)
 {
 

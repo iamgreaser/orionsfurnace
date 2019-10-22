@@ -23,7 +23,13 @@ using loops::GameLoop;
 GameLoop::GameLoop(void)
 {
 	m_client = new net::Client(m_stream_s2c, m_stream_c2s);
-	m_server = new net::Server(m_stream_c2s, m_stream_s2c);
+	m_server = new net::Server();
+	m_server->add_client(m_stream_c2s, m_stream_s2c);
+
+	std::stringstream ss;
+	save(ss, m_server->game());
+	ss.seekg(0);
+	load(ss, m_client->game());
 }
 
 GameLoop::~GameLoop(void)
@@ -72,17 +78,21 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	if (m_demo_fp == NULL) {
 		m_demo_fp = new std::ofstream("test.demo");
-		net::GameSnapshotPacket game_snapshot_packet(m_game);
+		net::GameSnapshotPacket game_snapshot_packet(m_server->game());
 		save(*m_demo_fp, game_snapshot_packet);
 	}
 
 	//
 	// Update logic
 	//
-	GameFrame game_frame(m_game.get_player_count());
+	GameFrame game_frame(m_server->game().get_player_count());
 	game_frame.player_set_all_inputs(0, m_player_inputs[0]);
 	game_frame.player_set_all_inputs(1, m_player_inputs[1]);
-	m_game.tick(game_frame);
+	m_server->game().tick(game_frame);
+
+	// Update client logic
+	// TODO: Shove this into the client
+	m_client->game().tick(game_frame);
 
 	//
 	// TEST: Add input to demo
@@ -95,7 +105,7 @@ loops::MainLoopState GameLoop::tick(void)
 #if 0
 	// TEST: Save then load the game
 	std::stringstream game_ss;
-	save(game_ss, m_game);
+	save(game_ss, m_server->game());
 	{
 		std::ofstream fp("test.save");
 		game_ss.seekg(0);
@@ -106,7 +116,7 @@ loops::MainLoopState GameLoop::tick(void)
 		fp.close();
 	}
 	game_ss.seekg(0);
-	load(game_ss, m_game);
+	load(game_ss, m_server->game());
 #endif
 
 	// Continue with the game
@@ -168,7 +178,7 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 		case SDLK_F2:
 			if(ev.type == SDL_KEYDOWN) {
 				std::ofstream fp("quick.save");
-				save(fp, m_game);
+				save(fp, m_server->game());
 				fp.close();
 			}
 			break;
@@ -176,15 +186,20 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 		case SDLK_F3:
 			if(ev.type == SDL_KEYDOWN) {
 				std::ifstream fp("quick.save");
-				load(fp, m_game);
+				load(fp, m_server->game());
 				fp.close();
 
 				// Also load in demo
 				if (m_demo_fp == NULL) {
 					m_demo_fp = new std::ofstream("test.demo");
 				}
-				net::GameSnapshotPacket game_snapshot_packet(m_game);
+				net::GameSnapshotPacket game_snapshot_packet(m_server->game());
 				save(*m_demo_fp, game_snapshot_packet);
+
+				// FIXME: Load this from a stream
+				std::ifstream fp2("quick.save");
+				load(fp2, m_client->game());
+				fp2.close();
 			}
 			break;
 
@@ -221,7 +236,7 @@ void GameLoop::draw_playfield(void)
 	}
 
 	// Draw game
-	m_game.draw();
+	m_client->game().draw();
 
 	// Clear clipping rectangle
 	gfx::clip_nothing();
@@ -237,9 +252,9 @@ void GameLoop::draw_sidebar(void)
 	// Draw our sidebar
 	gfx::clear(0, 0, 0);
 
-	for (int pidx = 0; pidx < m_game.get_player_count(); pidx++)
+	for (int pidx = 0; pidx < m_client->game().get_player_count(); pidx++)
 	{
-		Player *player = m_game.get_player_ptr(pidx);
+		Player *player = m_client->game().get_player_ptr(pidx);
 
 		std::stringstream ss;
 		ss << "Player pos: (";

@@ -4,13 +4,31 @@
 #include "core/core.h"
 #include "core/game.h"
 
+#include <vector>
+
 namespace net
 {
-	class Server : public Node
+	class ServerClient : public Node
 	{
 	public:
-		Server(std::istream &ips, std::ostream &ops);
+		ServerClient(std::istream &ips, std::ostream &ops);
+		~ServerClient(void);
+		void update(void);
+	};
+
+	class Server
+	{
+	private:
+		std::vector<ServerClient> m_clients;
+		Game m_game;
+	public:
+		Server(void);
 		~Server(void);
+
+		Game &game(void);
+
+		void add_client(std::istream &ips, std::ostream &ops);
+
 		void update(void);
 	};
 }

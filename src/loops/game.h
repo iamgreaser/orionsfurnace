@@ -21,7 +21,6 @@ namespace loops
 	class GameLoop : public Loop
 	{
 	private:
-		Game m_game;
 		PlayerInput m_player_inputs[2];
 		std::ofstream *m_demo_fp = NULL;
 		std::stringstream m_stream_c2s;

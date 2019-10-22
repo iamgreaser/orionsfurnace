@@ -97,7 +97,6 @@ namespace net
 	class Node
 	{
 	protected:
-		Game *m_game;
 		std::istream *m_ips;
 		std::ostream *m_ops;
 	public:
