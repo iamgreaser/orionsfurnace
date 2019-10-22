@@ -1,6 +1,13 @@
 # vim: set sts=4 sw=4 et :
 
 Import("env")
+
+env.Command(
+    ["engine_version.h"],
+    [],
+    ["echo '#define ENGINE_VERSION \"$ENGINE_VERSION\"' >$TARGET"],
+)
+
 env.Program(
     "orionsfurnace",
     [
@@ -11,6 +18,7 @@ env.Program(
         env.Glob("net/*.cpp"),
     ],
     CPPPATH = [
+        env.Dir("."),
         env.Dir(".").srcnode(),
         env["CPPPATH"],
     ]

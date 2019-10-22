@@ -5,6 +5,8 @@
 
 #include "gfx/internal.h"
 
+#include "engine_version.h"
+
 #include <SDL.h>
 
 #include <cassert>

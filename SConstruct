@@ -57,8 +57,8 @@ finally:
     git_return = pfp.wait()
     assert git_return == 0
 engine_version += "+" + git_commit_version
-env.Append(
-    COMMON_FLAGS = ["-DENGINE_VERSION='\"%s\"'" % (engine_version,),],
+env.Replace(
+    ENGINE_VERSION = engine_version,
 )
 
 Export("env")
