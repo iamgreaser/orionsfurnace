@@ -5,6 +5,7 @@
 #include "core/game.h"
 
 #include <iostream>
+#include <sstream>
 
 namespace net
 {
@@ -12,6 +13,7 @@ namespace net
 	{
 	private:
 		Game m_game;
+		std::stringstream m_input_ss;
 	public:
 		Client(std::istream &ips, std::ostream &ops);
 		~Client(void);

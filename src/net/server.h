@@ -3,6 +3,7 @@
 
 #include "core/core.h"
 #include "core/game.h"
+#include "net/net.h"
 
 #include <iostream>
 #include <fstream>
@@ -16,6 +17,8 @@ namespace net
 		ServerClient(std::istream &ips, std::ostream &ops);
 		~ServerClient(void);
 		void update(void);
+
+		void send_packet(Packet &packet);
 	};
 
 	class Server
@@ -31,6 +34,8 @@ namespace net
 		Game &game(void);
 
 		void add_client(std::istream &ips, std::ostream &ops);
+
+		void broadcast_packet(net::Packet &packet);
 
 		void quicksave(void);
 		void quickload(void);

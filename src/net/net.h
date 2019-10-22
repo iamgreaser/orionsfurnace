@@ -26,6 +26,10 @@ using packets::PacketType;
 
 namespace net
 {
+	class Client;
+	class Packet;
+	class Server;
+
 	class Packet : public Saveable
 	{
 	public:

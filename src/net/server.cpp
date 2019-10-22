@@ -16,6 +16,11 @@ ServerClient::~ServerClient(void)
 {
 }
 
+void ServerClient::send_packet(net::Packet &packet)
+{
+	save(*m_ops, packet);
+}
+
 Game &Server::game(void)
 {
 	return m_game;
@@ -24,11 +29,12 @@ Game &Server::game(void)
 void Server::add_client(std::istream &ips, std::ostream &ops)
 {
 	m_clients.push_back(ServerClient(ips, ops));
+	net::GameSnapshotPacket game_snapshot_packet(m_game);
+	m_clients[m_clients.size()-1].send_packet(game_snapshot_packet);
 }
 
 void ServerClient::update(void)
 {
-
 }
 
 Server::Server(void)
@@ -44,7 +50,7 @@ Server::~Server(void)
 	}
 }
 
-void Server::game_tick(GameFrame game_frame)
+void Server::broadcast_packet(net::Packet &packet)
 {
 	// Start recording demo if we haven't yet
 	if (m_demo_fp == NULL) {
@@ -53,13 +59,20 @@ void Server::game_tick(GameFrame game_frame)
 		save(*m_demo_fp, game_snapshot_packet);
 	}
 
+	save(*m_demo_fp, packet);
+	for (ServerClient &sc : m_clients) {
+		sc.send_packet(packet);
+	}
+}
+
+void Server::game_tick(GameFrame game_frame)
+{
 	// Tick game
 	m_game.tick(game_frame);
 
 	// Add input to demo
 	net::GameFramePacket game_frame_packet(game_frame);
-	save(*m_demo_fp, game_frame_packet);
-
+	this->broadcast_packet(game_frame_packet);
 }
 
 void Server::quicksave(void)
