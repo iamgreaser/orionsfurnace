@@ -58,7 +58,7 @@ finally:
     assert git_return == 0
 engine_version += "+" + git_commit_version
 env.Append(
-    COMMON_FLAGS = ["-DENGINE_VERSION=%s" % (engine_version,),],
+    COMMON_FLAGS = ["-DENGINE_VERSION='\"%s\"'" % (engine_version,),],
 )
 
 Export("env")
