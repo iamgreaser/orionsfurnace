@@ -11,8 +11,24 @@
 
 namespace net
 {
+	namespace server_client_status
+	{
+		enum ServerClientStatus
+		{
+			// TODO: Use these!
+			AWAITING_HELLO = 0,
+			SENDING_YOUR_PLAYER,
+			SENDING_GAME,
+			PLAYING_GAME,
+			DISCONNECTED,
+		};
+	}
+	using server_client_status::ServerClientStatus;
+
 	class ServerClient : public Node
 	{
+	private:
+		ServerClientStatus m_status;
 	public:
 		ServerClient(std::istream &ips, std::ostream &ops);
 		~ServerClient(void);

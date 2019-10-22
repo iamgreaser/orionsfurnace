@@ -14,7 +14,10 @@ namespace net
 	{
 		enum ClientStatus
 		{
-			WAITING_FOR_GAME = 0,
+			// TODO: Use these!
+			SENDING_HELLO = 0,
+			AWAITING_YOUR_PLAYER,
+			AWAITING_GAME,
 			PLAYING_GAME,
 			DISCONNECTED,
 		};
