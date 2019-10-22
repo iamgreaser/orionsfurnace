@@ -61,7 +61,6 @@ void Player::tick(void)
 		if (dx != 0 || dy != 0) {
 			if (this->attempt_move_by(dx, dy)) {
 				m_input_cooldown = 12;
-
 			}
 		}
 	}

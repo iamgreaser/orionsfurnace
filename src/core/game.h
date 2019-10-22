@@ -24,10 +24,12 @@ namespace game
 	public:
 		Game();
 		~Game();
+		Game &operator=(const Game &other);
 
 		int get_player_count(void) { return m_players.size(); }
 		Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
 
+		void add_player(Player player);
 		void player_set_all_inputs(int player_idx,
 			PlayerInput player_input);
 
@@ -44,7 +46,7 @@ namespace game
 	private:
 		vector<PlayerInput> m_player_inputs;
 	public:
-		GameFrame(int player_count);
+		GameFrame(int player_count = 0);
 		GameFrame(std::istream &ips);
 
 		int get_player_count(void) const { return m_player_inputs.size(); }

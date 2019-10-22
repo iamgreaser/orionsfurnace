@@ -32,6 +32,7 @@ public:
 
 class Player : public Saveable
 {
+	friend Game; // m_game MUST point to the correct game!
 private:
 	Game *m_game;
 	int32_t m_cx;

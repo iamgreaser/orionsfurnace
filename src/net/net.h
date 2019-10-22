@@ -54,6 +54,11 @@ namespace net
 		{
 		}
 
+		T get_value(void)
+		{
+			return m_value;
+		}
+
 		uint8_t get_packet_id(void)
 		{
 			return PID;
@@ -64,6 +69,9 @@ namespace net
 			// Load datagram
 			uint32_t packet_length = 0;
 			load(ips, packet_length);
+			uint8_t packet_id = PID^1;
+			load(ips, packet_id);
+			assert(packet_id == PID);
 
 			// Load datagram buffer
 			char *buf = new char[packet_length];
@@ -73,9 +81,6 @@ namespace net
 
 			// Load datagram contents
 			std::stringstream ss(str);
-			uint8_t packet_id = PID^1;
-			load(ss, packet_id);
-			assert(packet_id == PID);
 			load(ss, m_value);
 		}
 
@@ -84,13 +89,13 @@ namespace net
 			// Build datagram contents
 			uint8_t packet_id = PID;
 			std::stringstream ss;
-			save(ss, packet_id);
 			save(ss, m_value);
 
 			// Save datagram
 			std::string str = ss.str();
 			uint32_t packet_length = str.size();
 			save(ops, packet_length);
+			save(ops, packet_id);
 			ops << str;
 		}
 	};

@@ -39,6 +39,8 @@ void ServerClient::update(void)
 
 Server::Server(void)
 {
+	m_game.add_player(Player(&m_game,  4,  8, direction::SOUTH));
+	m_game.add_player(Player(&m_game, 10,  6, direction::SOUTH));
 }
 
 Server::~Server(void)
@@ -88,12 +90,9 @@ void Server::quickload(void)
 	load(fp, m_game);
 	fp.close();
 
-	// Also load in demo
-	if (m_demo_fp == NULL) {
-		m_demo_fp = new std::ofstream("test.demo");
-	}
+	// Broadcast to everyone
 	net::GameSnapshotPacket game_snapshot_packet(m_game);
-	save(*m_demo_fp, game_snapshot_packet);
+	this->broadcast_packet(game_snapshot_packet);
 }
 
 void Server::update(void)

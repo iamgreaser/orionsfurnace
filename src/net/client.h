@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <string>
 
 namespace net
 {
@@ -13,7 +14,7 @@ namespace net
 	{
 	private:
 		Game m_game;
-		std::stringstream m_input_ss;
+		std::string m_input_buf;
 	public:
 		Client(std::istream &ips, std::ostream &ops);
 		~Client(void);

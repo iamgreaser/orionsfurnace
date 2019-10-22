@@ -15,14 +15,29 @@ namespace game
 {
 }
 
-Game::Game()
+Game::Game(void)
 {
-	m_players.push_back(Player(this,  4,  8, direction::SOUTH));
-	m_players.push_back(Player(this, 10,  6, direction::SOUTH));
 }
 
-Game::~Game()
+Game::~Game(void)
 {
+}
+
+Game &Game::operator=(const Game &other)
+{
+	if (this != &other) {
+		m_players.clear();
+		for (const Player &p : other.m_players) {
+			m_players.push_back(p);
+			m_players[m_players.size()-1].m_game = this;
+		}
+	}
+	return *this;
+}
+
+void Game::add_player(Player player)
+{
+	m_players.push_back(player);
 }
 
 void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)

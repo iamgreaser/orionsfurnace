@@ -83,7 +83,6 @@ loops::MainLoopState GameLoop::tick(void)
 	// TODO: Shove this into the client
 	if (m_client != NULL) {
 		m_client->update();
-		m_client->game().tick(game_frame);
 	}
 
 	// Continue with the game
@@ -151,13 +150,6 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 		case SDLK_F3:
 			if (ev.type == SDL_KEYDOWN) {
 				m_server->quickload();
-
-				// FIXME: Load this from the network
-				if (m_client != NULL) {
-					std::ifstream fp2("quick.save");
-					load(fp2, m_client->game());
-					fp2.close();
-				}
 			}
 			break;
 
