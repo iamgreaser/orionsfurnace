@@ -40,6 +40,14 @@ Server::~Server(void)
 {
 }
 
+void Server::game_tick(GameFrame game_frame)
+{
+	m_game.tick(game_frame);
+}
+
 void Server::update(void)
 {
+	for (ServerClient &sc : m_clients) {
+		sc.update();
+	}
 }

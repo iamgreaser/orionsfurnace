@@ -29,6 +29,7 @@ namespace net
 
 		void add_client(std::istream &ips, std::ostream &ops);
 
+		void game_tick(GameFrame game_frame);
 		void update(void);
 	};
 }
