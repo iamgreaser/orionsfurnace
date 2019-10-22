@@ -22,8 +22,9 @@ namespace game
 	private:
 		vector<Player> m_players;
 	public:
-		Game();
-		~Game();
+		Game(void);
+		Game(const Game &other);
+		~Game(void);
 		Game &operator=(const Game &other);
 
 		int get_player_count(void) { return m_players.size(); }

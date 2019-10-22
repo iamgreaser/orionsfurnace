@@ -19,6 +19,15 @@ Game::Game(void)
 {
 }
 
+Game::Game(const Game &other)
+{
+	m_players.clear();
+	for (const Player &p : other.m_players) {
+		m_players.push_back(p);
+		m_players[m_players.size()-1].m_game = this;
+	}
+}
+
 Game::~Game(void)
 {
 }
