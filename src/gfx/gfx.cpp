@@ -5,7 +5,7 @@
 
 #include "gfx/internal.h"
 
-#include "engine_version.h"
+#include "core/version.h"
 
 #include <SDL.h>
 
@@ -37,7 +37,7 @@ void gfx::init(void)
 	// Create a window
 	std::string window_title = (
 		std::string("orion's furnace v")
-		+ std::string(ENGINE_VERSION));
+		+ get_engine_version());
 	window = SDL_CreateWindow(
 		window_title.c_str(),
 		SDL_WINDOWPOS_CENTERED,
