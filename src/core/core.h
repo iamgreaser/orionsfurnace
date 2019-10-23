@@ -22,5 +22,6 @@ using game::GameFrame;
 
 class Player;
 class PlayerInput;
+class PlayerAdd;
 
 #endif /* if !defined(_CORE_CORE_H) */

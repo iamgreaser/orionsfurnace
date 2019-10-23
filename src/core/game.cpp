@@ -30,7 +30,9 @@ Game::~Game(void)
 
 void Game::add_player(Player player)
 {
+	int player_idx = m_players.size();
 	m_players.push_back(player);
+	m_players[player_idx].set_game(this);
 }
 
 void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)
@@ -39,8 +41,29 @@ void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)
 	m_players[player_idx].set_all_inputs(player_input);
 }
 
+bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
+{
+	// Is this in range of the map?
+	if (cx < 0 || cy < 0 || cx >= this->get_width() || cy >= this->get_height()) {
+		return false;
+	}
+
+	// Do we care to check for existing players?
+	if (players_are_blocking) {
+		// Is there a player at the given cell?
+		Player *other = this->get_player_at(cx, cy);
+		if (other != NULL) {
+			return false;
+		}
+	}
+
+	// OK we're good.
+	return true;
+}
+
 void Game::tick(const GameFrame &game_frame)
 {
+	std::cout << "Players: Got " << game_frame.get_player_count() << ", Expected " << this->get_player_count() << std::endl;
 	assert(game_frame.get_player_count() == this->get_player_count());
 
 	for (int i = 0; i < this->get_player_count(); i++) {

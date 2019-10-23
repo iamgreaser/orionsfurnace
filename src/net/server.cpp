@@ -53,8 +53,6 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 
 Server::Server(void)
 {
-	m_game.add_player(Player(&m_game,  4,  8, direction::SOUTH));
-	m_game.add_player(Player(&m_game, 10,  6, direction::SOUTH));
 }
 
 Server::~Server(void)
@@ -73,14 +71,40 @@ Game &Server::game(void)
 
 void Server::add_client(std::istream &ips, std::ostream &ops)
 {
-	int player_index = m_clients.size();
+	int client_index = m_clients.size();
+	int player_index = m_game.get_player_count();
 
+	// TODO: Add spawn points
+	// FIXME: This COULD spawn one player atop another, or atop a wall or something!
+	// (but at least it terminates)
+	int cx = (int)m_game.random().next_int((uint32_t)m_game.get_width());
+	int cy = (int)m_game.random().next_int((uint32_t)m_game.get_height());
+	for (int i = 0; i < 100; i++) {
+		if (m_game.can_step_into(cx, cy, true)) {
+			// Our position is good!
+			break;
+		}
+		cx = (int)m_game.random().next_int((uint32_t)m_game.get_width());
+		cy = (int)m_game.random().next_int((uint32_t)m_game.get_height());
+	}
+
+	// Add the player
+	m_game.add_player(Player(&m_game, cx, cy, direction::SOUTH));
+
+	// Add the player to everyone else
+	// DO THIS BEFORE ADDING THE NEW CLIENT.
+	// TODO: Cut down on redundancy here and use the same Player object
+	net::AddPlayerPacket add_player_packet(PlayerAdd(
+		player_index, Player(&m_game, cx, cy, direction::SOUTH)));
+	this->broadcast_packet(add_player_packet);
+
+	// Add a new client
 	m_clients.push_back(ServerClient(this, player_index, ips, ops));
-	net::GameSnapshotPacket game_snapshot_packet(m_game);
 
-	// NOTE: Comment the following line out if you wish to test client pre-game-snapshot state.
+	// Send a game snapshot to the new client
 	// TODO: Wait for the "Hello" packet and then send the player's index if the Hello is OK
-	m_clients[player_index].send_packet(game_snapshot_packet);
+	net::GameSnapshotPacket game_snapshot_packet(m_game);
+	m_clients[client_index].send_packet(game_snapshot_packet);
 }
 
 void Server::broadcast_packet(net::Packet &packet)

@@ -4,6 +4,7 @@
 #include "core/core.h"
 
 #include "core/player.h"
+#include "core/random.h"
 #include "core/save.h"
 #include "net/net.h"
 
@@ -21,6 +22,7 @@ namespace game
 	{
 	private:
 		vector<Player> m_players;
+		Random m_random;
 	public:
 		Game(void);
 		Game(std::istream &ips);
@@ -28,12 +30,17 @@ namespace game
 
 		int get_player_count(void) { return m_players.size(); }
 		Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
+		int get_width(void) const { return 15; }
+		int get_height(void) const { return 15; }
+		Random &random(void) { return m_random; }
 
 		void add_player(Player player);
 		void player_set_all_inputs(int player_idx,
 			PlayerInput player_input);
 
+		bool can_step_into(int cx, int cy, bool players_are_blocking);
 		Player *get_player_at(int cx, int cy);
+
 		void tick(const GameFrame &game_frame);
 		void draw(void);
 

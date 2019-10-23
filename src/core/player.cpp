@@ -23,6 +23,11 @@ Player::Player(Game *game, int cx, int cy, Direction dir)
 {
 }
 
+Player::Player(void)
+	: m_game(NULL)
+{
+}
+
 Player::Player(Game *game, std::istream &ips)
 	: m_game(game)
 {
@@ -147,6 +152,11 @@ bool Player::attempt_move_by(int dx, int dy)
 	int cx = m_cx + dx;
 	int cy = m_cy + dy;
 
+	// Can we step into here?
+	if (!m_game->can_step_into(cx, cy, false)) {
+		return false;
+	}
+
 	// Is there a player at the given cell?
 	Player *other = m_game->get_player_at(cx, cy);
 	if (other != NULL) {
@@ -175,14 +185,8 @@ bool Player::attempt_move_by(int dx, int dy)
 
 bool Player::attempt_move_to(int cx, int cy)
 {
-	// TEST: Is this in range of the map?
-	if (cx < 0 || cy < 0 || cx >= 15 || cy >= 15) {
-		return false;
-	}
-
-	// Is there a player at the given cell?
-	Player *other = m_game->get_player_at(cx, cy);
-	if (other != NULL) {
+	// Can we step into here?
+	if (!m_game->can_step_into(cx, cy, true)) {
 		return false;
 	}
 
@@ -229,4 +233,28 @@ void PlayerInput::save_this(std::ostream &ops)
 		}
 	}
 	save(ops, dirmask);
+}
+
+
+PlayerAdd::PlayerAdd(int player_idx, Player player)
+	: m_player_idx(player_idx)
+	, m_player(player)
+{
+}
+
+PlayerAdd::PlayerAdd(std::istream &ips)
+{
+	load(ips, *this);
+}
+
+void PlayerAdd::load_this(std::istream &ips)
+{
+	load(ips, m_player_idx);
+	load(ips, m_player);
+}
+
+void PlayerAdd::save_this(std::ostream &ops)
+{
+	save(ops, m_player_idx);
+	save(ops, m_player);
 }

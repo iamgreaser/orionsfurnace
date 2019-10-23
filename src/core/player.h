@@ -52,6 +52,7 @@ private:
 public:
 	Player(Game *game, int cx, int cy, Direction dir);
 	Player(Game *game, std::istream &ips);
+	Player(void);
 
 	int get_x(void) { return m_cx; }
 	int get_y(void) { return m_cy; }
@@ -63,6 +64,11 @@ public:
 		m_input.set_input_move(dir, v);
 	}
 	void set_all_inputs(PlayerInput player_input);
+	void set_game(Game *game) {
+		// FIXME THIS IS A KLUDGE
+		// - I may need to pass a Game * argument around for things?
+		m_game = game;
+	}
 
 	void tick(void);
 
@@ -76,6 +82,22 @@ public:
 
 protected:
 	void calc_interp_pos(int *px, int *py);
+};
+
+class PlayerAdd : public Saveable
+{
+private:
+	uint16_t m_player_idx;
+	Player m_player;
+public:
+	PlayerAdd(int player_idx, Player player);
+	PlayerAdd(std::istream &ips);
+
+	Player get_player(void) { return m_player; }
+	int get_player_idx(void) { return m_player_idx; }
+
+	void load_this(std::istream &ips);
+	void save_this(std::ostream &ops);
 };
 
 #endif /* if !defined(_CORE_PLAYER_H) */

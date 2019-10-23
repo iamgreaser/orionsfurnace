@@ -71,6 +71,16 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
 			}
 		} break;
 
+		case packets::ADD_PLAYER: {
+			// Add the new player
+			std::cout << "Add new player" << std::endl;
+			PlayerAdd player_add(packet_ss);
+			if (m_game != NULL) {
+				assert(player_add.get_player_idx() == m_game->get_player_count());
+				m_game->add_player(player_add.get_player());
+			}
+		} break;
+
 		default: {
 			std::cerr << "ERR: Unhandled packet ID " << std::hex << packet_id << " on client recv" << std::dec << std::endl;
 			abort();
