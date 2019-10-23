@@ -29,7 +29,6 @@ namespace net
 	private:
 		ClientStatus m_status;
 		Game *m_game = NULL;
-		std::string m_input_buf;
 	public:
 		Client(std::istream &ips, std::ostream &ops);
 		~Client(void);
@@ -40,6 +39,7 @@ namespace net
 		void send_packet(Packet &packet);
 
 		void update(void);
+		void handle_input_packet(int packet_id, std::istream &packet_ss);
 	};
 }
 

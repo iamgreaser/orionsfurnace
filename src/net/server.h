@@ -31,7 +31,6 @@ namespace net
 	private:
 		ServerClientStatus m_status;
 		Server *m_server = NULL;
-		std::string m_input_buf;
 		GameFrame m_game_frame;
 		int m_player_index;
 		PlayerInput m_player_input;
@@ -42,6 +41,7 @@ namespace net
 			return m_player_input;
 		}
 		void update(void);
+		void handle_input_packet(int packet_id, std::istream &packet_ss);
 
 		void send_packet(Packet &packet);
 	};

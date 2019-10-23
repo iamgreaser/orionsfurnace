@@ -109,10 +109,13 @@ namespace net
 	protected:
 		std::istream *m_ips;
 		std::ostream *m_ops;
+		std::string m_input_buf;
 	public:
 		Node(std::istream &ips, std::ostream &ops);
 		virtual ~Node(void);
 		virtual void update(void) = 0;
+		void update_packets(void);
+		virtual void handle_input_packet(int packet_id, std::istream &packet_ss) = 0;
 	};
 }
 

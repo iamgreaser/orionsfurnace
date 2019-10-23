@@ -26,66 +26,26 @@ void ServerClient::send_packet(net::Packet &packet)
 
 void ServerClient::update(void)
 {
-	// Fetch some input
+	this->update_packets();
+}
+
+void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
+{
+	// Select by packet ID.
+	switch (packet_id)
 	{
-		char buf[8192];
-		std::streamsize sz = m_ips->readsome(buf, 8192);
-		m_input_buf += std::string(buf, sz);
-	}
+		case packets::PROVIDE_INPUT: {
+			// Set frame input.
+			std::cout << "Provide input for player " << m_player_index << std::endl;
+			assert(m_server != NULL);
+			PlayerInput player_input(packet_ss);
+			m_player_input = player_input;
+		} break;
 
-	// Extract packets
-	for (;;) {
-		size_t buffer_size = m_input_buf.size();
-		std::cout << "ServerClient input:" << buffer_size << std::endl;
-
-		// Do we have enough stuff to read to make any sense of this?
-		if (buffer_size < 5) {
-			// No - wait.
-			std::cout << "Done " << std::endl;
-			break;
-		}
-
-		// Extract the bare minimum info needed
-		uint32_t sub_size = 0;
-		sub_size += ((uint32_t)m_input_buf[0]);
-		sub_size += ((uint32_t)m_input_buf[1])<<8;
-		sub_size += ((uint32_t)m_input_buf[2])<<16;
-		sub_size += ((uint32_t)m_input_buf[3])<<24;
-		assert(sub_size >= 1);
-		uint8_t packet_id = (uint8_t)m_input_buf[4];
-		size_t full_packet_size = 4+1+sub_size;
-
-		// Will it fit?
-		if (buffer_size < full_packet_size) {
-			// No - leave it in the buffer.
-			std::cout << "Overshoot " << std::hex << sub_size << std::dec << std::endl;
-			break;
-		}
-
-		// Get packet data.
-		std::cout << "Client packet:" << full_packet_size << std::endl;
-		std::string packet_s(m_input_buf, 4+1, full_packet_size-(4+1));
-		m_input_buf.erase(m_input_buf.begin(), m_input_buf.begin()+full_packet_size);
-		assert(m_input_buf.size() != buffer_size);
-		std::stringstream packet_ss(packet_s);
-
-		// Select by packet ID.
-		switch (packet_id)
-		{
-			case packets::PROVIDE_INPUT: {
-				// Set frame input.
-				std::cout << "Provide input for player " << m_player_index << std::endl;
-				assert(m_server != NULL);
-				PlayerInput player_input(packet_ss);
-				m_player_input = player_input;
-			} break;
-
-
-			default: {
-				std::cerr << "ERR: Unhandled packet ID " << std::hex << packet_id << " on client recv" << std::dec << std::endl;
-				abort();
-			} break;
-		}
+		default: {
+			std::cerr << "ERR: Unhandled packet ID " << std::hex << packet_id << " on client recv" << std::dec << std::endl;
+			abort();
+		} break;
 	}
 }
 
