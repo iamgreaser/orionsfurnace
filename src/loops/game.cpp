@@ -72,13 +72,15 @@ loops::MainLoopState GameLoop::tick(void)
 
 	//
 	// Update logic
-	// TODO: Separate input handling between client and server
+	// TODO: Separate input handling between client and server for the second player
+	// (or more appropriately, get actual client-server working here)
 	//
 	assert(m_server != NULL);
-	GameFrame game_frame(m_server->game().get_player_count());
-	game_frame.player_set_all_inputs(0, m_player_inputs[0]);
-	game_frame.player_set_all_inputs(1, m_player_inputs[1]);
-	m_server->game_tick(game_frame);
+
+	net::ProvideInputPacket provide_input_packet(m_player_inputs[0]);
+	m_client->send_packet(provide_input_packet);
+	m_server->set_player_input(1, m_player_inputs[1]);
+
 	m_server->update();
 
 	// Update client logic

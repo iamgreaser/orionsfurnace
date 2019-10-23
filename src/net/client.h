@@ -37,6 +37,8 @@ namespace net
 		Game *game(void);
 		void load_game(std::istream &ips);
 
+		void send_packet(Packet &packet);
+
 		void update(void);
 	};
 }

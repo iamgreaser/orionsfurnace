@@ -3,6 +3,7 @@
 
 #include "core/core.h"
 #include "core/game.h"
+#include "core/player.h"
 #include "net/net.h"
 
 #include <iostream>
@@ -29,9 +30,20 @@ namespace net
 	{
 	private:
 		ServerClientStatus m_status;
+		Server *m_server = NULL;
+		std::string m_input_buf;
+		GameFrame m_game_frame;
+		int m_player_index;
+		PlayerInput m_player_input;
 	public:
-		ServerClient(std::istream &ips, std::ostream &ops);
+		ServerClient(Server *server, int player_index, std::istream &ips, std::ostream &ops);
 		~ServerClient(void);
+		PlayerInput get_player_input(void) {
+			return m_player_input;
+		}
+		void set_player_input(PlayerInput player_input) {
+			m_player_input = player_input;
+		}
 		void update(void);
 
 		void send_packet(Packet &packet);
@@ -50,6 +62,8 @@ namespace net
 		Game &game(void);
 
 		void add_client(std::istream &ips, std::ostream &ops);
+
+		void set_player_input(int player_idx, PlayerInput player_input);
 
 		void broadcast_packet(net::Packet &packet);
 

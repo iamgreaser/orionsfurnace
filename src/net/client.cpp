@@ -41,6 +41,11 @@ void Client::load_game(std::istream &ips)
 	m_game = new Game(ips);
 }
 
+void Client::send_packet(net::Packet &packet)
+{
+	save(*m_ops, packet);
+}
+
 void Client::update(void)
 {
 	// Fetch some input
