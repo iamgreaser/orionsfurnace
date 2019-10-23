@@ -48,12 +48,19 @@ pfp = subprocess.Popen(
 )
 try:
     git_stdout, git_stderr, = pfp.communicate()
-    git_commit_version = git_stdout.strip()
+    git_commit_version_bytes = git_stdout.strip()
+    # Python 2 -> Python 3
+    if not isinstance(git_commit_version_bytes, str):
+        git_commit_version = git_commit_version_bytes.decode("utf-8")
+    else:
+        git_commit_version = git_commit_version_bytes
+
     assert " " not in git_commit_version
     assert "\t" not in git_commit_version
     assert "\n" not in git_commit_version
     assert "\r" not in git_commit_version
     assert "\x00" not in git_commit_version
+
 finally:
     git_return = pfp.wait()
     assert git_return == 0
