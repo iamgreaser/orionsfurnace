@@ -41,9 +41,6 @@ namespace net
 		PlayerInput get_player_input(void) {
 			return m_player_input;
 		}
-		void set_player_input(PlayerInput player_input) {
-			m_player_input = player_input;
-		}
 		void update(void);
 
 		void send_packet(Packet &packet);
@@ -62,8 +59,6 @@ namespace net
 		Game &game(void);
 
 		void add_client(std::istream &ips, std::ostream &ops);
-
-		void set_player_input(int player_idx, PlayerInput player_input);
 
 		void broadcast_packet(net::Packet &packet);
 

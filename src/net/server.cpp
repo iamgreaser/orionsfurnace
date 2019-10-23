@@ -123,15 +123,6 @@ void Server::add_client(std::istream &ips, std::ostream &ops)
 	m_clients[player_index].send_packet(game_snapshot_packet);
 }
 
-void Server::set_player_input(int player_idx, PlayerInput player_input)
-{
-	if (player_idx >= 0 && player_idx < m_game.get_player_count()) {
-		std::cout << "Setting player " << player_idx << " input" << std::endl;
-		std::cout << "Up = " << player_input.get_input_move(direction::NORTH) << std::endl;
-		m_clients[player_idx].set_player_input(player_input);
-	}
-}
-
 void Server::broadcast_packet(net::Packet &packet)
 {
 	// Start recording demo if we haven't yet
