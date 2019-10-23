@@ -26,6 +26,10 @@ namespace loops
 		std::stringstream m_stream_s2c;
 		net::Client *m_client = NULL;
 		net::Server *m_server = NULL;
+
+		net::Client *m_client_extra1 = NULL;
+		std::stringstream m_client_extra1_stream_c2s;
+		std::stringstream m_client_extra1_stream_s2c;
 	public:
 		GameLoop(void);
 		~GameLoop(void);

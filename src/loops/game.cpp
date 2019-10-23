@@ -23,16 +23,16 @@ using loops::GameLoop;
 
 GameLoop::GameLoop(void)
 {
-	m_client = new net::Client(m_stream_s2c, m_stream_c2s);
 	m_server = new net::Server();
+
+	m_client = new net::Client(m_stream_s2c, m_stream_c2s);
 	m_server->add_client(m_stream_c2s, m_stream_s2c);
 
-#if 0
-	std::stringstream ss;
-	save(ss, m_server->game());
-	ss.seekg(0);
-	load(ss, m_client->game());
-#endif
+	// For testing a second player
+	if (true) {
+		m_client_extra1 = new net::Client(m_client_extra1_stream_s2c, m_client_extra1_stream_c2s);
+		m_server->add_client(m_client_extra1_stream_c2s, m_client_extra1_stream_s2c);
+	}
 }
 
 GameLoop::~GameLoop(void)
@@ -40,6 +40,11 @@ GameLoop::~GameLoop(void)
 	if (m_client != NULL) {
 		delete m_client;
 		m_client = NULL;
+	}
+
+	if (m_client_extra1 != NULL) {
+		delete m_client_extra1;
+		m_client_extra1 = NULL;
 	}
 
 	if (m_server != NULL) {
@@ -71,22 +76,32 @@ loops::MainLoopState GameLoop::tick(void)
 	}
 
 	//
-	// Update logic
-	// TODO: Separate input handling between client and server for the second player
-	// (or more appropriately, get actual client-server working here)
+	// Send inputs
+	//
+	if (m_client != NULL) {
+		net::ProvideInputPacket provide_input_packet(m_player_inputs[0]);
+		m_client->send_packet(provide_input_packet);
+	}
+
+	if (m_client_extra1 != NULL) {
+		net::ProvideInputPacket extra1_provide_input_packet(m_player_inputs[1]);
+		m_client_extra1->send_packet(extra1_provide_input_packet);
+	}
+
+	//
+	// Update server logic
 	//
 	assert(m_server != NULL);
-
-	net::ProvideInputPacket provide_input_packet(m_player_inputs[0]);
-	m_client->send_packet(provide_input_packet);
-	m_server->set_player_input(1, m_player_inputs[1]);
-
 	m_server->update();
 
+	//
 	// Update client logic
-	// TODO: Shove this into the client
+	//
 	if (m_client != NULL) {
 		m_client->update();
+	}
+	if (m_client_extra1 != NULL) {
+		m_client_extra1->update();
 	}
 
 	// Continue with the game
