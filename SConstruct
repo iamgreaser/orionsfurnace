@@ -40,7 +40,8 @@ if WARNINGS_ARE_ERRORS:
     env.MergeFlags(["-Werror",])
 
 # Get engine version
-engine_version = "0.0"
+#engine_version = "0.0" # It will be a long time before SemVer could make any sense --GM
+engine_version = "git"
 pfp = subprocess.Popen(
     [ "git", "show", "-s", "--format=%h", "HEAD" ],
     stdout=subprocess.PIPE,
