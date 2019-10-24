@@ -47,6 +47,25 @@ public:
 	void save_this(std::ostream &ops);
 };
 
+namespace diagonal_fixer
+{
+	enum DiagonalFixer
+	{
+		// The next diagonal should be vertical.
+		NEXT_VERTICAL = 0,
+
+		// The next diagonal should be horizontal.
+		NEXT_HORIZONTAL,
+
+		// There is an active diagonal going horizontal.
+		ASSERTING_HORIZONTAL,
+
+		// There is an active diagonal going vertical.
+		ASSERTING_VERTICAL,
+	};
+}
+using diagonal_fixer::DiagonalFixer;
+
 class Player : public Saveable
 {
 	friend Game; // m_game MUST point to the correct game!
@@ -55,6 +74,7 @@ private:
 	int32_t m_cx;
 	int32_t m_cy;
 	Direction m_dir;
+	DiagonalFixer m_diagonal_fixer;
 
 	int32_t m_pos_interp_x0;
 	int32_t m_pos_interp_y0;

@@ -33,6 +33,7 @@ Player::Player(Game *game, int cx, int cy, Direction dir)
 	, m_cx(cx)
 	, m_cy(cy)
 	, m_dir(dir)
+	, m_diagonal_fixer(diagonal_fixer::NEXT_VERTICAL)
 	, m_pos_interp_x0(cx*CELL_W)
 	, m_pos_interp_y0(cy*CELL_H)
 	, m_pos_interp_x1(cx*CELL_W)
@@ -70,8 +71,56 @@ void Player::tick(void)
 	assert (dx >= -1 && dx <= +1);
 	assert (dy >= -1 && dy <= +1);
 
+	// Fix diagonals
+	if (dx != 0 && dy != 0) {
+		switch (m_diagonal_fixer) {
+			case diagonal_fixer::NEXT_VERTICAL:
+			case diagonal_fixer::ASSERTING_VERTICAL:
+				dx = 0;
+				m_diagonal_fixer = diagonal_fixer::ASSERTING_VERTICAL;
+				break;
+
+			case diagonal_fixer::NEXT_HORIZONTAL:
+			case diagonal_fixer::ASSERTING_HORIZONTAL:
+				dy = 0;
+				m_diagonal_fixer = diagonal_fixer::ASSERTING_HORIZONTAL;
+				break;
+
+			default:
+				assert(!"LOGIC FAILURE");
+				break;
+		}
+
+	} else if (dx != 0) {
+		assert(dy == 0);
+		m_diagonal_fixer = diagonal_fixer::NEXT_VERTICAL;
+	} else if (dy != 0) {
+		assert(dx == 0);
+		m_diagonal_fixer = diagonal_fixer::NEXT_HORIZONTAL;
+	} else {
+		assert(dx == 0 && dy == 0);
+
+		// Handle idle case sanely.
+		// Favour switching here.
+		switch (m_diagonal_fixer) {
+			case diagonal_fixer::NEXT_VERTICAL:
+			case diagonal_fixer::ASSERTING_HORIZONTAL:
+				m_diagonal_fixer = diagonal_fixer::NEXT_VERTICAL;
+				break;
+
+			case diagonal_fixer::NEXT_HORIZONTAL:
+			case diagonal_fixer::ASSERTING_VERTICAL:
+				dy = 0;
+				m_diagonal_fixer = diagonal_fixer::NEXT_HORIZONTAL;
+				break;
+
+			default:
+				assert(!"LOGIC FAILURE");
+				break;
+		}
+	}
+
 	// Calculate facing direction base on movement direction
-	// Prioritise horizontal over vertical
 	if (dy < 0) { m_dir = direction::NORTH; }
 	if (dy > 0) { m_dir = direction::SOUTH; }
 	if (dx < 0) { m_dir = direction::WEST; }
@@ -118,10 +167,17 @@ void Player::load_this(istream &ips)
 {
 	load(ips, m_cx);
 	load(ips, m_cy);
+
 	uint8_t ui_dir = 0;
 	load(ips, ui_dir);
 	assert(ui_dir < 4);
 	m_dir = (Direction)ui_dir;
+
+	uint8_t diagonal = 0;
+	load(ips, diagonal);
+	assert(diagonal < 4);
+	m_diagonal_fixer = (DiagonalFixer)diagonal;
+
 	load(ips, m_pos_interp_x0);
 	load(ips, m_pos_interp_y0);
 	load(ips, m_pos_interp_x1);
@@ -136,8 +192,13 @@ void Player::save_this(ostream &ops)
 {
 	save(ops, m_cx);
 	save(ops, m_cy);
+
 	uint8_t ui_dir = (uint8_t)m_dir;
 	save(ops, ui_dir);
+
+	uint8_t diagonal = (uint8_t)m_diagonal_fixer;
+	save(ops, diagonal);
+
 	save(ops, m_pos_interp_x0);
 	save(ops, m_pos_interp_y0);
 	save(ops, m_pos_interp_x1);
