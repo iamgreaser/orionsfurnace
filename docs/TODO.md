@@ -11,7 +11,7 @@ A few things before I inflict this upon people:
 * [ ] Make the server open a TCP port
 * [ ] Make the client use said TCP port
 * [ ] Allow launching as a client or a nondedicated server
-* [ ] Put a donk^H^H^H^H licence on it
+* [x] Put a donk^H^H^H^H licence on it
 
 I think that's it for now. **EDIT: It wasn't it. This has been edited since putting it together. --GM**
 
