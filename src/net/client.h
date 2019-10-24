@@ -23,24 +23,6 @@ namespace net
 	}
 	using client_status::ClientStatus;
 
-	class ClientHello: public Saveable
-	{
-	private:
-		std::string m_version;
-		std::string m_nickname;
-	public:
-		ClientHello(std::string nickname = "");
-		ClientHello(std::istream &ips);
-
-		std::string get_version(void) {
-			return m_version;
-		}
-		bool is_current_version(void);
-
-		void load_this(std::istream &ips);
-		void save_this(std::ostream &ops);
-	};
-
 	class Client : public Node
 	{
 	private:

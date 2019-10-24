@@ -1,6 +1,9 @@
 #include "net/net.h"
 
+#include "core/version.h"
+
 using net::Node;
+using net::ClientHello;
 
 Node::Node(std::istream &ips, std::ostream &ops)
 	: m_ips(&ips)
@@ -56,4 +59,33 @@ void Node::update_packets(void)
 		// Handle packet.
 		this->handle_input_packet(packet_id, packet_ss);
 	}
+}
+
+
+ClientHello::ClientHello(std::string nickname)
+	: m_version(get_engine_version())
+	, m_nickname(nickname)
+{
+}
+
+ClientHello::ClientHello(std::istream &ips)
+{
+	load(ips, *this);
+}
+
+bool ClientHello::is_current_version(void)
+{
+	return (m_version == get_engine_version());
+}
+
+void ClientHello::load_this(std::istream &ips)
+{
+	load(ips, m_version);
+	load(ips, m_nickname);
+}
+
+void ClientHello::save_this(std::ostream &ops)
+{
+	save(ops, m_version);
+	save(ops, m_nickname);
 }

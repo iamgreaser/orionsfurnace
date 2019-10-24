@@ -38,6 +38,16 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 			// Say hello!
 			std::cout << "Hello from client" << std::endl;
 
+			ClientHello hello(packet_ss);
+
+			// Is this the correct version?
+			if (!hello.is_current_version()) {
+				// No - disconnect the client
+				std::cout << "Client has the wrong version!" << std::endl;
+				// TODO: Actually disconnect the client
+				break;
+			}
+
 			Game &game = m_server->game();
 			m_player_index = game.get_player_count();
 

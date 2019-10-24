@@ -122,6 +122,25 @@ namespace net
 		void update_packets(void);
 		virtual void handle_input_packet(int packet_id, std::istream &packet_ss) = 0;
 	};
+
+	class ClientHello: public Saveable
+	{
+	private:
+		std::string m_version;
+		std::string m_nickname;
+	public:
+		ClientHello(std::string nickname = "");
+		ClientHello(std::istream &ips);
+
+		std::string get_version(void) {
+			return m_version;
+		}
+		bool is_current_version(void);
+
+		void load_this(std::istream &ips);
+		void save_this(std::ostream &ops);
+	};
+
 }
 
 #endif /* if !defined(_NET_NET_H) */
