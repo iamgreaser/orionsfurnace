@@ -51,6 +51,7 @@ namespace net
 		GameFrame m_game_frame;
 		int m_player_index;
 		PlayerInput m_player_input;
+		bool m_disconnected = false;
 	public:
 		ServerClient(Server *server, int player_index, std::istream &ips, std::ostream &ops);
 		~ServerClient(void);

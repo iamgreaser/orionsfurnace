@@ -20,6 +20,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/core.h"
 #include "core/game.h"
 #include "core/player.h"
+#include "core/version.h"
 #include "net/net.h"
 
 using net::Server;
@@ -48,6 +49,11 @@ void ServerClient::update(void)
 
 void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 {
+	// Ignore if disconnected.
+	if (m_disconnected) {
+		return;
+	}
+
 	// Select by packet ID.
 	switch (packet_id)
 	{
@@ -61,7 +67,14 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 			if (!hello.is_current_version()) {
 				// No - disconnect the client
 				std::cout << "Client has the wrong version!" << std::endl;
-				// TODO: Actually disconnect the client
+
+				net::DisconnectPacket disconnect_packet(
+					std::string("Version mismatch!\n")
+					+ std::string("Please use v")
+					+ get_engine_version()
+				);
+				this->send_packet(disconnect_packet);
+				m_disconnected = true;
 				break;
 			}
 

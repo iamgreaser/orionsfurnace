@@ -76,7 +76,7 @@ std::string Client::get_central_message(void)
 			return "";
 
 		case client_status::DISCONNECTED:
-			return "Disconnected:\n" + m_disconnect_message;
+			return "Disconnected:\n\n" + m_disconnect_message;
 
 		default:
 			assert(!"LOGIC ERROR");
@@ -155,6 +155,12 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
 	// Select by packet ID.
 	switch (packet_id)
 	{
+		case packets::DISCONNECT: {
+			// Disconnect ourselves.
+			load(packet_ss, m_disconnect_message);
+			m_status = client_status::DISCONNECTED;
+		} break;
+
 		case packets::THIS_IS_YOU: {
 			// Load player index.
 			std::cout << "Load player index" << std::endl;
