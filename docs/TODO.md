@@ -8,6 +8,7 @@ A few things before I inflict this upon people:
 
 * [x] Implement the proper join sequence
 * [x] Implement disconnection
+* [ ] Implement a send/recv over pipe interface and use it - needed for the next 2 or 3:
 * [ ] Make the server open a TCP port
 * [ ] Make the client use said TCP port
 * [ ] Allow launching as a client or a nondedicated server
