@@ -26,6 +26,7 @@ I think that's it for now.
 ## Features we'll need
 
 * [ ] Implement a world
+* [ ] Implement a camera so we're not stuck with 15x15
 * [ ] Make headless server builds a thing
 
 ## Ponies
