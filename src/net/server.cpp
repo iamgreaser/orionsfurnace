@@ -34,6 +34,44 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 	// Select by packet ID.
 	switch (packet_id)
 	{
+		case packets::HELLO: {
+			// Say hello!
+			std::cout << "Hello from client" << std::endl;
+
+			Game &game = m_server->game();
+			m_player_index = game.get_player_count();
+
+			// TODO: Add spawn points
+			// FIXME: This COULD spawn one player atop another, or atop a wall or something!
+			// (but at least it terminates)
+			int cx = (int)game.random().next_int((uint32_t)game.get_width());
+			int cy = (int)game.random().next_int((uint32_t)game.get_height());
+			for (int i = 0; i < 100; i++) {
+				if (game.can_step_into(cx, cy, true)) {
+					// Our position is good!
+					break;
+				}
+				cx = (int)game.random().next_int((uint32_t)game.get_width());
+				cy = (int)game.random().next_int((uint32_t)game.get_height());
+			}
+
+			// Add the player
+			game.add_player(Player(&game, cx, cy, direction::SOUTH));
+
+			// Add the player to everyone else
+			// TODO: Cut down on redundancy here and use the same Player object
+			net::AddPlayerPacket add_player_packet(PlayerAdd(
+				m_player_index, Player(&game, cx, cy, direction::SOUTH)));
+			m_server->broadcast_packet(add_player_packet);
+
+			// Send a game snapshot to the client
+			// Also send a "This Is You" packet
+			net::ThisIsYouPacket this_is_you_packet(m_player_index);
+			net::GameSnapshotPacket game_snapshot_packet(game);
+			this->send_packet(this_is_you_packet);
+			this->send_packet(game_snapshot_packet);
+		} break;
+
 		case packets::PROVIDE_INPUT: {
 			// Set frame input.
 			std::cout << "Provide input for player " << m_player_index << std::endl;
@@ -43,7 +81,7 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 		} break;
 
 		default: {
-			std::cerr << "ERR: Unhandled packet ID " << std::hex << packet_id << " on client recv" << std::dec << std::endl;
+			std::cerr << "ERR: Unhandled packet ID " << std::hex << packet_id << " on server recv" << std::dec << std::endl;
 			abort();
 		} break;
 	}
@@ -71,43 +109,9 @@ Game &Server::game(void)
 
 void Server::add_client(std::istream &ips, std::ostream &ops)
 {
-	int client_index = m_clients.size();
-	int player_index = m_game.get_player_count();
-
-	// TODO: Add spawn points
-	// FIXME: This COULD spawn one player atop another, or atop a wall or something!
-	// (but at least it terminates)
-	int cx = (int)m_game.random().next_int((uint32_t)m_game.get_width());
-	int cy = (int)m_game.random().next_int((uint32_t)m_game.get_height());
-	for (int i = 0; i < 100; i++) {
-		if (m_game.can_step_into(cx, cy, true)) {
-			// Our position is good!
-			break;
-		}
-		cx = (int)m_game.random().next_int((uint32_t)m_game.get_width());
-		cy = (int)m_game.random().next_int((uint32_t)m_game.get_height());
-	}
-
-	// Add the player
-	m_game.add_player(Player(&m_game, cx, cy, direction::SOUTH));
-
-	// Add the player to everyone else
-	// DO THIS BEFORE ADDING THE NEW CLIENT.
-	// TODO: Cut down on redundancy here and use the same Player object
-	net::AddPlayerPacket add_player_packet(PlayerAdd(
-		player_index, Player(&m_game, cx, cy, direction::SOUTH)));
-	this->broadcast_packet(add_player_packet);
-
+	//int client_index = m_clients.size();
 	// Add a new client
-	m_clients.push_back(ServerClient(this, player_index, ips, ops));
-
-	// Send a game snapshot to the new client
-	// Also send a "This Is You" packet
-	// TODO: Wait for the "Hello" packet and then send the player's index if the Hello is OK
-	net::ThisIsYouPacket this_is_you_packet(player_index);
-	m_clients[client_index].send_packet(this_is_you_packet);
-	net::GameSnapshotPacket game_snapshot_packet(m_game);
-	m_clients[client_index].send_packet(game_snapshot_packet);
+	m_clients.push_back(ServerClient(this, -1, ips, ops));
 }
 
 void Server::broadcast_packet(net::Packet &packet)
@@ -122,6 +126,23 @@ void Server::broadcast_packet(net::Packet &packet)
 	save(*m_demo_fp, packet);
 	for (ServerClient &sc : m_clients) {
 		sc.send_packet(packet);
+	}
+}
+
+void Server::broadcast_packet_ignoring_client(net::Packet &packet, ServerClient *ignore_sc)
+{
+	// Start recording demo if we haven't yet
+	if (m_demo_fp == NULL) {
+		m_demo_fp = new std::ofstream("test.demo");
+		net::GameSnapshotPacket game_snapshot_packet(m_game);
+		save(*m_demo_fp, game_snapshot_packet);
+	}
+
+	save(*m_demo_fp, packet);
+	for (ServerClient &sc : m_clients) {
+		if (&sc != ignore_sc) {
+			sc.send_packet(packet);
+		}
 	}
 }
 

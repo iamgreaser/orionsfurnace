@@ -61,6 +61,7 @@ namespace net
 		void add_client(std::istream &ips, std::ostream &ops);
 
 		void broadcast_packet(net::Packet &packet);
+		void broadcast_packet_ignoring_client(net::Packet &packet, ServerClient *ignore_sc);
 
 		void quicksave(void);
 		void quickload(void);

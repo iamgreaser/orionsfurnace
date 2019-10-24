@@ -101,9 +101,8 @@ void Client::update(void)
 		case client_status::SENDING_HELLO: {
 			// Send a Hello packet.
 			// TODO: Nicknames
-			// TODO: Get this to work!
-			//net::HelloPacket hello_packet(ClientHello());
-			//this->send_packet(hello_packet);
+			net::HelloPacket hello_packet = net::HelloPacket(ClientHello());
+			this->send_packet(hello_packet);
 
 			// Now we move to the next awaiting state.
 			m_status = client_status::LOADING_GAME;

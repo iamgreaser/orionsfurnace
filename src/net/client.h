@@ -3,6 +3,7 @@
 
 #include "core/core.h"
 #include "core/game.h"
+#include "core/save.h"
 
 #include <iostream>
 #include <sstream>
