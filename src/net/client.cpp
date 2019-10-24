@@ -98,13 +98,16 @@ void Client::update(void)
 
 	switch (m_status)
 	{
-		case client_status::SENDING_HELLO:
+		case client_status::SENDING_HELLO: {
 			// Send a Hello packet.
-			// TODO!
+			// TODO: Nicknames
+			// TODO: Get this to work!
+			//net::HelloPacket hello_packet(ClientHello());
+			//this->send_packet(hello_packet);
 
 			// Now we move to the next awaiting state.
 			m_status = client_status::LOADING_GAME;
-			break;
+		} break;
 
 		case client_status::LOADING_GAME:
 			// All we can do here really is wait.
