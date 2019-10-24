@@ -64,6 +64,26 @@ void Client::set_all_inputs(PlayerInput player_input)
 	m_player_input = player_input;
 }
 
+std::string Client::get_central_message(void)
+{
+	switch (m_status)
+	{
+		case client_status::SENDING_HELLO:
+		case client_status::LOADING_GAME:
+			return "Loading...";
+
+		case client_status::PLAYING_GAME:
+			return "";
+
+		case client_status::DISCONNECTED:
+			return "Disconnected:\n" + m_disconnect_message;
+
+		default:
+			assert(!"LOGIC ERROR");
+			break;
+	}
+}
+
 void Client::load_game(std::istream &ips)
 {
 	if (m_game != NULL) {
@@ -115,6 +135,9 @@ void Client::update(void)
 			// TODO: implement that in the gameloop.
 			break;
 
+		default:
+			assert(!"LOGIC ERROR");
+			break;
 	}
 }
 

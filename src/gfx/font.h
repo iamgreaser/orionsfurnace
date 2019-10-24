@@ -42,6 +42,9 @@ namespace gfx
 		void draw(int px, int py,
 			int r, int g, int b,
 			const std::string text);
+		void fetch_dims_of(
+			std::string s,
+			int *pw, int *ph);
 	};
 
 	extern Font font_base;

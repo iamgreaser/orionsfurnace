@@ -125,10 +125,27 @@ void gfx::clip_rect(int px, int py, int pw, int ph)
 	assert(did_set_clip_rect == 0);
 }
 
+void gfx::draw_rect(int px, int py, int pw, int ph, int r, int g, int b)
+{
+	SDL_Rect rect = {};
+	rect.x = px;
+	rect.y = py;
+	rect.w = pw;
+	rect.h = ph;
+
+	SDL_SetRenderDrawColor(renderer, r, g, b, 0xFF);
+	int did_rect = SDL_RenderFillRect(renderer, &rect);
+	assert(did_rect == 0);
+}
+
 void gfx::draw_text(int px, int py, int r, int g, int b, const std::string text)
 {
-	// Draw text
 	font_base.draw(px, py, r, g, b, text);
+}
+
+void gfx::fetch_text_dims(std::string s, int *px, int *py)
+{
+	font_base.fetch_dims_of(s, px, py);
 }
 
 void gfx::flip(void)

@@ -47,6 +47,7 @@ namespace net
 		PlayerInput m_player_input;
 		int m_player_idx = -1;
 		Game *m_game = NULL;
+		std::string m_disconnect_message = "";
 
 		// Throttle input sending to once a frame
 		bool m_ready_to_send_input = false;
@@ -58,6 +59,8 @@ namespace net
 		int get_player_idx(void);
 		PlayerInput get_player_input(void);
 		void set_all_inputs(PlayerInput player_input);
+		std::string get_central_message(void);
+
 		void load_game(std::istream &ips);
 
 		void send_packet(Packet &packet);

@@ -104,3 +104,12 @@ void Font::draw(int px, int py, int r, int g, int b, const std::string text)
 	SDL_DestroyTexture(texture);
 
 }
+
+void Font::fetch_dims_of(std::string s, int *pw, int *ph)
+{
+	this->ensure_loaded();
+
+	TTF_Font *ttf = static_cast<TTF_Font *>(m_loaded_font);
+	int did_metrics = TTF_SizeUTF8(ttf, s.c_str(), pw, ph);
+	assert(did_metrics == 0);
+}

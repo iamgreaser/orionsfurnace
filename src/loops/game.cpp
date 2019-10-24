@@ -276,5 +276,36 @@ void GameLoop::draw_sidebar(void)
 
 void GameLoop::draw_gui(void)
 {
-	// TODO!
+	// TODO: more stuff
+
+	std::string central_message = m_client->get_central_message();
+	if (central_message != "") {
+		// Get dimensions
+		int pw = 0;
+		int ph = 0;
+		gfx::fetch_text_dims(central_message, &pw, &ph);
+
+		int px = (gfx::BASE_SCREEN_WIDTH-pw+1)/2;
+		int py = (gfx::BASE_SCREEN_HEIGHT-ph+1)/2;
+
+		// Draw background box
+		constexpr int padw1 = 20;
+		constexpr int padh1 = 10;
+		constexpr int padw2 = padw1+5;
+		constexpr int padh2 = padh1+5;
+		gfx::draw_rect(
+			px-padw2, py-padh2,
+			pw+padw2*2, ph+padh2*2,
+			170, 170, 255);
+		gfx::draw_rect(
+			px-padw1, py-padh1,
+			pw+padw1*2, ph+padh1*2,
+			0, 0, 0);
+
+		// Draw message
+		gfx::draw_text(
+			px, py,
+			170, 170, 255,
+			central_message);
+	}
 }
