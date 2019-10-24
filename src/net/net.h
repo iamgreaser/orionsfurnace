@@ -105,6 +105,7 @@ namespace net
 	typedef class ClassPacket<packets::GAME_FRAME, GameFrame> GameFramePacket;
 	typedef class ClassPacket<packets::PROVIDE_INPUT, PlayerInput> ProvideInputPacket;
 	typedef class ClassPacket<packets::ADD_PLAYER, PlayerAdd> AddPlayerPacket;
+	typedef class ClassPacket<packets::THIS_IS_YOU, uint16_t> ThisIsYouPacket;
 
 	class Node
 	{

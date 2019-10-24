@@ -102,7 +102,10 @@ void Server::add_client(std::istream &ips, std::ostream &ops)
 	m_clients.push_back(ServerClient(this, player_index, ips, ops));
 
 	// Send a game snapshot to the new client
+	// Also send a "This Is You" packet
 	// TODO: Wait for the "Hello" packet and then send the player's index if the Hello is OK
+	net::ThisIsYouPacket this_is_you_packet(player_index);
+	m_clients[client_index].send_packet(this_is_you_packet);
 	net::GameSnapshotPacket game_snapshot_packet(m_game);
 	m_clients[client_index].send_packet(game_snapshot_packet);
 }

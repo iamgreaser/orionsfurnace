@@ -31,6 +31,21 @@ Game *Client::game(void)
 	return m_game;
 }
 
+int Client::get_player_idx(void)
+{
+	return m_player_idx;
+}
+
+PlayerInput Client::get_player_input(void)
+{
+	return m_player_input;
+}
+
+void Client::set_all_inputs(PlayerInput player_input)
+{
+	m_player_input = player_input;
+}
+
 void Client::load_game(std::istream &ips)
 {
 	if (m_game != NULL) {
@@ -49,6 +64,47 @@ void Client::send_packet(net::Packet &packet)
 void Client::update(void)
 {
 	this->update_packets();
+
+	switch (m_status)
+	{
+		case client_status::SENDING_HELLO:
+			// Send a Hello packet.
+			// TODO!
+
+			// Now we move to the next awaiting state.
+			m_status = client_status::LOADING_GAME;
+			break;
+
+		case client_status::LOADING_GAME:
+			// All we can do here really is wait.
+			// Until we've got everything we need that is...
+			if (this->m_game == NULL) { break; }
+			if (this->m_player_idx < 0) { break; }
+
+			// ALRIGHT WE'RE GOOD NOW
+			this->m_status = client_status::PLAYING_GAME;
+			break;
+
+		case client_status::PLAYING_GAME:
+			// Now we can spam inputs everywhere it'll be great
+			this->tick_input_send();
+			break;
+
+		case client_status::DISCONNECTED:
+			// Welp, time to show a message telling people to quit.
+			// TODO: implement that in the gameloop.
+			break;
+
+	}
+}
+
+void Client::tick_input_send(void)
+{
+	if (m_ready_to_send_input) {
+		net::ProvideInputPacket provide_input_packet(m_player_input);
+		this->send_packet(provide_input_packet);
+		m_ready_to_send_input = false;
+	}
 }
 
 void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
@@ -56,10 +112,19 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
 	// Select by packet ID.
 	switch (packet_id)
 	{
+		case packets::THIS_IS_YOU: {
+			// Load player index.
+			std::cout << "Load player index" << std::endl;
+			int16_t player_idx = -1;
+			load(packet_ss, player_idx);
+			m_player_idx = player_idx;
+		} break;
+
 		case packets::GAME_SNAPSHOT: {
 			// Load game.
 			std::cout << "Load game" << std::endl;
 			this->load_game(packet_ss);
+			assert(m_game != NULL);
 		} break;
 
 		case packets::GAME_FRAME: {
@@ -69,6 +134,7 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
 			if (m_game != NULL) {
 				m_game->tick(game_frame);
 			}
+			m_ready_to_send_input = true;
 		} break;
 
 		case packets::ADD_PLAYER: {

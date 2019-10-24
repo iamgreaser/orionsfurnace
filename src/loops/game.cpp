@@ -79,13 +79,21 @@ loops::MainLoopState GameLoop::tick(void)
 	// Send inputs
 	//
 	if (m_client != NULL) {
-		net::ProvideInputPacket provide_input_packet(m_player_inputs[0]);
-		m_client->send_packet(provide_input_packet);
+		m_client->set_all_inputs(m_player_inputs[0]);
 	}
 
 	if (m_client_extra1 != NULL) {
-		net::ProvideInputPacket extra1_provide_input_packet(m_player_inputs[1]);
-		m_client_extra1->send_packet(extra1_provide_input_packet);
+		m_client_extra1->set_all_inputs(m_player_inputs[1]);
+	}
+
+	//
+	// Update client logic
+	//
+	if (m_client != NULL) {
+		m_client->update();
+	}
+	if (m_client_extra1 != NULL) {
+		m_client_extra1->update();
 	}
 
 	//
