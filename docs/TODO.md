@@ -6,7 +6,7 @@ vim: set sts=2 sw=2 et :
 
 A few things before I inflict this upon people:
 
-* [ ] Implement the proper join sequence
+* [x] Implement the proper join sequence
 * [ ] Implement disconnection
 * [ ] Make the server open a TCP port
 * [ ] Make the client use said TCP port
