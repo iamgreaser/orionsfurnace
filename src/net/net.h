@@ -119,6 +119,7 @@ namespace net
 		}
 	};
 
+	typedef class ClassPacket<packets::DISCONNECT, std::string> DisconnectPacket;
 	typedef class ClassPacket<packets::HELLO, ClientHello> HelloPacket;
 	typedef class ClassPacket<packets::THIS_IS_YOU, uint16_t> ThisIsYouPacket;
 	typedef class ClassPacket<packets::GAME_SNAPSHOT, Game> GameSnapshotPacket;
