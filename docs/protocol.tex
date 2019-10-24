@@ -33,7 +33,7 @@
 
     \item Various data structures are also supported. These are composed of any of these types mentioned, including other structures.
     \begin{enumerate}
-      \item A \texttt{pstring8} is a string prefixed with a \texttt{uint8\_t} denoting the length. No \texttt{0x00} byte follows.
+      \item A \texttt{pstring16} is a string prefixed with a \texttt{uint16\_t} denoting the length. No \texttt{0x00} byte follows.
     \end{enumerate}
 
     \item At this stage, TCP will be used for networking.
@@ -124,7 +124,7 @@
       \hline
       Type & Name & Description \\
       \hline
-      \texttt{pstring8} & \texttt{reason} & A text reason for the disconnection \\
+      \texttt{pstring16} & \texttt{reason} & A text reason for the disconnection \\
       \hline
     \end{tabular}
   \end{subsection}
@@ -136,8 +136,8 @@
       \hline
       Type & Name & Description \\
       \hline
-      \texttt{pstring8} & \texttt{game\_version} & The version of the game \\
-      \texttt{pstring8} & \texttt{nickname} & A nickname to give to the player \\
+      \texttt{pstring16} & \texttt{game\_version} & The version of the game \\
+      \texttt{pstring16} & \texttt{nickname} & A nickname to give to the player \\
       \hline
     \end{tabular}
 

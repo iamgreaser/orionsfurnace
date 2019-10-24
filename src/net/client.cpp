@@ -2,6 +2,7 @@
 
 #include "core/core.h"
 #include "core/game.h"
+#include "core/version.h"
 #include "net/net.h"
 
 #include <cstddef>
@@ -10,8 +11,38 @@
 #include <string>
 
 using net::Client;
+using net::ClientHello;
 using net::GameSnapshotPacket;
 using net::GameFramePacket;
+
+ClientHello::ClientHello(std::string nickname)
+	: m_version(get_engine_version())
+	, m_nickname(nickname)
+{
+}
+
+ClientHello::ClientHello(std::istream &ips)
+{
+	load(ips, *this);
+}
+
+bool ClientHello::is_current_version(void)
+{
+	return (m_version == get_engine_version());
+}
+
+void ClientHello::load_this(std::istream &ips)
+{
+	load(ips, m_version);
+	load(ips, m_nickname);
+}
+
+void ClientHello::save_this(std::ostream &ops)
+{
+	save(ops, m_version);
+	save(ops, m_nickname);
+}
+
 
 Client::Client(std::istream &ips, std::ostream &ops)
 	: net::Node::Node(ips, ops)

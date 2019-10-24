@@ -132,6 +132,27 @@ void save(std::ostream &ops, bool &obj)
 }
 
 //
+// pstring16
+//
+void load(std::istream &ips, std::string &obj)
+{
+	uint16_t len = 0;
+	load(ips, len);
+	char *buf = new char[len]; // I'd use a VLA, but Microsoft refuse to implement VLAs which is why they're optional in C11
+	ips.read(buf, len);
+	obj = std::string(buf, len);
+	delete buf;
+}
+
+void save(std::ostream &ops, std::string &obj)
+{
+	assert(obj.size() <= 0xFFFF);
+	uint16_t len = obj.size();
+	save(ops, len);
+	ops.write(obj.c_str(), len);
+}
+
+//
 // Saveable
 //
 void load(std::istream &ips, Saveable &obj)

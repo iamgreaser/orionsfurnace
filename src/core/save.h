@@ -34,6 +34,9 @@ void save(std::ostream &ops, int64_t &obj);
 void load(std::istream &ips, bool &obj);
 void save(std::ostream &ops, bool &obj);
 
+void load(std::istream &ips, std::string &obj);
+void save(std::ostream &ops, std::string &obj);
+
 void load(std::istream &ips, Saveable &obj);
 void save(std::ostream &ops, Saveable &obj);
 

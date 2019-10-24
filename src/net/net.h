@@ -28,6 +28,7 @@ using packets::PacketType;
 namespace net
 {
 	class Client;
+	class ClientHello;
 	class Packet;
 	class Server;
 
@@ -101,11 +102,12 @@ namespace net
 		}
 	};
 
+	typedef class ClassPacket<packets::HELLO, ClientHello> HelloPacket;
+	typedef class ClassPacket<packets::THIS_IS_YOU, uint16_t> ThisIsYouPacket;
 	typedef class ClassPacket<packets::GAME_SNAPSHOT, Game> GameSnapshotPacket;
 	typedef class ClassPacket<packets::GAME_FRAME, GameFrame> GameFramePacket;
 	typedef class ClassPacket<packets::PROVIDE_INPUT, PlayerInput> ProvideInputPacket;
 	typedef class ClassPacket<packets::ADD_PLAYER, PlayerAdd> AddPlayerPacket;
-	typedef class ClassPacket<packets::THIS_IS_YOU, uint16_t> ThisIsYouPacket;
 
 	class Node
 	{
