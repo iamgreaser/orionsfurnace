@@ -25,6 +25,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/player.h"
 #include "net/client.h"
 #include "net/net.h"
+#include "net/pipe.h"
 #include "net/server.h"
 
 #ifdef _LOOPS_GAME_INTERNAL
@@ -39,14 +40,12 @@ namespace loops
 	{
 	private:
 		PlayerInput m_player_inputs[2];
-		std::stringstream m_stream_c2s;
-		std::stringstream m_stream_s2c;
+		net::RawPipe m_local_pipe;
 		net::Client *m_client = NULL;
 		net::Server *m_server = NULL;
 
 		net::Client *m_client_extra1 = NULL;
-		std::stringstream m_client_extra1_stream_c2s;
-		std::stringstream m_client_extra1_stream_s2c;
+		net::RawPipe m_local_pipe_extra1;
 	public:
 		GameLoop(void);
 		~GameLoop(void);

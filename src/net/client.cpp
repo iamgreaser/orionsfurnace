@@ -96,6 +96,8 @@ void Client::load_game(std::istream &ips)
 
 void Client::update(void)
 {
+	m_pipe_end->pump_recv();
+
 	this->update_packets();
 
 	switch (m_status)
@@ -134,6 +136,8 @@ void Client::update(void)
 			assert(!"LOGIC ERROR");
 			break;
 	}
+
+	m_pipe_end->pump_send();
 }
 
 void Client::tick_input_send(void)

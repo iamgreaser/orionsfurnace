@@ -42,13 +42,13 @@ GameLoop::GameLoop(void)
 {
 	m_server = new net::Server();
 
-	m_client = new net::Client(m_stream_s2c, m_stream_c2s);
-	m_server->add_client(m_stream_c2s, m_stream_s2c);
+	m_client = new net::Client(m_local_pipe.end_a());
+	m_server->add_client(m_local_pipe.end_b());
 
 	// For testing a second player
 	if (true) {
-		m_client_extra1 = new net::Client(m_client_extra1_stream_s2c, m_client_extra1_stream_c2s);
-		m_server->add_client(m_client_extra1_stream_c2s, m_client_extra1_stream_s2c);
+		m_client_extra1 = new net::Client(m_local_pipe_extra1.end_a());
+		m_server->add_client(m_local_pipe_extra1.end_b());
 	}
 }
 

@@ -39,7 +39,11 @@ ServerClient::~ServerClient(void)
 
 void ServerClient::update(void)
 {
+	m_pipe_end->pump_recv();
+
 	this->update_packets();
+
+	m_pipe_end->pump_send();
 }
 
 void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
