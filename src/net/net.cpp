@@ -25,15 +25,12 @@ using net::ClientHello;
 Node::Node(net::PipeEnd *pipe_end)
   : m_pipe_end(pipe_end)
 {
-  std::cout << "New Node with m_pipe_end " << (uintptr_t)(m_pipe_end) << std::endl;
 }
 
 Node::~Node(void)
 {
   if (m_pipe_end != nullptr) {
-    std::cout << "Attempt m_pipe_end delete " << (uintptr_t)(m_pipe_end) << std::endl;
-    //delete m_pipe_end; // FIXME: This crashes in ~ServerClient.
-    std::cout << "Done m_pipe_end delete" << std::endl;
+    delete m_pipe_end;
     m_pipe_end = nullptr;
   }
 }
