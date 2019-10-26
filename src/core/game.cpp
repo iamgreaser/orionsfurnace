@@ -47,9 +47,7 @@ Game::~Game(void)
 
 void Game::add_player(Player player)
 {
-  int player_idx = this->get_player_count();
   m_players.push_back(player);
-  m_players[player_idx].set_game(this);
 }
 
 void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)

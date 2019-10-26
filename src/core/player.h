@@ -66,7 +66,6 @@ using diagonal_fixer::DiagonalFixer;
 
 class Player : public Saveable
 {
-  friend class Game; // m_game MUST point to the correct game!
 private:
   Game *m_game;
   int32_t m_cx;
@@ -87,7 +86,6 @@ private:
 public:
   Player(Game *game, int cx, int cy, Direction dir);
   Player(Game *game, std::istream &ips);
-  Player(void);
 
   int get_x(void) { return m_cx; }
   int get_y(void) { return m_cy; }
@@ -99,11 +97,6 @@ public:
     m_input.set_input_move(dir, v);
   }
   void set_all_inputs(PlayerInput player_input);
-  void set_game(Game *game) {
-    // FIXME THIS IS A KLUDGE
-    // - I may need to pass a Game * argument around for things?
-    m_game = game;
-  }
 
   void tick(void);
 
@@ -123,12 +116,16 @@ class PlayerAdd : public Saveable
 {
 private:
   uint16_t m_player_idx;
-  Player m_player;
+  int32_t m_cx;
+  int32_t m_cy;
+  Direction m_dir;
 public:
-  PlayerAdd(int player_idx, Player player);
+  PlayerAdd(int player_idx, int32_t cx, int32_t cy, Direction dir);
   PlayerAdd(std::istream &ips);
 
-  Player &get_player(void) { return m_player; }
+  Player make_player(Game *game) {
+    return Player(game, m_cx, m_cy, m_dir);
+  }
   int get_player_idx(void) { return m_player_idx; }
 
   void load_this(std::istream &ips) override;

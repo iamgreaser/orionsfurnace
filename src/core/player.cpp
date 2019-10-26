@@ -42,11 +42,6 @@ Player::Player(Game *game, int cx, int cy, Direction dir)
 {
 }
 
-Player::Player(void)
-  : m_game(nullptr)
-{
-}
-
 Player::Player(Game *game, std::istream &ips)
   : m_game(game)
 {
@@ -316,8 +311,10 @@ void PlayerInput::save_this(std::ostream &ops) const
 }
 
 
-PlayerAdd::PlayerAdd(int player_idx, Player player)
-  : m_player(player)
+PlayerAdd::PlayerAdd(int player_idx, int32_t cx, int32_t cy, Direction dir)
+  : m_cx(cx)
+  , m_cy(cy)
+  , m_dir(dir)
 {
   assert(player_idx >= 0 && player_idx <= 0xFFFF);
   m_player_idx = static_cast<uint16_t>(player_idx);
@@ -331,11 +328,21 @@ PlayerAdd::PlayerAdd(std::istream &ips)
 void PlayerAdd::load_this(std::istream &ips)
 {
   load(ips, m_player_idx);
-  load(ips, m_player);
+  load(ips, m_cx);
+  load(ips, m_cy);
+
+  uint8_t ui_dir = 0;
+  load(ips, ui_dir);
+  assert(ui_dir < 4);
+  m_dir = static_cast<Direction>(ui_dir);
 }
 
 void PlayerAdd::save_this(std::ostream &ops) const
 {
   save(ops, m_player_idx);
-  save(ops, m_player);
+  save(ops, m_cx);
+  save(ops, m_cy);
+
+  uint8_t ui_dir = static_cast<uint8_t>(m_dir);
+  save(ops, ui_dir);
 }

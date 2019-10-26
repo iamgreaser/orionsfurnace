@@ -102,7 +102,7 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
       // Add the player to everyone else
       // TODO: Cut down on redundancy here and use the same Player object
       net::AddPlayerPacket add_player_packet(PlayerAdd(
-        m_player_index, Player(&game, cx, cy, direction::SOUTH)));
+        m_player_index, cx, cy, direction::SOUTH));
       m_server->broadcast_packet(add_player_packet);
 
       // Send a game snapshot to the client

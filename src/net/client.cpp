@@ -200,7 +200,7 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
       PlayerAdd player_add(packet_ss);
       if (m_game != nullptr) {
         assert(player_add.get_player_idx() == m_game->get_player_count());
-        m_game->add_player(player_add.get_player());
+        m_game->add_player(player_add.make_player(m_game));
       }
     } break;
 
