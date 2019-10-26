@@ -1,0 +1,6 @@
+#ifndef ENGINE_VERSION_H
+#define ENGINE_VERSION_H
+
+#define ENGINE_VERSION "@GIT_VERSION@"
+
+#endif /* if !defined(ENGINE_VERSION_H) */

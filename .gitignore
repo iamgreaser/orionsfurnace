@@ -1,5 +1,6 @@
 # Output
 build/
+cbuild/
 
 # TeX output
 *.aux
