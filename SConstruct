@@ -21,9 +21,20 @@ env = Environment(
     variables = vars,
 
     COMMON_FLAGS = ["-g", "-Og"],
-    CFLAGS = ["${COMMON_FLAGS}", "-Wall", "-Wextra", "-pedantic", "-std=c11",],
-    CXXFLAGS = ["${COMMON_FLAGS}", "-Wall", "-Wextra", "-pedantic", "-std=c++11",],
-    LINKFLAGS = ["${COMMON_FLAGS}",],
+    C_AND_CXX_FLAGS = [
+        "${COMMON_FLAGS}",
+        "-Wall",
+        "-Wextra",
+        "-pedantic",
+    ],
+    CFLAGS = [
+        "${C_AND_CXX_FLAGS}",
+        "-std=c11",
+    ],
+    CXXFLAGS = [
+        "${C_AND_CXX_FLAGS}",
+        "-std=c++11",
+    ],
 )
 
 env.Replace(
@@ -41,6 +52,40 @@ env.Append(
         "SDL2_ttf",
     ],
 )
+
+if "gcc" in env["CC"] or "g++" in env["CXX"]:
+    env.Append(
+        C_AND_CXX_FLAGS = [
+            "-Wconversion",
+            "-Wpedantic",
+            "-Wlogical-op",
+            "-Wformat=2",
+            "-Wformat-overflow=2",
+            "-Wformat-signedness",
+            "-Wformat-truncation=2",
+            "-Wnull-dereference",
+            "-Wuninitialized",
+            "-Wstrict-aliasing=2",
+            "-Wstringop-truncation",
+            "-Wduplicated-cond",
+            "-Walloca",
+            "-Warray-bounds=2",
+            "-Wtrampolines",
+            "-Wfloat-equal",
+            "-Wshadow",
+            "-Wpointer-arith",
+            "-Wcast-align=strict",
+            "-Wwrite-strings",
+            "-Wcast-qual",
+            "-Wdate-time",
+        ],
+        CFLAGS = [
+            "-Wc++-compat",
+            "-Wbad-function-cast",
+        ],
+        CXXFLAGS = [
+        ],
+    )
 
 if "clang" in env["CC"]:
     env["CFLAGS"] += ["-Weverything",]
