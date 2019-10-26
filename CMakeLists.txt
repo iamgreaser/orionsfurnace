@@ -47,7 +47,7 @@ configure_file (
 # Aggressive warnings
 set(COMMON_FLAGS "-Wall -Wextra -Wconversion -Wpedantic -pedantic -Wformat=2 -Wnull-dereference -Wuninitialized -Wstrict-aliasing=2 -Wfloat-equal -Wshadow -Wpointer-arith -Wwrite-strings -Wcast-qual -Wdate-time")
 # Hardening and fail-fast behavior
-set(COMMON_FLAGS "${COMMON_FLAGS} -fsanitize=address -fsanitize=undefined -fstack-protector-all -fsanitize-address-use-after-scope -fstack-check")
+set(COMMON_FLAGS "${COMMON_FLAGS} -fsanitize=address -fsanitize=undefined -fstack-protector-all -fsanitize-address-use-after-scope")
 # Verbose debugging information and tracking
 set(COMMON_FLAGS "${COMMON_FLAGS} -gdwarf-4 -ggdb3 -fno-omit-frame-pointer")
 
@@ -55,6 +55,8 @@ set(COMMON_FLAGS "${COMMON_FLAGS} -gdwarf-4 -ggdb3 -fno-omit-frame-pointer")
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Aggressive warnings
   set(COMMON_FLAGS "${COMMON_FLAGS} -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
+  # Hardening and fail-fast behavior
+  set(COMMON_FLAGS "${COMMON_FLAGS} -fstack-check")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # Aggressive warnings
   set(COMMON_FLAGS "${COMMON_FLAGS} -Wlogical-op -Wformat-overflow=2 -Wformat-signedness -Wformat-truncation=2 -Wstringop-truncation -Wduplicated-cond -Walloca -Warray-bounds=2 -Wtrampolines -Wcast-align=strict")
