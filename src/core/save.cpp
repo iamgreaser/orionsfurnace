@@ -24,7 +24,10 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 //
 void load(std::istream &ips, uint8_t &obj)
 {
-	char vc = ips.get();
+	int v = ips.get();
+	assert(vc >= 0); // TODO: throw an exception on EOF instead
+	assert(vc <= 0xFF); // this on the other hand should just crash on failure
+	uint8_t vc = (uint8_t)v;
 	obj = *reinterpret_cast<uint8_t *>(&vc);
 }
 
