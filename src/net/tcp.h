@@ -63,7 +63,7 @@ namespace net
 		TCPPipeEnd *accept_if_available(void);
 
 	protected:
-		bool is_good_ai_family(int family);
+		bool is_good_ai_family(int family) const;
 	};
 }
 

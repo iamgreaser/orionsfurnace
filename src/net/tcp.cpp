@@ -308,7 +308,7 @@ TCPServer::~TCPServer(void)
 	}
 }
 
-bool TCPServer::is_good_ai_family(int family)
+bool TCPServer::is_good_ai_family(int family) const
 {
 	switch (family) {
 		case AF_LOCAL:

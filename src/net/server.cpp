@@ -151,11 +151,6 @@ Server::~Server(void)
 	}
 }
 
-Game &Server::game(void)
-{
-	return m_game;
-}
-
 void Server::add_client(net::PipeEnd *pipe_end)
 {
 	//int client_index = m_clients.size();

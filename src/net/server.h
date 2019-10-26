@@ -75,7 +75,9 @@ namespace net
 		Server(int port);
 		~Server(void);
 
-		Game &game(void);
+		Game &game(void) {
+			return m_game;
+		}
 
 		void add_client(net::PipeEnd *pipe_end);
 
