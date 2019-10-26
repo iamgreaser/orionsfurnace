@@ -64,7 +64,7 @@ env = Environment(
 )
 
 env.Replace(
-    TARGET_SYSTEM = "x86_64-linux",
+    TARGET_SYSTEM = syscall([env['CC'], '-dumpmachine'])
 )
 
 env.MergeFlags([
