@@ -27,7 +27,7 @@ void load(std::istream &ips, uint8_t &obj)
   int v = ips.get();
   assert(v >= 0); // TODO: throw an exception on EOF instead
   assert(v <= 0xFF); // this on the other hand should just crash on failure
-  uint8_t vc = (uint8_t)v;
+  uint8_t vc = static_cast<uint8_t>(v);
   obj = *reinterpret_cast<uint8_t *>(&vc);
 }
 
@@ -45,13 +45,13 @@ void load(std::istream &ips, uint16_t &obj)
   uint8_t v1 = 0;
   load(ips, v0);
   load(ips, v1);
-  obj = (uint16_t)(((uint32_t)v0)|(((uint32_t)v1)<<8));
+  obj = static_cast<uint16_t>((static_cast<uint32_t>(v0))|(static_cast<uint32_t>(v1)<<8));
 }
 
 void save(std::ostream &ops, uint16_t &obj)
 {
-  uint8_t v0 = (uint8_t)(obj);
-  uint8_t v1 = (uint8_t)(obj>>8);
+  uint8_t v0 = static_cast<uint8_t>(obj);
+  uint8_t v1 = static_cast<uint8_t>(obj>>8);
   save(ops, v0);
   save(ops, v1);
 }
@@ -62,13 +62,13 @@ void load(std::istream &ips, uint32_t &obj)
   uint16_t v1 = 0;
   load(ips, v0);
   load(ips, v1);
-  obj = ((uint32_t)v0)|(((uint32_t)v1)<<16);
+  obj = static_cast<uint32_t>(v0)|(static_cast<uint32_t>(v1)<<16);
 }
 
 void save(std::ostream &ops, uint32_t &obj)
 {
-  uint16_t v0 = (uint16_t)(obj);
-  uint16_t v1 = (uint16_t)(obj>>16);
+  uint16_t v0 = static_cast<uint16_t>(obj);
+  uint16_t v1 = static_cast<uint16_t>(obj>>16);
   save(ops, v0);
   save(ops, v1);
 }
@@ -79,13 +79,13 @@ void load(std::istream &ips, uint64_t &obj)
   uint32_t v1 = 0;
   load(ips, v0);
   load(ips, v1);
-  obj = ((uint64_t)v0)|(((uint64_t)v1)<<32ULL);
+  obj = static_cast<uint64_t>(v0)|(static_cast<uint64_t>(v1)<<32ULL);
 }
 
 void save(std::ostream &ops, uint64_t &obj)
 {
-  uint32_t v0 = (uint32_t)(obj);
-  uint32_t v1 = (uint32_t)(obj>>32ULL);
+  uint32_t v0 = static_cast<uint32_t>(obj);
+  uint32_t v1 = static_cast<uint32_t>(obj>>32ULL);
   save(ops, v0);
   save(ops, v1);
 }
@@ -168,7 +168,7 @@ void save(std::ostream &ops, std::string &obj)
 {
   size_t raw_len = obj.size();
   assert(raw_len <= 0xFFFF);
-  uint16_t len = (uint16_t)raw_len;
+  uint16_t len = static_cast<uint16_t>(raw_len);
   save(ops, len);
   ops.write(obj.c_str(), len);
 }

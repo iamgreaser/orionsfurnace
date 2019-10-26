@@ -85,15 +85,15 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
       // TODO: Add spawn points
       // FIXME: This COULD spawn one player atop another, or atop a wall or something!
       // (but at least it terminates)
-      int cx = (int)game.random().next_int((uint32_t)game.get_width());
-      int cy = (int)game.random().next_int((uint32_t)game.get_height());
+      int cx = static_cast<int>(game.random().next_int(static_cast<uint32_t>(game.get_width())));
+      int cy = static_cast<int>(game.random().next_int(static_cast<uint32_t>(game.get_height())));
       for (int i = 0; i < 100; i++) {
         if (game.can_step_into(cx, cy, true)) {
           // Our position is good!
           break;
         }
-        cx = (int)game.random().next_int((uint32_t)game.get_width());
-        cy = (int)game.random().next_int((uint32_t)game.get_height());
+        cx = static_cast<int>(game.random().next_int(static_cast<uint32_t>(game.get_width())));
+        cy = static_cast<int>(game.random().next_int(static_cast<uint32_t>(game.get_height())));
       }
 
       // Add the player
@@ -109,7 +109,7 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
       // Also send a "This Is You" packet
       assert(m_player_index >= 0);
       assert(m_player_index <= 0xFFFF);
-      uint16_t saved_player_index = (uint16_t)m_player_index;
+      uint16_t saved_player_index = static_cast<uint16_t>(m_player_index);
       net::ThisIsYouPacket this_is_you_packet(saved_player_index);
       net::GameSnapshotPacket game_snapshot_packet(game);
       this->send_packet(this_is_you_packet);

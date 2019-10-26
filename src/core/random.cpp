@@ -35,7 +35,7 @@ Random::Random(void)
 {
   // Grab it from the system time in milliseconds.
   time_point<system_clock> now = system_clock::now();
-  m_seed = (uint32_t)(duration_cast<milliseconds>(now.time_since_epoch()).count());
+  m_seed = static_cast<uint32_t>((duration_cast<milliseconds>(now.time_since_epoch()).count()));
 
   // Seed it a few times for good luck.
   for (int i = 0; i < 13; i++) {

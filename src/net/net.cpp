@@ -61,12 +61,12 @@ void Node::update_packets(void)
 
     // Extract the bare minimum info needed
     uint32_t sub_size = 0;
-    sub_size += ((uint32_t)m_input_buf[0]);
-    sub_size += ((uint32_t)m_input_buf[1])<<8;
-    sub_size += ((uint32_t)m_input_buf[2])<<16;
-    sub_size += ((uint32_t)m_input_buf[3])<<24;
+    sub_size += static_cast<uint32_t>((m_input_buf[0]));
+    sub_size += static_cast<uint32_t>((m_input_buf[1])<<8);
+    sub_size += static_cast<uint32_t>((m_input_buf[2])<<16);
+    sub_size += static_cast<uint32_t>((m_input_buf[3])<<24);
     assert(sub_size >= 1);
-    uint8_t packet_id = (uint8_t)m_input_buf[4];
+    uint8_t packet_id = static_cast<uint8_t>(m_input_buf[4]);
     size_t full_packet_size = 4+1+sub_size;
 
     // Will it fit?

@@ -172,12 +172,12 @@ void Player::load_this(istream &ips)
   uint8_t ui_dir = 0;
   load(ips, ui_dir);
   assert(ui_dir < 4);
-  m_dir = (Direction)ui_dir;
+  m_dir = static_cast<Direction>(ui_dir);
 
   uint8_t diagonal = 0;
   load(ips, diagonal);
   assert(diagonal < 4);
-  m_diagonal_fixer = (DiagonalFixer)diagonal;
+  m_diagonal_fixer = static_cast<DiagonalFixer>(diagonal);
 
   load(ips, m_pos_interp_x0);
   load(ips, m_pos_interp_y0);
@@ -194,10 +194,10 @@ void Player::save_this(ostream &ops)
   save(ops, m_cx);
   save(ops, m_cy);
 
-  uint8_t ui_dir = (uint8_t)m_dir;
+  uint8_t ui_dir = static_cast<uint8_t>(m_dir);
   save(ops, ui_dir);
 
-  uint8_t diagonal = (uint8_t)m_diagonal_fixer;
+  uint8_t diagonal = static_cast<uint8_t>(m_diagonal_fixer);
   save(ops, diagonal);
 
   save(ops, m_pos_interp_x0);
@@ -309,7 +309,7 @@ void PlayerInput::save_this(std::ostream &ops)
   for (int i = 0; i < 4; i++) {
     if (m_input_move[i]) {
       assert(i >= 0 && i <= 8);
-      dirmask |= (uint8_t)(1<<i);
+      dirmask |= static_cast<uint8_t>((1<<i));
     }
   }
   save(ops, dirmask);
@@ -320,7 +320,7 @@ PlayerAdd::PlayerAdd(int player_idx, Player player)
   : m_player(player)
 {
   assert(player_idx >= 0 && player_idx <= 0xFFFF);
-  m_player_idx = (uint16_t)player_idx;
+  m_player_idx = static_cast<uint16_t>(player_idx);
 }
 
 PlayerAdd::PlayerAdd(std::istream &ips)

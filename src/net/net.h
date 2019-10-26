@@ -125,8 +125,8 @@ namespace net
       // Save datagram
       std::string str = ss.str();
       size_t raw_packet_length = str.size();
-      assert(raw_packet_length <= (size_t)(0xFFFFFFFFULL));
-      uint32_t packet_length = (uint32_t)raw_packet_length;
+      assert(raw_packet_length <= static_cast<size_t>(0xFFFFFFFFULL));
+      uint32_t packet_length = static_cast<uint32_t>(raw_packet_length);
       save(ops, packet_length);
       save(ops, packet_id);
       ops << str;

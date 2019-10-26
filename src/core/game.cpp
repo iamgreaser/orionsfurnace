@@ -115,7 +115,7 @@ void Game::save_this(ostream &ops)
 {
   int raw_player_count = this->get_player_count();
   assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
-  uint16_t player_count = (uint16_t)raw_player_count;
+  uint16_t player_count = static_cast<uint16_t>(raw_player_count);
   save(ops, player_count);
 
   for (uint16_t i = 0; i < player_count; i++) {
@@ -160,7 +160,7 @@ void GameFrame::save_this(ostream &ops)
 {
   int raw_player_count = this->get_player_count();
   assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
-  uint16_t player_count = (uint16_t)raw_player_count;
+  uint16_t player_count = static_cast<uint16_t>(raw_player_count);
   save(ops, player_count);
 
   for (uint16_t i = 0; i < player_count; i++) {
