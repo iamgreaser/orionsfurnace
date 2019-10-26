@@ -38,7 +38,7 @@ namespace gfx
   constexpr int SIDEBAR_W = BASE_SCREEN_WIDTH-SIDEBAR_X;
   constexpr int SIDEBAR_H = BASE_SCREEN_HEIGHT;
 
-  void init(void);
+  void init(bool use_software_rendering);
 
   void clear(int r, int g, int b);
   void clip_nothing(void);

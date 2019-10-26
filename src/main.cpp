@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
   loops::LaunchMode launch_mode = loops::launch_mode::PLAYER_SERVER;
   bool did_set_launch_mode = false;
   bool bailed_inside = false;
+  bool use_software_rendering = false;
   string net_addr = "localhost";
   int net_port = -1;
 
@@ -109,6 +110,10 @@ int main(int argc, char *argv[])
       net_port = std::stoi(string(argv[i+2]));
       i += 3;
 
+    } else if (string(argv[i]) == "--software") {
+      use_software_rendering = true;
+      i += 1;
+
     } else {
       cerr << "Invalid argument \"" << string(argv[i]) << "\"" << endl;
       break;
@@ -128,7 +133,7 @@ int main(int argc, char *argv[])
   signal(SIGINT,  SIG_DFL);
   signal(SIGTERM, SIG_DFL);
 
-  gfx::init();
+  gfx::init(use_software_rendering);
 
   loops::run(launch_mode, net_addr, net_port);
 

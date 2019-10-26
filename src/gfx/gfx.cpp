@@ -49,7 +49,7 @@ namespace gfx
 #endif
 }
 
-void gfx::init(void)
+void gfx::init(bool use_software_rendering)
 {
   // Create a window
   std::string window_title = (
@@ -67,13 +67,15 @@ void gfx::init(void)
   assert(window != nullptr);
 
   // Create a renderer for the window
-  renderer = SDL_CreateRenderer(
-    window,
-    -1,
-    (0
-      | SDL_RENDERER_PRESENTVSYNC
-      | SDL_RENDERER_TARGETTEXTURE
-      ));
+  int renderer_flags = (0
+    | SDL_RENDERER_PRESENTVSYNC
+    | SDL_RENDERER_TARGETTEXTURE);
+
+  if (use_software_rendering) {
+    renderer_flags &= ~SDL_RENDERER_PRESENTVSYNC;
+    renderer_flags |= SDL_RENDERER_SOFTWARE;
+  }
+  renderer = SDL_CreateRenderer(window, -1, renderer_flags);
   assert(renderer != nullptr);
 
   // Create our backbuffer
