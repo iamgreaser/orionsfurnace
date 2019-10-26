@@ -17,6 +17,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "net/tcp.h"
 
+#include <cerrno>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
@@ -30,6 +31,9 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <netinet/in.h>
 #include <poll.h>
 #include <unistd.h>
+
+// Use 64KB for recv
+const int TCP_RECV_BUFFER_SIZE = (64<<10);
 
 #if 1
 const int NETWORK_SOCKTYPE = SOCK_STREAM;
@@ -105,10 +109,76 @@ TCPPipeEnd::~TCPPipeEnd(void)
 
 void TCPPipeEnd::pump_recv(void)
 {
+	char recv_buf[TCP_RECV_BUFFER_SIZE];
+	ssize_t got_bytes = recv(
+		m_sockfd,
+		recv_buf,
+		sizeof(recv_buf),
+		MSG_DONTWAIT);
+
+	if (got_bytes < 0) {
+		int e = errno;
+
+		// Check if this is because we would block.
+		if (e == EAGAIN || e == EWOULDBLOCK) {
+			return;
+		}
+
+		perror("recv");
+		assert(!"recv failed");
+	}
+
+	// Did we disconnect?
+	if (got_bytes == 0) {
+		assert(!"TODO: Disconnect elegantly");
+	}
+
+	// Add this to the buffer.
+	m_recv_ss.write(recv_buf, got_bytes);
 }
 
 void TCPPipeEnd::pump_send(void)
 {
+	// Fetch some output
+	{
+		char buf[8192];
+		std::streamsize sz = m_send_ss.readsome(buf, 8192);
+		m_send_buf += std::string(buf, sz);
+	}
+
+	// Don't send nothing.
+	// - This can easily get confused with EOF.
+	// - IIRC FreeBSD throws an error if you do this, but it's been years since I last checked.
+	if (m_send_buf.size() == 0) {
+		return;
+	}
+
+	// Write some bytes
+	ssize_t wrote_bytes = send(
+		m_sockfd,
+		m_send_buf.c_str(),
+		m_send_buf.size(),
+		MSG_DONTWAIT);
+
+	if (wrote_bytes < 0) {
+		int e = errno;
+
+		// Check if this is because we would block.
+		if (e == EAGAIN || e == EWOULDBLOCK) {
+			return;
+		}
+
+		perror("send");
+		assert(!"send failed");
+	}
+
+	// Did we disconnect?
+	if (wrote_bytes == 0) {
+		assert(!"TODO: Disconnect elegantly");
+	}
+
+	// Remove this from the send buffer.
+	m_send_buf.erase(m_send_buf.begin(), m_send_buf.begin()+wrote_bytes);
 }
 
 TCPServer::TCPServer(int port)

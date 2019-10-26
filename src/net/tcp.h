@@ -34,7 +34,6 @@ namespace net
 		int m_sockfd;
 		std::stringstream m_send_ss;
 		std::stringstream m_recv_ss;
-		std::string m_recv_buf = "";
 		std::string m_send_buf = "";
 	public:
 		TCPPipeEnd(int sockfd);
