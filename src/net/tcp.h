@@ -32,6 +32,7 @@ namespace net
 	{
 	protected:
 		int m_sockfd;
+		bool m_is_dead = false;
 		std::stringstream m_send_ss;
 		std::stringstream m_recv_ss;
 		std::string m_send_buf = "";

@@ -225,13 +225,17 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 
 		case SDLK_F2:
 			if (ev.type == SDL_KEYDOWN) {
-				m_server->quicksave();
+				if (m_server != NULL) {
+					m_server->quicksave();
+				}
 			}
 			break;
 
 		case SDLK_F3:
 			if (ev.type == SDL_KEYDOWN) {
-				m_server->quickload();
+				if (m_server != NULL) {
+					m_server->quickload();
+				}
 			}
 			break;
 

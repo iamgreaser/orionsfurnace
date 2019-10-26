@@ -40,7 +40,8 @@ const int NETWORK_SOCKTYPE = SOCK_STREAM;
 const int NETWORK_PROTOCOL = IPPROTO_TCP;
 #else
 // TODO: No really, abolish Windows
-const int NETWORK_SOCKTYPE = SOCK_SEQPACKET;
+//const int NETWORK_SOCKTYPE = SOCK_SEQPACKET;
+const int NETWORK_SOCKTYPE = SOCK_STREAM;
 const int NETWORK_PROTOCOL = IPPROTO_SCTP;
 #endif
 
@@ -109,6 +110,10 @@ TCPPipeEnd::~TCPPipeEnd(void)
 
 void TCPPipeEnd::pump_recv(void)
 {
+	if (m_is_dead) {
+		return;
+	}
+
 	char recv_buf[TCP_RECV_BUFFER_SIZE];
 	ssize_t got_bytes = recv(
 		m_sockfd,
@@ -124,13 +129,20 @@ void TCPPipeEnd::pump_recv(void)
 			return;
 		}
 
+		// Mark this socket as dead
 		perror("recv");
-		assert(!"recv failed");
+		m_is_dead = true;
+		return;
+		//assert(!"recv failed");
 	}
 
 	// Did we disconnect?
 	if (got_bytes == 0) {
-		assert(!"TODO: Disconnect elegantly");
+		// Mark this socket as dead
+		std::cerr << "recv returned 0" << std::endl;
+		m_is_dead = true;
+		return;
+		//assert(!"TODO: Disconnect elegantly");
 	}
 
 	// Add this to the buffer.
@@ -139,6 +151,10 @@ void TCPPipeEnd::pump_recv(void)
 
 void TCPPipeEnd::pump_send(void)
 {
+	if (m_is_dead) {
+		return;
+	}
+
 	// Fetch some output
 	{
 		char buf[8192];
@@ -168,13 +184,19 @@ void TCPPipeEnd::pump_send(void)
 			return;
 		}
 
+		// Mark this socket as dead
 		perror("send");
-		assert(!"send failed");
+		m_is_dead = true;
+		return;
+		//assert(!"send failed");
 	}
 
 	// Did we disconnect?
 	if (wrote_bytes == 0) {
-		assert(!"TODO: Disconnect elegantly");
+		std::cerr << "send returned 0" << std::endl;
+		m_is_dead = true;
+		return;
+		//assert(!"TODO: Disconnect elegantly");
 	}
 
 	// Remove this from the send buffer.
