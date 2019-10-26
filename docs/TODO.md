@@ -31,7 +31,7 @@ I think that's it for now. **EDIT: It wasn't it. This has been edited since putt
 
 * [ ] Make it possible to remove players
 * [ ] Make it possible for a client to save
-* [ ] Make stuff like `TCP_NODELAY` happen
+* [x] Make stuff like `TCP_NODELAY` happen
 * [ ] Handle saves with mismatched player counts better
 * [ ] Windows-specific networking support
 * [ ] Implement a world

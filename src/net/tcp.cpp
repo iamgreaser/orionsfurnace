@@ -29,6 +29,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <poll.h>
 #include <unistd.h>
 
@@ -83,6 +84,23 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
 		perror("creating client socket");
 		assert(!"Could not connect: Could not create socket");
 	}
+
+	std::cout << "Client address family: " << gai->ai_family << std::endl;
+	std::cout << "Client socket type: " << gai->ai_socktype << std::endl;
+	std::cout << "Client protocol: " << gai->ai_protocol << std::endl;
+
+	// Disable Nagle's algorithm and send immediately
+	int tcp_nodelay = 1;
+	int did_tcp_nodelay = setsockopt(
+		m_sockfd, IPPROTO_TCP, TCP_NODELAY,
+		(void *)&tcp_nodelay,
+		sizeof(tcp_nodelay));
+
+	if (did_tcp_nodelay < 0) {
+		perror("setting TCP_NODELAY");
+		assert(!"Could not host: Could not set TCP_NODELAY");
+	}
+
 
 	// Now connect to it
 	int did_connect = connect(
