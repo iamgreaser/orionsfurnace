@@ -25,8 +25,8 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 void load(std::istream &ips, uint8_t &obj)
 {
 	int v = ips.get();
-	assert(vc >= 0); // TODO: throw an exception on EOF instead
-	assert(vc <= 0xFF); // this on the other hand should just crash on failure
+	assert(v >= 0); // TODO: throw an exception on EOF instead
+	assert(v <= 0xFF); // this on the other hand should just crash on failure
 	uint8_t vc = (uint8_t)v;
 	obj = *reinterpret_cast<uint8_t *>(&vc);
 }
@@ -45,7 +45,7 @@ void load(std::istream &ips, uint16_t &obj)
 	uint8_t v1 = 0;
 	load(ips, v0);
 	load(ips, v1);
-	obj = ((uint16_t)v0)|(((uint16_t)v1)<<8);
+	obj = (uint16_t)(((uint32_t)v0)|(((uint32_t)v1)<<8));
 }
 
 void save(std::ostream &ops, uint16_t &obj)
@@ -166,8 +166,9 @@ void load(std::istream &ips, std::string &obj)
 
 void save(std::ostream &ops, std::string &obj)
 {
-	assert(obj.size() <= 0xFFFF);
-	uint16_t len = obj.size();
+	size_t raw_len = obj.size();
+	assert(raw_len <= 0xFFFF);
+	uint16_t len = (uint16_t)raw_len;
 	save(ops, len);
 	ops.write(obj.c_str(), len);
 }
