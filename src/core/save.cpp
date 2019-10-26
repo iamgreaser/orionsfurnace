@@ -161,7 +161,7 @@ void load(std::istream &ips, std::string &obj)
   char *buf = new char[len]; // I'd use a VLA, but Microsoft refuse to implement VLAs which is why they're optional in C11
   ips.read(buf, len);
   obj = std::string(buf, len);
-  delete buf;
+  delete[] buf;
 }
 
 void save(std::ostream &ops, std::string &obj)

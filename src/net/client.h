@@ -43,7 +43,7 @@ namespace net
   class Client : public Node
   {
   private:
-    ClientStatus m_status;
+    ClientStatus m_status = client_status::SENDING_HELLO;
     PlayerInput m_player_input;
     int m_player_idx = -1;
     Game *m_game = nullptr;
