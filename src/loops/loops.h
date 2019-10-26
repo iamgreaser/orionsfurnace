@@ -27,7 +27,7 @@ namespace loops
 		enum LaunchMode
 		{
 			PLAYER_SERVER = 0,
-			//CLIENT,
+			CLIENT,
 			//HEADLESS_SERVER,
 		};
 	}

@@ -76,10 +76,12 @@ void loops::run(loops::LaunchMode launch_mode, std::string net_addr, int net_por
 			game_loop.start_server(net_port);
 			game_loop.start_client("", net_port);
 			break;
-		// case loops::launch_mode::CLIENT:
-			//game_loop.start_client(net_addr, net_port);
-			//break;
-		//default: assert(!"LOGIC ERROR"); break;
+
+		case loops::launch_mode::CLIENT:
+			game_loop.start_client(net_addr, net_port);
+			break;
+
+		default: assert(!"LOGIC ERROR"); break;
 	}
 
 	MainLoopState loop_state = mainloop::GAME;

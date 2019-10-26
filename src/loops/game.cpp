@@ -140,8 +140,9 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	// Update server logic
 	//
-	assert(m_server != NULL);
-	m_server->update();
+	if (m_server != NULL) {
+		m_server->update();
+	}
 
 	//
 	// Update client logic

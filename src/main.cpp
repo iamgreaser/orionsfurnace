@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 
 	loops::run(
 		loops::launch_mode::PLAYER_SERVER,
+		//loops::launch_mode::CLIENT,
 		"localhost",
 		13420);
 
