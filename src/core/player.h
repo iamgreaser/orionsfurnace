@@ -68,7 +68,7 @@ using diagonal_fixer::DiagonalFixer;
 
 class Player : public Saveable
 {
-	friend Game; // m_game MUST point to the correct game!
+	friend class Game; // m_game MUST point to the correct game!
 private:
 	Game *m_game;
 	int32_t m_cx;
