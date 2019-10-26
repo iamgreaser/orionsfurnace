@@ -39,6 +39,12 @@ def syscall(argv):
 #
 WARNINGS_ARE_ERRORS = True
 
+# USE_HINT_WARNINGS:
+#
+# If you want to catch a few extra things, set this to True.
+# Currently this only works for GCC.
+USE_HINT_WARNINGS = False
+
 vars = Variables("build_settings.py", ARGUMENTS)
 vars.Add("CC", "C compiler", "gcc")
 vars.Add("CXX", "C++ compiler", "g++")
@@ -112,6 +118,29 @@ if "gcc" in env["CC"] or ("g++" in env["CXX"] and "clang++" not in env["CXX"]):
         CXXFLAGS = [
         ],
     )
+
+    if USE_HINT_WARNINGS:
+        env.Append(
+            C_AND_CXX_FLAGS = [
+                "-Wsuggest-attribute=pure",
+                "-Wsuggest-attribute=const",
+                "-Wsuggest-attribute=noreturn",
+                "-Wsuggest-attribute=malloc",
+                "-Wsuggest-attribute=format",
+                "-Wmissing-format-attribute",
+                "-Wsuggest-attribute=cold",
+                "-Wvector-operation-performance",
+                "-Winline",
+                "-Wpadded",
+                "-Wpacked",
+            ],
+
+            CXXFLAGS = [
+                "-Wsuggest-final-types",
+                "-Wsuggest-final-methods",
+                "-Wsuggest-override",
+            ],
+        )
 
 if "clang" in env["CC"]:
     env["CFLAGS"] += ["-Weverything",]
