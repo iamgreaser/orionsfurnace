@@ -95,7 +95,7 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
   int tcp_nodelay = 1;
   int did_tcp_nodelay = setsockopt(
     m_sockfd, IPPROTO_TCP, TCP_NODELAY,
-    (void *)&tcp_nodelay,
+    static_cast<void *>(&tcp_nodelay),
     sizeof(tcp_nodelay));
 
   if (did_tcp_nodelay < 0) {
@@ -107,8 +107,8 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
   // Now connect to it
   int did_connect = connect(
     m_sockfd,
-    (const struct sockaddr *)gai->ai_addr,
-    (socklen_t)gai->ai_addrlen);
+    const_cast<const struct sockaddr *>(gai->ai_addr),
+    static_cast<socklen_t>(gai->ai_addrlen));
 
   if (did_connect < 0) {
     perror("connecting to client socket");
@@ -274,7 +274,7 @@ TCPServer::TCPServer(int port)
   int reuse_addr = 1;
   int did_reuse_addr = setsockopt(
     m_sockfd, SOL_SOCKET, SO_REUSEADDR,
-    (void *)&reuse_addr,
+    static_cast<void *>(&reuse_addr),
     sizeof(reuse_addr));
 
   if (did_reuse_addr < 0) {
@@ -285,8 +285,8 @@ TCPServer::TCPServer(int port)
   // Now bind it
   int did_bind = bind(
     m_sockfd,
-    (const struct sockaddr *)gai->ai_addr,
-    (socklen_t)gai->ai_addrlen);
+    const_cast<const struct sockaddr *>(gai->ai_addr),
+    static_cast<socklen_t>(gai->ai_addrlen));
 
   if (did_bind < 0) {
     perror("binding to server socket");

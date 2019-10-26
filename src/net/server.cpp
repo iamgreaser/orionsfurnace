@@ -31,12 +31,12 @@ ServerClient::ServerClient(Server *server, int player_index, net::PipeEnd *pipe_
   , m_server(server)
   , m_player_index(player_index)
 {
-  std::cout << "New ServerClient " << ((intptr_t)this) << std::endl;
+  std::cout << "New ServerClient " << reinterpret_cast<void *>(this) << std::endl;
 }
 
 ServerClient::~ServerClient(void)
 {
-  std::cout << "Deleting ServerClient " << ((intptr_t)this) << std::endl;
+  std::cout << "Deleting ServerClient " << reinterpret_cast<void *>(this) << std::endl;
 }
 
 void ServerClient::update(void)

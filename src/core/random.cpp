@@ -59,5 +59,5 @@ uint32_t Random::next_int(uint32_t open_upper_bound)
   uint64_t result = this->next_raw();
   result *= open_upper_bound;
   result >>= 32;
-  return (uint32_t)result;
+  return static_cast<uint32_t>(result);
 }

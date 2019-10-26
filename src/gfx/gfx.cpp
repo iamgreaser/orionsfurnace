@@ -102,9 +102,9 @@ void gfx::clear(int r, int g, int b)
 {
   // Clear screen
   SDL_SetRenderDrawColor(renderer,
-    (r < 0 ? 0 : r > 0xFF ? 0xFF : (uint8_t)r),
-    (g < 0 ? 0 : g > 0xFF ? 0xFF : (uint8_t)g),
-    (b < 0 ? 0 : b > 0xFF ? 0xFF : (uint8_t)b),
+    (r < 0 ? 0 : r > 0xFF ? 0xFF : static_cast<uint8_t>(r)),
+    (g < 0 ? 0 : g > 0xFF ? 0xFF : static_cast<uint8_t>(g)),
+    (b < 0 ? 0 : b > 0xFF ? 0xFF : static_cast<uint8_t>(b)),
     0xFF);
   SDL_RenderFillRect(renderer, nullptr);
 }
@@ -138,9 +138,9 @@ void gfx::draw_rect(int px, int py, int pw, int ph, int r, int g, int b)
   rect.h = ph;
 
   SDL_SetRenderDrawColor(renderer,
-    (r < 0 ? 0 : r > 0xFF ? 0xFF : (uint8_t)r),
-    (g < 0 ? 0 : g > 0xFF ? 0xFF : (uint8_t)g),
-    (b < 0 ? 0 : b > 0xFF ? 0xFF : (uint8_t)b),
+    (r < 0 ? 0 : r > 0xFF ? 0xFF : static_cast<uint8_t>(r)),
+    (g < 0 ? 0 : g > 0xFF ? 0xFF : static_cast<uint8_t>(g)),
+    (b < 0 ? 0 : b > 0xFF ? 0xFF : static_cast<uint8_t>(b)),
     0xFF);
   int did_rect = SDL_RenderFillRect(renderer, &rect);
   assert(did_rect == 0);

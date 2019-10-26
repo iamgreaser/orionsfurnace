@@ -69,9 +69,9 @@ void Font::draw(int px, int py, int r, int g, int b, const std::string text)
 
   // Build colour
   SDL_Color fg = {};
-  fg.r = (r < 0 ? 0 : r > 0xFF ? 0xFF : (uint8_t)r);
-  fg.g = (g < 0 ? 0 : g > 0xFF ? 0xFF : (uint8_t)g);
-  fg.b = (b < 0 ? 0 : b > 0xFF ? 0xFF : (uint8_t)b);
+  fg.r = (r < 0 ? 0 : r > 0xFF ? 0xFF : static_cast<uint8_t>(r));
+  fg.g = (g < 0 ? 0 : g > 0xFF ? 0xFF : static_cast<uint8_t>(g));
+  fg.b = (b < 0 ? 0 : b > 0xFF ? 0xFF : static_cast<uint8_t>(b));
   fg.a = 0xFF;
 
   // Build surface

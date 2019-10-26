@@ -96,42 +96,42 @@ void save(std::ostream &ops, uint64_t obj)
 
 void load(std::istream &ips, int8_t &obj)
 {
-  load(ips, (uint8_t&)obj);
+  load(ips, reinterpret_cast<uint8_t &>(obj));
 }
 
 void save(std::ostream &ops, int8_t obj)
 {
-  save(ops, (uint8_t&)obj);
+  save(ops, static_cast<uint8_t>(obj));
 }
 
 void load(std::istream &ips, int16_t &obj)
 {
-  load(ips, (uint16_t&)obj);
+  load(ips, reinterpret_cast<uint16_t &>(obj));
 }
 
 void save(std::ostream &ops, int16_t obj)
 {
-  save(ops, (uint16_t&)obj);
+  save(ops, static_cast<uint16_t>(obj));
 }
 
 void load(std::istream &ips, int32_t &obj)
 {
-  load(ips, (uint32_t&)obj);
+  load(ips, reinterpret_cast<uint32_t &>(obj));
 }
 
 void save(std::ostream &ops, int32_t obj)
 {
-  save(ops, (uint32_t&)obj);
+  save(ops, static_cast<uint32_t>(obj));
 }
 
 void load(std::istream &ips, int64_t &obj)
 {
-  load(ips, (uint64_t&)obj);
+  load(ips, reinterpret_cast<uint64_t &>(obj));
 }
 
 void save(std::ostream &ops, int64_t obj)
 {
-  save(ops, (uint64_t&)obj);
+  save(ops, static_cast<uint64_t>(obj));
 }
 
 //
