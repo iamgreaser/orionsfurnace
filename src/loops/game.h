@@ -29,7 +29,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "net/server.h"
 #include "net/tcp.h"
 
-#ifdef _LOOPS_GAME_INTERNAL
+#ifdef LOOPS_GAME_INTERNAL
 #include <SDL.h>
 #endif
 
@@ -60,7 +60,7 @@ namespace loops
 #endif
   public:
     GameLoop(void);
-    ~GameLoop(void);
+    virtual ~GameLoop(void);
 
     void start_server(int port);
     void start_client(std::string addr, int port);
@@ -69,7 +69,7 @@ namespace loops
     void draw(void) override;
 
   protected:
-#ifdef _LOOPS_GAME_INTERNAL
+#ifdef LOOPS_GAME_INTERNAL
     void tick_key_event(SDL_Event &ev);
     void draw_playfield(void);
     void draw_sidebar(void);
