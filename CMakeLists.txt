@@ -43,3 +43,6 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/src/engine_version.h.in"
   "${PROJECT_BINARY_DIR}/engine_version.h"
 )
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fsanitize=undefined")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined")
