@@ -26,6 +26,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <thread>
 
 using std::chrono::time_point;
@@ -60,11 +61,26 @@ loops::Loop *loops::get_loop_for_state(MainLoopState loop_state)
 	}
 }
 
-void loops::run(void)
+void loops::run(loops::LaunchMode launch_mode, std::string net_addr, int net_port)
 {
+	// TODO: Use net_addr
+	(void)net_addr;
+
 	time_point<steady_clock> time_now = steady_clock::now();
 	time_point<steady_clock> time_next = time_now;
 	constexpr microseconds time_step(1000000/TICKS_PER_SECOND);
+
+	switch (launch_mode)
+	{
+		case loops::launch_mode::PLAYER_SERVER:
+			game_loop.start_server(net_port);
+			game_loop.start_client("", net_port);
+			break;
+		// case loops::launch_mode::CLIENT:
+			//game_loop.start_client(net_addr, net_port);
+			//break;
+		//default: assert(!"LOGIC ERROR"); break;
+	}
 
 	MainLoopState loop_state = mainloop::GAME;
 	MainLoopState prev_loop_state = mainloop::EXIT;

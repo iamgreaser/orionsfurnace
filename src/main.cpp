@@ -42,7 +42,10 @@ int main(int argc, char *argv[])
 
 	gfx::init();
 
-	loops::run();
+	loops::run(
+		loops::launch_mode::PLAYER_SERVER,
+		"localhost",
+		13420);
 
 	return 0;
 }

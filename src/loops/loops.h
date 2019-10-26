@@ -18,8 +18,21 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef _LOOPS_LOOPS_H
 #define _LOOPS_LOOPS_H
 
+#include <string>
+
 namespace loops
 {
+	namespace launch_mode
+	{
+		enum LaunchMode
+		{
+			PLAYER_SERVER = 0,
+			//CLIENT,
+			//HEADLESS_SERVER,
+		};
+	}
+	using launch_mode::LaunchMode;
+
 	namespace mainloop
 	{
 		enum MainLoopState
@@ -43,7 +56,7 @@ namespace loops
 
 	constexpr int TICKS_PER_SECOND = 60;
 
-	void run(void);
+	void run(loops::LaunchMode launch_mode, std::string net_addr, int net_port);
 }
 
 #endif /* if !defined(_LOOPS_LOOPS_H) */

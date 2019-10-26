@@ -35,21 +35,12 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 using loops::GameLoop;
 
 GameLoop::GameLoop(void)
 {
-	m_server = new net::Server();
-
-	m_client = new net::Client(m_local_pipe.end_a());
-	m_server->add_client(m_local_pipe.end_b());
-
-	// For testing a second player
-	if (true) {
-		m_client_extra1 = new net::Client(m_local_pipe_extra1.end_a());
-		m_server->add_client(m_local_pipe_extra1.end_b());
-	}
 }
 
 GameLoop::~GameLoop(void)
@@ -67,6 +58,39 @@ GameLoop::~GameLoop(void)
 	if (m_server != NULL) {
 		delete m_server;
 		m_server = NULL;
+	}
+}
+
+void GameLoop::start_server(int port)
+{
+	// TODO: Use the port
+	(void)port;
+
+	assert(m_server == NULL);
+	m_server = new net::Server();
+}
+
+void GameLoop::start_client(std::string addr, int port)
+{
+	// TODO: Use the addr and port
+	(void)addr;
+	(void)port;
+
+	assert(m_client == NULL);
+	m_client = new net::Client(m_local_pipe.end_a());
+	if (m_server != NULL) {
+		// Direct connection
+		m_server->add_client(m_local_pipe.end_b());
+	}
+
+	// For testing a second player
+	if (true) {
+		assert(m_client_extra1 == NULL);
+		m_client_extra1 = new net::Client(m_local_pipe_extra1.end_a());
+		if (m_server != NULL) {
+			// Direct connection
+			m_server->add_client(m_local_pipe_extra1.end_b());
+		}
 	}
 }
 

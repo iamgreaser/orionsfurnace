@@ -33,6 +33,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #endif
 
 #include <fstream>
+#include <string>
 
 namespace loops
 {
@@ -49,6 +50,10 @@ namespace loops
 	public:
 		GameLoop(void);
 		~GameLoop(void);
+
+		void start_server(int port);
+		void start_client(std::string addr, int port);
+
 		MainLoopState tick(void);
 		void draw(void);
 
