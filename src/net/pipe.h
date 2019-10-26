@@ -38,10 +38,10 @@ namespace net
 			m_send_ss = ips;
 			m_recv_ss = ops;
 		}
-		std::ostream &send_stream(void) {
+		std::ostream &send_stream(void) override {
 			return static_cast<std::ostream&>(*m_send_ss);
 		}
-		std::istream &recv_stream(void) {
+		std::istream &recv_stream(void) override {
 			return static_cast<std::istream&>(*m_recv_ss);
 		}
 	};

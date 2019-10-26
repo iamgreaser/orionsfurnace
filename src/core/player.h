@@ -43,8 +43,8 @@ public:
 		m_input_move[dir] = v;
 	}
 
-	void load_this(std::istream &ips);
-	void save_this(std::ostream &ops);
+	void load_this(std::istream &ips) override;
+	void save_this(std::ostream &ops) override;
 };
 
 namespace diagonal_fixer
@@ -111,8 +111,8 @@ public:
 
 	void draw(void);
 
-	void load_this(std::istream &ips);
-	void save_this(std::ostream &ops);
+	void load_this(std::istream &ips) override;
+	void save_this(std::ostream &ops) override;
 
 	bool attempt_move_by(int dx, int dy);
 	bool attempt_move_to(int cx, int cy);
@@ -133,8 +133,8 @@ public:
 	Player get_player(void) { return m_player; }
 	int get_player_idx(void) { return m_player_idx; }
 
-	void load_this(std::istream &ips);
-	void save_this(std::ostream &ops);
+	void load_this(std::istream &ips) override;
+	void save_this(std::ostream &ops) override;
 };
 
 #endif /* if !defined(CORE_PLAYER_H) */

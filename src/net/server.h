@@ -60,8 +60,8 @@ namespace net
 		PlayerInput get_player_input(void) {
 			return m_player_input;
 		}
-		void update(void);
-		void handle_input_packet(int packet_id, std::istream &packet_ss);
+		void update(void) override;
+		void handle_input_packet(int packet_id, std::istream &packet_ss) override;
 	};
 
 	class Server

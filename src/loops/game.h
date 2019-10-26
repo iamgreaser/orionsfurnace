@@ -65,8 +65,8 @@ namespace loops
 		void start_server(int port);
 		void start_client(std::string addr, int port);
 
-		MainLoopState tick(void);
-		void draw(void);
+		MainLoopState tick(void) override;
+		void draw(void) override;
 
 	protected:
 #ifdef _LOOPS_GAME_INTERNAL

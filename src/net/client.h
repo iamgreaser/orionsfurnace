@@ -63,9 +63,9 @@ namespace net
 
 		void load_game(std::istream &ips);
 
-		void update(void);
+		void update(void) override;
 		void tick_input_send(void);
-		void handle_input_packet(int packet_id, std::istream &packet_ss);
+		void handle_input_packet(int packet_id, std::istream &packet_ss) override;
 	};
 }
 

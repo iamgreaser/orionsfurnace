@@ -65,8 +65,8 @@ namespace game
 		void tick(const GameFrame &game_frame);
 		void draw(void);
 
-		void load_this(istream &ips);
-		void save_this(ostream &ops);
+		void load_this(istream &ips) override;
+		void save_this(ostream &ops) override;
 	};
 
 	class GameFrame : public Saveable
@@ -94,8 +94,8 @@ namespace game
 			return m_player_inputs[player_idx];
 		}
 
-		void load_this(istream &ips);
-		void save_this(ostream &ops);
+		void load_this(istream &ips) override;
+		void save_this(ostream &ops) override;
 	};
 }
 

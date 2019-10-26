@@ -65,8 +65,8 @@ namespace net
 	{
 	public:
 		virtual uint8_t get_packet_id(void) = 0;
-		virtual void load_this(std::istream &ips) = 0;
-		virtual void save_this(std::ostream &ops) = 0;
+		//virtual void load_this(std::istream &ips) = 0;
+		//virtual void save_this(std::ostream &ops) = 0;
 	};
 
 	template <uint8_t PID, class T>
@@ -90,12 +90,12 @@ namespace net
 			return m_value;
 		}
 
-		uint8_t get_packet_id(void)
+		uint8_t get_packet_id(void) override
 		{
 			return PID;
 		}
 
-		void load_this(std::istream &ips)
+		void load_this(std::istream &ips) override
 		{
 			// Load datagram
 			uint32_t packet_length = 0;
@@ -115,7 +115,7 @@ namespace net
 			load(ss, m_value);
 		}
 
-		void save_this(std::ostream &ops)
+		void save_this(std::ostream &ops) override
 		{
 			// Build datagram contents
 			uint8_t packet_id = PID;
@@ -169,8 +169,8 @@ namespace net
 		}
 		bool is_current_version(void);
 
-		void load_this(std::istream &ips);
-		void save_this(std::ostream &ops);
+		void load_this(std::istream &ips) override;
+		void save_this(std::ostream &ops) override;
 	};
 
 }

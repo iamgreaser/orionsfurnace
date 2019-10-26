@@ -41,15 +41,15 @@ namespace net
 		TCPPipeEnd(std::string addr, int port);
 		~TCPPipeEnd(void);
 
-		std::ostream &send_stream(void) {
+		std::ostream &send_stream(void) override {
 			return static_cast<std::ostream&>(m_send_ss);
 		}
-		std::istream &recv_stream(void) {
+		std::istream &recv_stream(void) override {
 			return static_cast<std::istream&>(m_recv_ss);
 		}
 
-		void pump_recv(void);
-		void pump_send(void);
+		void pump_recv(void) override;
+		void pump_send(void) override;
 	};
 
 	class TCPServer
