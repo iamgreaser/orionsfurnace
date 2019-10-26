@@ -110,6 +110,7 @@ if "gcc" in env["CC"] and ("g++" in env["CXX"] and "clang++" not in env["CXX"]):
             "-Wwrite-strings",
             "-Wcast-qual",
             "-Wdate-time",
+            "-fdiagnostics-color=always",
         ],
         CFLAGS = [
             "-Wc++-compat",
@@ -143,8 +144,12 @@ if "gcc" in env["CC"] and ("g++" in env["CXX"] and "clang++" not in env["CXX"]):
         )
 
 if "clang" in env["CC"] and "clang" in env["CXX"]:
-    env["CFLAGS"] += ["-Weverything",]
-    env["CXXFLAGS"] += ["-Weverything",]
+    env.Append(
+        C_AND_CXX_FLAGS = [
+            "-Weverything",
+            "-fcolor-diagnostics",
+        ],
+    )
 
 if WARNINGS_ARE_ERRORS:
     env.MergeFlags(["-Werror",])
