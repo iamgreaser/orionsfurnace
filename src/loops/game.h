@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _LOOPS_GAME_H
-#define _LOOPS_GAME_H
+#ifndef LOOPS_GAME_H
+#define LOOPS_GAME_H
 
 #include "loops/loops.h"
 

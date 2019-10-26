@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _GFX_FONT_H
-#define _GFX_FONT_H
+#ifndef GFX_FONT_H
+#define GFX_FONT_H
 
 #include "gfx/gfx.h"
 
@@ -52,4 +52,4 @@ namespace gfx
 
 using gfx::Font;
 
-#endif /* if !defined(_GFX_FONT_H) */
+#endif /* if !defined(GFX_FONT_H) */

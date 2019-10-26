@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _CORE_PLAYER_H
-#define _CORE_PLAYER_H
+#ifndef CORE_PLAYER_H
+#define CORE_PLAYER_H
 
 #include "core/core.h"
 
@@ -137,4 +137,4 @@ public:
 	void save_this(std::ostream &ops);
 };
 
-#endif /* if !defined(_CORE_PLAYER_H) */
+#endif /* if !defined(CORE_PLAYER_H) */

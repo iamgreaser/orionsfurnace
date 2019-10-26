@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _CORE_SAVE_H
-#define _CORE_SAVE_H
+#ifndef CORE_SAVE_H
+#define CORE_SAVE_H
 
 #include <cstdint>
 #include <iostream>
@@ -57,4 +57,4 @@ void save(std::ostream &ops, std::string &obj);
 void load(std::istream &ips, Saveable &obj);
 void save(std::ostream &ops, Saveable &obj);
 
-#endif /* if !defined(_CORE_SAVE_H) */
+#endif /* if !defined(CORE_SAVE_H) */

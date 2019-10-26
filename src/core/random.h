@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _CORE_RANDOM_H
-#define _CORE_RANDOM_H
+#ifndef CORE_RANDOM_H
+#define CORE_RANDOM_H
 
 #include <cstdint>
 
@@ -35,4 +35,4 @@ protected:
 	uint32_t next_raw(void);
 };
 
-#endif /* if !defined(_CORE_RANDOM_H) */
+#endif /* if !defined(CORE_RANDOM_H) */

@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _GFX_GFX_H
-#define _GFX_GFX_H
+#ifndef GFX_GFX_H
+#define GFX_GFX_H
 
 #include <string>
 
@@ -63,4 +63,4 @@ using gfx::SIDEBAR_Y;
 using gfx::SIDEBAR_W;
 using gfx::SIDEBAR_H;
 
-#endif /* if !defined(_GFX_GFX_H) */
+#endif /* if !defined(GFX_GFX_H) */

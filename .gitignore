@@ -19,3 +19,11 @@ build_settings.py
 .sw?
 .*.sw?
 
+# Misc garbage, temporary/generated files
+*~
+*_
+a.out
+# Name conflict with the "core" source directory, so only ignore if top-level
+/core
+scratch
+*.log

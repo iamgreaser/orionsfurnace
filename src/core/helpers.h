@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _CORE_HELPERS_H
-#define _CORE_HELPERS_H
+#ifndef CORE_HELPERS_H
+#define CORE_HELPERS_H
 
-#endif /* if !defined(_CORE_HELPERS_H) */
+#endif /* if !defined(CORE_HELPERS_H) */
