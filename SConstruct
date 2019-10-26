@@ -43,7 +43,7 @@ env.Append(
 )
 
 if "clang" in env["CC"]:
-    env["CCFLAGS"] += ["-Weverything",]
+    env["CFLAGS"] += ["-Weverything",]
 if "clang" in env["CXX"]:
     env["CXXFLAGS"] += ["-Weverything",]
 
@@ -88,4 +88,3 @@ env.SConscript(
     variant_dir="build/${TARGET_SYSTEM}/",
     duplicate=False,
 )
-
