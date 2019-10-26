@@ -33,7 +33,7 @@ using std::string;
 void show_help(char *arg0)
 {
   cerr << "Orion's Furnace v" << get_engine_version() << endl;
-  cerr << "Copyright (C) 2019 Ben \"GreaseMonkey\" Russell & contributors" << endl;
+  cerr << "Copyright (C) 2019 Orion's Furnace contributors" << endl;
   cerr << endl;
   cerr << "This program is free software: you can redistribute it and/or modify" << endl;
   cerr << "it under the terms of the GNU Affero General Public License as published by" << endl;
