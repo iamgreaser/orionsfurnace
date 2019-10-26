@@ -53,6 +53,7 @@ namespace net
 	class PipeEnd
 	{
 	public:
+		virtual ~PipeEnd(void) {}
 		virtual std::ostream &send_stream(void) = 0;
 		virtual std::istream &recv_stream(void) = 0;
 		virtual void pump_recv(void) {}
@@ -144,7 +145,7 @@ namespace net
 		net::PipeEnd *m_pipe_end;
 		std::string m_input_buf;
 	public:
-		Node(net::PipeEnd &pipe_end);
+		Node(net::PipeEnd *pipe_end);
 		void send_packet(net::Packet &packet);
 		virtual ~Node(void);
 		virtual void update(void) = 0;

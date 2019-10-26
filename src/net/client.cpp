@@ -31,7 +31,7 @@ using net::GameSnapshotPacket;
 using net::GameFramePacket;
 
 
-Client::Client(net::PipeEnd &pipe_end)
+Client::Client(net::PipeEnd *pipe_end)
 	: net::Node::Node(pipe_end)
 {
 }

@@ -52,7 +52,7 @@ namespace net
 		// Throttle input sending to once a frame
 		bool m_ready_to_send_input = false;
 	public:
-		Client(net::PipeEnd &pipe_end);
+		Client(net::PipeEnd *pipe_end);
 		~Client(void);
 
 		Game *game(void);

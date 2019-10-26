@@ -28,6 +28,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <poll.h>
 #include <unistd.h>
 
 #if 1
@@ -212,7 +213,37 @@ bool TCPServer::is_good_ai_family(int family)
 	}
 }
 
-TCPPipeEnd *TCPServer::accept(void)
+TCPPipeEnd *TCPServer::accept_if_available(void)
 {
+	// Check for new client connections
+	struct pollfd base_fds[1] = {};
+	base_fds[0].fd = m_sockfd;
+	base_fds[0].events = POLLIN;
+	base_fds[0].revents = 0;
+	int poll_result = poll(base_fds, 1, 0);
+
+	if (poll_result < 0) {
+		perror("server root socket poll");
+		assert(!"could not poll server root socket");
+	}
+
+	// Accept if we can
+	if ((base_fds[0].revents & POLLIN) != 0) {
+		// Accept!
+		int new_sockfd = accept(m_sockfd, NULL, NULL);
+		if (new_sockfd < 0) {
+			perror("server root socket accept");
+			assert(!"could not accept from server root socket");
+		}
+
+		// Now add a client
+		net::TCPPipeEnd *pipe_end = new net::TCPPipeEnd(
+			new_sockfd);
+
+		// And return!
+		return pipe_end;
+	}
+
+	// Nothing to return.
 	return NULL;
 }

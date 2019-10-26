@@ -25,6 +25,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "net/tcp.h"
 
 #include <iostream>
+#include <memory>
 #include <fstream>
 #include <vector>
 
@@ -54,7 +55,7 @@ namespace net
 		PlayerInput m_player_input;
 		bool m_disconnected = false;
 	public:
-		ServerClient(Server *server, int player_index, net::PipeEnd &pipe_end);
+		ServerClient(Server *server, int player_index, net::PipeEnd *pipe_end);
 		~ServerClient(void);
 		PlayerInput get_player_input(void) {
 			return m_player_input;
@@ -67,7 +68,7 @@ namespace net
 	{
 	private:
 		std::ofstream *m_demo_fp = NULL;
-		std::vector<ServerClient> m_clients;
+		std::vector<std::shared_ptr<ServerClient>> m_clients;
 		net::TCPServer m_tcp_server;
 		Game m_game;
 	public:
@@ -76,7 +77,7 @@ namespace net
 
 		Game &game(void);
 
-		void add_client(net::PipeEnd &pipe_end);
+		void add_client(net::PipeEnd *pipe_end);
 
 		void broadcast_packet(net::Packet &packet);
 		void broadcast_packet_ignoring_client(net::Packet &packet, ServerClient *ignore_sc);

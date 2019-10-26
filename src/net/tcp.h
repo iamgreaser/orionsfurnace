@@ -60,7 +60,7 @@ namespace net
 		TCPServer(int port);
 		~TCPServer(void);
 
-		TCPPipeEnd *accept(void);
+		TCPPipeEnd *accept_if_available(void);
 
 	protected:
 		bool is_good_ai_family(int family);

@@ -49,11 +49,12 @@ GameLoop::~GameLoop(void)
 		delete m_client;
 		m_client = NULL;
 	}
-
+#if USE_EXTRA_PLAYER
 	if (m_client_extra1 != NULL) {
 		delete m_client_extra1;
 		m_client_extra1 = NULL;
 	}
+#endif
 
 	if (m_server != NULL) {
 		delete m_server;
@@ -69,26 +70,36 @@ void GameLoop::start_server(int port)
 
 void GameLoop::start_client(std::string addr, int port)
 {
-	// TODO: Use the addr and port
 	(void)addr;
 	(void)port;
 
 	assert(m_client == NULL);
+#if USE_LOCAL_PIPES
 	m_client = new net::Client(m_local_pipe.end_a());
 	if (m_server != NULL) {
 		// Direct connection
 		m_server->add_client(m_local_pipe.end_b());
 	}
-
-	// For testing a second player
-	if (true) {
-		assert(m_client_extra1 == NULL);
-		m_client_extra1 = new net::Client(m_local_pipe_extra1.end_a());
-		if (m_server != NULL) {
-			// Direct connection
-			m_server->add_client(m_local_pipe_extra1.end_b());
-		}
+#else
+	if (addr == "") {
+		addr = "localhost";
 	}
+	net::TCPPipeEnd *client_socket = new net::TCPPipeEnd(addr, port);
+	m_client = new net::Client(client_socket);
+#endif
+
+#if USE_EXTRA_PLAYER
+	// For testing a second player
+	assert(m_client_extra1 == NULL);
+#if USE_LOCAL_PIPES
+	m_client_extra1 = new net::Client(m_local_pipe_extra1.end_a());
+	if (m_server != NULL) {
+		// Direct connection
+		m_server->add_client(m_local_pipe_extra1.end_b());
+	}
+#else
+#endif
+#endif
 }
 
 loops::MainLoopState GameLoop::tick(void)
@@ -119,10 +130,11 @@ loops::MainLoopState GameLoop::tick(void)
 	if (m_client != NULL) {
 		m_client->set_all_inputs(m_player_inputs[0]);
 	}
-
+#if USE_EXTRA_PLAYER
 	if (m_client_extra1 != NULL) {
 		m_client_extra1->set_all_inputs(m_player_inputs[1]);
 	}
+#endif
 
 	//
 	// Update client logic
@@ -130,9 +142,11 @@ loops::MainLoopState GameLoop::tick(void)
 	if (m_client != NULL) {
 		m_client->update();
 	}
+#if USE_EXTRA_PLAYER
 	if (m_client_extra1 != NULL) {
 		m_client_extra1->update();
 	}
+#endif
 
 	//
 	// Update server logic
@@ -147,9 +161,11 @@ loops::MainLoopState GameLoop::tick(void)
 	if (m_client != NULL) {
 		m_client->update();
 	}
+#if USE_EXTRA_PLAYER
 	if (m_client_extra1 != NULL) {
 		m_client_extra1->update();
 	}
+#endif
 
 	// Continue with the game
 	return mainloop::GAME;
@@ -300,7 +316,11 @@ void GameLoop::draw_gui(void)
 {
 	// TODO: more stuff
 
-	std::string central_message = m_client->get_central_message();
+	std::string central_message = "NO CLIENT";
+	if (m_client != NULL) {
+		central_message = m_client->get_central_message();
+	}
+
 	if (central_message != "") {
 		// Get dimensions
 		int pw = 0;

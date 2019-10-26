@@ -27,6 +27,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "net/net.h"
 #include "net/pipe.h"
 #include "net/server.h"
+#include "net/tcp.h"
 
 #ifdef _LOOPS_GAME_INTERNAL
 #include <SDL.h>
@@ -35,18 +36,28 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <fstream>
 #include <string>
 
+#define USE_LOCAL_PIPES 0
+#define USE_EXTRA_PLAYER 0
+
 namespace loops
 {
 	class GameLoop : public Loop
 	{
 	private:
 		PlayerInput m_player_inputs[2];
+#if USE_LOCAL_PIPES
 		net::RawPipe m_local_pipe;
+#if USE_EXTRA_PLAYER
+		net::RawPipe m_local_pipe_extra1;
+#endif
+#else
+#endif
 		net::Client *m_client = NULL;
 		net::Server *m_server = NULL;
 
+#if USE_EXTRA_PLAYER
 		net::Client *m_client_extra1 = NULL;
-		net::RawPipe m_local_pipe_extra1;
+#endif
 	public:
 		GameLoop(void);
 		~GameLoop(void);

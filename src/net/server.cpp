@@ -26,15 +26,21 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 using net::Server;
 using net::ServerClient;
 
-ServerClient::ServerClient(Server *server, int player_index, net::PipeEnd &pipe_end)
+ServerClient::ServerClient(Server *server, int player_index, net::PipeEnd *pipe_end)
 	: net::Node::Node(pipe_end)
 	, m_server(server)
 	, m_player_index(player_index)
 {
+	std::cout << "New ServerClient! " << ((intptr_t)this) << std::endl;
 }
 
 ServerClient::~ServerClient(void)
 {
+	std::cout << "Old ServerClient! " << ((intptr_t)this) << std::endl;
+	if (m_pipe_end != NULL) {
+		delete m_pipe_end;
+	}
+	std::cout << "Old ServerClient DONE" << std::endl;
 }
 
 void ServerClient::update(void)
@@ -147,11 +153,12 @@ Game &Server::game(void)
 	return m_game;
 }
 
-void Server::add_client(net::PipeEnd &pipe_end)
+void Server::add_client(net::PipeEnd *pipe_end)
 {
 	//int client_index = m_clients.size();
 	// Add a new client
-	m_clients.push_back(ServerClient(this, -1, pipe_end));
+	m_clients.push_back(std::shared_ptr<ServerClient>(
+		new ServerClient(this, -1, pipe_end)));
 }
 
 void Server::broadcast_packet(net::Packet &packet)
@@ -164,8 +171,8 @@ void Server::broadcast_packet(net::Packet &packet)
 	}
 
 	save(*m_demo_fp, packet);
-	for (ServerClient &sc : m_clients) {
-		sc.send_packet(packet);
+	for (std::shared_ptr<ServerClient> sc : m_clients) {
+		sc.get()->send_packet(packet);
 	}
 }
 
@@ -179,9 +186,9 @@ void Server::broadcast_packet_ignoring_client(net::Packet &packet, ServerClient 
 	}
 
 	save(*m_demo_fp, packet);
-	for (ServerClient &sc : m_clients) {
-		if (&sc != ignore_sc) {
-			sc.send_packet(packet);
+	for (std::shared_ptr<ServerClient> sc : m_clients) {
+		if (sc.get() != ignore_sc) {
+			sc.get()->send_packet(packet);
 		}
 	}
 }
@@ -216,15 +223,23 @@ void Server::quickload(void)
 
 void Server::update(void)
 {
+	// Add a client if one is trying to connect
+	net::TCPPipeEnd *pipe_end = m_tcp_server.accept_if_available();
+	if (pipe_end != NULL) {
+		std::cout << "Accepting new client" << std::endl;
+		this->add_client(pipe_end);
+	}
+
+	// Form a frame
 	GameFrame game_frame(m_game.get_player_count());
 
 	for (int i = 0; i < m_game.get_player_count(); i++) {
 		game_frame.player_set_all_inputs(
-			i, m_clients[i].get_player_input());
+			i, m_clients[i]->get_player_input());
 	}
 
 	this->game_tick(game_frame);
-	for (ServerClient &sc : m_clients) {
-		sc.update();
+	for (std::shared_ptr<ServerClient> sc : m_clients) {
+		sc.get()->update();
 	}
 }
