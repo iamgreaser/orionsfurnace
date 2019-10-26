@@ -108,7 +108,7 @@ namespace net
 			char *buf = new char[packet_length];
 			ips.read(buf, packet_length);
 			std::string str(buf, packet_length);
-			delete buf;
+			delete[] buf;
 
 			// Load datagram contents
 			std::stringstream ss(str);
