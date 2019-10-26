@@ -17,6 +17,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "loops/loops.h"
 
+#include "core/helpers.h"
 #include "gfx/gfx.h"
 #include "loops/game.h"
 
@@ -81,7 +82,7 @@ void loops::run(loops::LaunchMode launch_mode, std::string net_addr, int net_por
       game_loop.start_client(net_addr, net_port);
       break;
 
-    default: assert(!"LOGIC ERROR"); break;
+    default: PANIC("LOGIC ERROR"); break;
   }
 
   MainLoopState loop_state = mainloop::GAME;

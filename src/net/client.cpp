@@ -18,6 +18,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "net/client.h"
 
 #include "core/core.h"
+#include "core/helpers.h"
 #include "core/game.h"
 #include "net/net.h"
 
@@ -79,7 +80,7 @@ std::string Client::get_central_message(void)
       return "Disconnected:\n\n" + m_disconnect_message;
 
     default:
-      assert(!"LOGIC ERROR");
+      PANIC("LOGIC ERROR");
       break;
   }
 }
@@ -133,7 +134,7 @@ void Client::update(void)
       break;
 
     default:
-      assert(!"LOGIC ERROR");
+      PANIC("LOGIC ERROR");
       break;
   }
 

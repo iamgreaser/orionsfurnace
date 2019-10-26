@@ -17,6 +17,8 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "net/tcp.h"
 
+#include "core/helpers.h"
+
 #include <cerrno>
 #include <cstdio>
 #include <cstring>
@@ -71,7 +73,7 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
 
   if (gai == nullptr) {
     std::cerr << "Could not look up host: \"" << std::string(gai_strerror(did_gai)) << std::endl;
-    assert(!"Could not connect: Could not look up host");
+    PANIC("Could not connect: Could not look up host");
   }
 
   // Grab the first thing we can get our hands on
@@ -82,7 +84,7 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
 
   if (m_sockfd < 0) {
     perror("creating client socket");
-    assert(!"Could not connect: Could not create socket");
+    PANIC("Could not connect: Could not create socket");
   }
 
   std::cout << "Client address family: " << gai->ai_family << std::endl;
@@ -98,7 +100,7 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
 
   if (did_tcp_nodelay < 0) {
     perror("setting TCP_NODELAY");
-    assert(!"Could not host: Could not set TCP_NODELAY");
+    PANIC("Could not host: Could not set TCP_NODELAY");
   }
 
 
@@ -110,7 +112,7 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
 
   if (did_connect < 0) {
     perror("connecting to client socket");
-    assert(!"Could not connect: Could not, well, connect");
+    PANIC("Could not connect: Could not, well, connect");
   }
 
   // Free GAI
@@ -151,7 +153,7 @@ void TCPPipeEnd::pump_recv(void)
     perror("recv");
     m_is_dead = true;
     return;
-    //assert(!"recv failed");
+    //PANIC("recv failed");
   }
 
   // Did we disconnect?
@@ -160,7 +162,7 @@ void TCPPipeEnd::pump_recv(void)
     std::cerr << "recv returned 0" << std::endl;
     m_is_dead = true;
     return;
-    //assert(!"TODO: Disconnect elegantly");
+    //PANIC("TODO: Disconnect elegantly");
   }
 
   // Add this to the buffer.
@@ -206,7 +208,7 @@ void TCPPipeEnd::pump_send(void)
     perror("send");
     m_is_dead = true;
     return;
-    //assert(!"send failed");
+    //PANIC("send failed");
   }
 
   // Did we disconnect?
@@ -214,7 +216,7 @@ void TCPPipeEnd::pump_send(void)
     std::cerr << "send returned 0" << std::endl;
     m_is_dead = true;
     return;
-    //assert(!"TODO: Disconnect elegantly");
+    //PANIC("TODO: Disconnect elegantly");
   }
 
   // Remove this from the send buffer.
@@ -246,7 +248,7 @@ TCPServer::TCPServer(int port)
 
   if (gai == nullptr) {
     std::cerr << "Could not look up host: \"" << std::string(gai_strerror(did_gai)) << std::endl;
-    assert(!"Could not host: Could not look up host");
+    PANIC("Could not host: Could not look up host");
   }
 
   std::cout << "Server address family: " << gai->ai_family << std::endl;
@@ -261,7 +263,7 @@ TCPServer::TCPServer(int port)
 
   if (m_sockfd < 0) {
     perror("creating server socket");
-    assert(!"Could not host: Could not create socket");
+    PANIC("Could not host: Could not create socket");
   }
 
   // Make sure it's easy to kick out something hogging the port
@@ -273,7 +275,7 @@ TCPServer::TCPServer(int port)
 
   if (did_reuse_addr < 0) {
     perror("setting SO_REUSEADDR");
-    assert(!"Could not host: Could not set SO_REUSEADDR");
+    PANIC("Could not host: Could not set SO_REUSEADDR");
   }
 
   // Now bind it
@@ -284,7 +286,7 @@ TCPServer::TCPServer(int port)
 
   if (did_bind < 0) {
     perror("binding to server socket");
-    assert(!"Could not host: bind failed");
+    PANIC("Could not host: bind failed");
   }
 
   // Finally, start listening
@@ -292,7 +294,7 @@ TCPServer::TCPServer(int port)
 
   if (did_listen < 0) {
     perror("listening to server socket");
-    assert(!"Could not host: listen failed");
+    PANIC("Could not host: listen failed");
   }
 
   // Free GAI
@@ -334,7 +336,7 @@ TCPPipeEnd *TCPServer::accept_if_available(void)
 
   if (poll_result < 0) {
     perror("server root socket poll");
-    assert(!"could not poll server root socket");
+    PANIC("could not poll server root socket");
   }
 
   // Accept if we can
@@ -343,7 +345,7 @@ TCPPipeEnd *TCPServer::accept_if_available(void)
     int new_sockfd = accept(m_sockfd, nullptr, nullptr);
     if (new_sockfd < 0) {
       perror("server root socket accept");
-      assert(!"could not accept from server root socket");
+      PANIC("could not accept from server root socket");
     }
 
     // Now add a client

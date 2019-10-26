@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
   (void)argv;
 
   // Parse arguments
-  loops::LaunchMode launch_mode = loops::launch_mode::PLAYER_SERVER; 
+  loops::LaunchMode launch_mode = loops::launch_mode::PLAYER_SERVER;
   bool did_set_launch_mode = false;
   bool bailed_inside = false;
   string net_addr = "localhost";

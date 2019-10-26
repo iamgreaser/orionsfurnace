@@ -61,4 +61,3 @@ uint32_t Random::next_int(uint32_t open_upper_bound)
   result >>= 32;
   return (uint32_t)result;
 }
-

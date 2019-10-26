@@ -18,6 +18,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/player.h"
 
 #include "core/core.h"
+#include "core/helpers.h"
 #include "core/game.h"
 #include "gfx/gfx.h"
 #include "gfx/sprite.h"
@@ -87,7 +88,7 @@ void Player::tick(void)
         break;
 
       default:
-        assert(!"LOGIC FAILURE");
+        PANIC("LOGIC FAILURE");
         break;
     }
 
@@ -115,7 +116,7 @@ void Player::tick(void)
         break;
 
       default:
-        assert(!"LOGIC FAILURE");
+        PANIC("LOGIC FAILURE");
         break;
     }
   }

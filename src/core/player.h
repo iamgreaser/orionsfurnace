@@ -35,11 +35,9 @@ public:
   PlayerInput(std::istream &ips);
 
   bool get_input_move(Direction dir) {
-    assert(dir >= 0 && dir < 4);
     return m_input_move[dir];
   }
   void set_input_move(Direction dir, bool v) {
-    assert(dir >= 0 && dir < 4);
     m_input_move[dir] = v;
   }
 
@@ -130,7 +128,7 @@ public:
   PlayerAdd(int player_idx, Player player);
   PlayerAdd(std::istream &ips);
 
-  Player get_player(void) { return m_player; }
+  Player &get_player(void) { return m_player; }
   int get_player_idx(void) { return m_player_idx; }
 
   void load_this(std::istream &ips) override;
