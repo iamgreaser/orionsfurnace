@@ -1,0 +1,3 @@
+-Isrc
+-Icbuild
+-I/usr/include/SDL2
