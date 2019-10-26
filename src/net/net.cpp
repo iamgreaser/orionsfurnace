@@ -22,9 +22,8 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 using net::Node;
 using net::ClientHello;
 
-Node::Node(std::istream &ips, std::ostream &ops)
-	: m_ips(&ips)
-	, m_ops(&ops)
+Node::Node(net::PipeEnd &pipe_end)
+	: m_pipe_end(&pipe_end)
 {
 }
 
@@ -32,12 +31,17 @@ Node::~Node(void)
 {
 }
 
+void Node::send_packet(net::Packet &packet)
+{
+	save(m_pipe_end->send_stream(), packet);
+}
+
 void Node::update_packets(void)
 {
 	// Fetch some input
 	{
 		char buf[8192];
-		std::streamsize sz = m_ips->readsome(buf, 8192);
+		std::streamsize sz = m_pipe_end->recv_stream().readsome(buf, 8192);
 		m_input_buf += std::string(buf, sz);
 	}
 

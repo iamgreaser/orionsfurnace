@@ -31,8 +31,8 @@ using net::GameSnapshotPacket;
 using net::GameFramePacket;
 
 
-Client::Client(std::istream &ips, std::ostream &ops)
-	: net::Node::Node(ips, ops)
+Client::Client(net::PipeEnd &pipe_end)
+	: net::Node::Node(pipe_end)
 {
 }
 
@@ -92,11 +92,6 @@ void Client::load_game(std::istream &ips)
 	}
 
 	m_game = new Game(ips);
-}
-
-void Client::send_packet(net::Packet &packet)
-{
-	save(*m_ops, packet);
 }
 
 void Client::update(void)

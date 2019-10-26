@@ -53,15 +53,13 @@ namespace net
 		PlayerInput m_player_input;
 		bool m_disconnected = false;
 	public:
-		ServerClient(Server *server, int player_index, std::istream &ips, std::ostream &ops);
+		ServerClient(Server *server, int player_index, net::PipeEnd &pipe_end);
 		~ServerClient(void);
 		PlayerInput get_player_input(void) {
 			return m_player_input;
 		}
 		void update(void);
 		void handle_input_packet(int packet_id, std::istream &packet_ss);
-
-		void send_packet(Packet &packet);
 	};
 
 	class Server
@@ -76,7 +74,7 @@ namespace net
 
 		Game &game(void);
 
-		void add_client(std::istream &ips, std::ostream &ops);
+		void add_client(net::PipeEnd &pipe_end);
 
 		void broadcast_packet(net::Packet &packet);
 		void broadcast_packet_ignoring_client(net::Packet &packet, ServerClient *ignore_sc);

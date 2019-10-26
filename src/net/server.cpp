@@ -26,8 +26,8 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 using net::Server;
 using net::ServerClient;
 
-ServerClient::ServerClient(Server *server, int player_index, std::istream &ips, std::ostream &ops)
-	: net::Node::Node(ips, ops)
+ServerClient::ServerClient(Server *server, int player_index, net::PipeEnd &pipe_end)
+	: net::Node::Node(pipe_end)
 	, m_server(server)
 	, m_player_index(player_index)
 {
@@ -35,11 +35,6 @@ ServerClient::ServerClient(Server *server, int player_index, std::istream &ips, 
 
 ServerClient::~ServerClient(void)
 {
-}
-
-void ServerClient::send_packet(net::Packet &packet)
-{
-	save(*m_ops, packet);
 }
 
 void ServerClient::update(void)
@@ -147,11 +142,11 @@ Game &Server::game(void)
 	return m_game;
 }
 
-void Server::add_client(std::istream &ips, std::ostream &ops)
+void Server::add_client(net::PipeEnd &pipe_end)
 {
 	//int client_index = m_clients.size();
 	// Add a new client
-	m_clients.push_back(ServerClient(this, -1, ips, ops));
+	m_clients.push_back(ServerClient(this, -1, pipe_end));
 }
 
 void Server::broadcast_packet(net::Packet &packet)

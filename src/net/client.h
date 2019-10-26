@@ -52,7 +52,7 @@ namespace net
 		// Throttle input sending to once a frame
 		bool m_ready_to_send_input = false;
 	public:
-		Client(std::istream &ips, std::ostream &ops);
+		Client(net::PipeEnd &pipe_end);
 		~Client(void);
 
 		Game *game(void);
@@ -62,8 +62,6 @@ namespace net
 		std::string get_central_message(void);
 
 		void load_game(std::istream &ips);
-
-		void send_packet(Packet &packet);
 
 		void update(void);
 		void tick_input_send(void);

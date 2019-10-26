@@ -47,7 +47,18 @@ namespace net
 	class Client;
 	class ClientHello;
 	class Packet;
+	class PipeEnd;
 	class Server;
+
+	class PipeEnd
+	{
+	public:
+		virtual std::ostream &send_stream(void) = 0;
+		virtual std::istream &recv_stream(void) = 0;
+		virtual void pump_recv(void) {}
+		virtual void pump_send(void) {}
+	};
+
 
 	class Packet : public Saveable
 	{
@@ -130,11 +141,11 @@ namespace net
 	class Node
 	{
 	protected:
-		std::istream *m_ips;
-		std::ostream *m_ops;
+		net::PipeEnd *m_pipe_end;
 		std::string m_input_buf;
 	public:
-		Node(std::istream &ips, std::ostream &ops);
+		Node(net::PipeEnd &pipe_end);
+		void send_packet(net::Packet &packet);
 		virtual ~Node(void);
 		virtual void update(void) = 0;
 		void update_packets(void);
