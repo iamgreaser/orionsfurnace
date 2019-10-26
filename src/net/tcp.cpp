@@ -143,9 +143,9 @@ void TCPPipeEnd::pump_recv(void)
 		int e = errno;
 
 		// Check if this is because we would block.
-		if (e == EAGAIN || e == EWOULDBLOCK) {
-			return;
-		}
+		// NOTE: On Linux they're the same, but POSIX allows them to differ.
+		if (e == EAGAIN) { return; }
+		if (e == EWOULDBLOCK) { return; }
 
 		// Mark this socket as dead
 		perror("recv");
@@ -198,9 +198,9 @@ void TCPPipeEnd::pump_send(void)
 		int e = errno;
 
 		// Check if this is because we would block.
-		if (e == EAGAIN || e == EWOULDBLOCK) {
-			return;
-		}
+		// NOTE: On Linux they're the same, but POSIX allows them to differ.
+		if (e == EAGAIN) { return; }
+		if (e == EWOULDBLOCK) { return; }
 
 		// Mark this socket as dead
 		perror("send");
