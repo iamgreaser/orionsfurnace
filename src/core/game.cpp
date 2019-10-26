@@ -80,7 +80,7 @@ bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
 
 void Game::tick(const GameFrame &game_frame)
 {
-  std::cout << "Players: Got " << game_frame.get_player_count() << ", Expected " << this->get_player_count() << std::endl;
+  //std::cout << "Players: Got " << game_frame.get_player_count() << ", Expected " << this->get_player_count() << std::endl;
   assert(game_frame.get_player_count() == this->get_player_count());
 
   for (int i = 0; i < this->get_player_count(); i++) {

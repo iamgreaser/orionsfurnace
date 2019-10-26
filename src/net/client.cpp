@@ -177,7 +177,7 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
 
     case packets::GAME_FRAME: {
       // Apply frame inputs.
-      std::cout << "Apply frame inputs" << std::endl;
+      //std::cout << "Apply frame inputs" << std::endl;
       GameFrame game_frame(packet_ss);
       if (m_game != nullptr) {
         m_game->tick(game_frame);

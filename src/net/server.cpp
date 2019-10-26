@@ -122,7 +122,7 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 
     case packets::PROVIDE_INPUT: {
       // Set frame input.
-      std::cout << "Provide input for player " << m_player_index << std::endl;
+      //std::cout << "Provide input for player " << m_player_index << std::endl;
       assert(m_server != nullptr);
       PlayerInput player_input(packet_ss);
       m_player_input = player_input;
