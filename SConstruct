@@ -159,9 +159,8 @@ if WARNINGS_ARE_ERRORS:
 
 # Get engine version
 #engine_version = "0.0" # It will be a long time before SemVer could make any sense --GM
-engine_version = "git"
 git_commit_version = syscall([ "git", "describe", "--always", "--dirty"])
-engine_version += "+" + git_commit_version
+engine_version = git_commit_version
 env.Replace(
     ENGINE_VERSION = engine_version,
 )
