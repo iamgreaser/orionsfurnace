@@ -3,6 +3,32 @@
 import sys
 import subprocess
 
+def syscall(argv):
+    pfp = subprocess.Popen(
+        argv,
+        stdout=subprocess.PIPE,
+    )
+    sub_output_stripped = None
+    try:
+        sub_stdout, sub_stderr, = pfp.communicate()
+        sub_output_stripped = sub_stdout.strip()
+        # Python 2 -> Python 3
+        if not isinstance(sub_output_stripped, str):
+            sub_output_stripped = sub_output_stripped.decode("utf-8")
+        else:
+            sub_output_stripped = sub_output_stripped
+
+        assert " " not in sub_output_stripped
+        assert "\t" not in sub_output_stripped
+        assert "\n" not in sub_output_stripped
+        assert "\r" not in sub_output_stripped
+        assert "\x00" not in sub_output_stripped
+
+    finally:
+        sub_return = pfp.wait()
+        assert sub_return == 0
+    return sub_output_stripped
+
 # WARNINGS_ARE_ERRORS:
 # Setting this to True will treat all warnings as errors.
 #
@@ -38,7 +64,7 @@ env = Environment(
 )
 
 env.Replace(
-    TARGET_SYSTEM = "x86_64-linux",
+    TARGET_SYSTEM = syscall([env['CC'], '-dumpmachine'])
 )
 
 env.MergeFlags([
@@ -53,7 +79,7 @@ env.Append(
     ],
 )
 
-if "gcc" in env["CC"] or "g++" in env["CXX"]:
+if "gcc" in env["CC"] or ("g++" in env["CXX"] and "clang++" not in env["CXX"]):
     env.Append(
         C_AND_CXX_FLAGS = [
             "-Wconversion",
@@ -98,28 +124,7 @@ if WARNINGS_ARE_ERRORS:
 # Get engine version
 #engine_version = "0.0" # It will be a long time before SemVer could make any sense --GM
 engine_version = "git"
-pfp = subprocess.Popen(
-    [ "git", "show", "-s", "--format=%h", "HEAD" ],
-    stdout=subprocess.PIPE,
-)
-try:
-    git_stdout, git_stderr, = pfp.communicate()
-    git_commit_version_bytes = git_stdout.strip()
-    # Python 2 -> Python 3
-    if not isinstance(git_commit_version_bytes, str):
-        git_commit_version = git_commit_version_bytes.decode("utf-8")
-    else:
-        git_commit_version = git_commit_version_bytes
-
-    assert " " not in git_commit_version
-    assert "\t" not in git_commit_version
-    assert "\n" not in git_commit_version
-    assert "\r" not in git_commit_version
-    assert "\x00" not in git_commit_version
-
-finally:
-    git_return = pfp.wait()
-    assert git_return == 0
+git_commit_version = syscall([ "git", "show", "-s", "--format=%h", "HEAD" ])
 engine_version += "+" + git_commit_version
 env.Replace(
     ENGINE_VERSION = engine_version,
