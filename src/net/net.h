@@ -25,6 +25,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <cstdint>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 namespace packets
 {
@@ -52,8 +53,19 @@ namespace net
 
   class PipeEnd
   {
+  protected:
+    bool m_disconnected = false;
+    std::string m_disconnect_message = "";
   public:
     virtual ~PipeEnd(void) {}
+
+    bool is_disconnected(void) {
+      return m_disconnected;
+    }
+    std::string get_disconnect_message(void) {
+      return m_disconnect_message;
+    }
+
     virtual std::ostream &send_stream(void) = 0;
     virtual std::istream &recv_stream(void) = 0;
     virtual void pump_recv(void) {}

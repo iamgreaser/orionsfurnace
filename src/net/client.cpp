@@ -101,6 +101,14 @@ void Client::update(void)
 
   this->update_packets();
 
+  // If we're disconnected, set a generic message.
+  if (m_pipe_end->is_disconnected()) {
+    if (m_status != client_status::DISCONNECTED) {
+      m_disconnect_message = m_pipe_end->get_disconnect_message();
+      m_status = client_status::DISCONNECTED;
+    }
+  }
+
   switch (m_status)
   {
     case client_status::SENDING_HELLO: {

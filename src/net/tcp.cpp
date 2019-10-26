@@ -130,7 +130,7 @@ TCPPipeEnd::~TCPPipeEnd(void)
 
 void TCPPipeEnd::pump_recv(void)
 {
-  if (m_is_dead) {
+  if (m_disconnected) {
     return;
   }
 
@@ -149,18 +149,20 @@ void TCPPipeEnd::pump_recv(void)
     if (e == EAGAIN) { return; }
     if (e == EWOULDBLOCK) { return; }
 
-    // Mark this socket as dead
+    // Mark this socket as disconnected
     perror("recv");
-    m_is_dead = true;
+    m_disconnect_message = std::string(strerror(e));
+    m_disconnected = true;
     return;
     //PANIC("recv failed");
   }
 
   // Did we disconnect?
   if (got_bytes == 0) {
-    // Mark this socket as dead
+    // Mark this socket as disconnected
     std::cerr << "recv returned 0" << std::endl;
-    m_is_dead = true;
+    m_disconnect_message = std::string("EOF reached");
+    m_disconnected = true;
     return;
     //PANIC("TODO: Disconnect elegantly");
   }
@@ -171,7 +173,7 @@ void TCPPipeEnd::pump_recv(void)
 
 void TCPPipeEnd::pump_send(void)
 {
-  if (m_is_dead) {
+  if (m_disconnected) {
     return;
   }
 
@@ -204,9 +206,10 @@ void TCPPipeEnd::pump_send(void)
     if (e == EAGAIN) { return; }
     if (e == EWOULDBLOCK) { return; }
 
-    // Mark this socket as dead
+    // Mark this socket as disconnected
     perror("send");
-    m_is_dead = true;
+    m_disconnect_message = std::string(strerror(e));
+    m_disconnected = true;
     return;
     //PANIC("send failed");
   }
@@ -214,7 +217,8 @@ void TCPPipeEnd::pump_send(void)
   // Did we disconnect?
   if (wrote_bytes == 0) {
     std::cerr << "send returned 0" << std::endl;
-    m_is_dead = true;
+    m_disconnect_message = std::string("send() returned 0");
+    m_disconnected = true;
     return;
     //PANIC("TODO: Disconnect elegantly");
   }
