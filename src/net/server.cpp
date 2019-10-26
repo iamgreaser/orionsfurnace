@@ -128,7 +128,8 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 
 ////////////////////////////////////////////////////////////////////////////
 
-Server::Server(void)
+Server::Server(int port)
+	: m_tcp_server(port)
 {
 }
 

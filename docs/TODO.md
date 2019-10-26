@@ -27,6 +27,7 @@ I think that's it for now. **EDIT: It wasn't it. This has been edited since putt
 
 ## Features we'll need
 
+* [ ] Windows-specific networking support.
 * [ ] Implement a world
 * [ ] Implement a camera so we're not stuck with 15x15
 * [ ] Make headless server builds a thing

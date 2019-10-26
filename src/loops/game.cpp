@@ -63,11 +63,8 @@ GameLoop::~GameLoop(void)
 
 void GameLoop::start_server(int port)
 {
-	// TODO: Use the port
-	(void)port;
-
 	assert(m_server == NULL);
-	m_server = new net::Server();
+	m_server = new net::Server(port);
 }
 
 void GameLoop::start_client(std::string addr, int port)

@@ -22,6 +22,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/game.h"
 #include "core/player.h"
 #include "net/net.h"
+#include "net/tcp.h"
 
 #include <iostream>
 #include <fstream>
@@ -67,9 +68,10 @@ namespace net
 	private:
 		std::ofstream *m_demo_fp = NULL;
 		std::vector<ServerClient> m_clients;
+		net::TCPServer m_tcp_server;
 		Game m_game;
 	public:
-		Server(void);
+		Server(int port);
 		~Server(void);
 
 		Game &game(void);
