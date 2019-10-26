@@ -147,6 +147,8 @@ if "clang" in env["CC"] and "clang" in env["CXX"]:
     env.Append(
         C_AND_CXX_FLAGS = [
             "-Weverything",
+            "-Wno-c++98-compat",
+            "-Wno-c++98-compat-pedantic",
             "-fcolor-diagnostics",
         ],
     )
