@@ -137,7 +137,7 @@ void save(std::ostream &ops, int64_t obj)
 //
 // bool
 //
-void load(std::istream &ips, bool obj)
+void load(std::istream &ips, bool &obj)
 {
   uint8_t vc = 0;
   load(ips, vc);
