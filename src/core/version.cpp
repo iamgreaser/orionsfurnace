@@ -21,5 +21,5 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 std::string get_engine_version(void)
 {
-	return ENGINE_VERSION;
+  return ENGINE_VERSION;
 }

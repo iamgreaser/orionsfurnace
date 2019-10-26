@@ -31,148 +31,148 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace gfx
 {
-	// 1x = 640x360
-	// 2x = 1280x720
-	// 3x = 1920x1080
-	constexpr int INITIAL_SCREEN_SCALE = 2;
-	int current_window_width = BASE_SCREEN_WIDTH*INITIAL_SCREEN_SCALE;
-	int current_window_height = BASE_SCREEN_HEIGHT*INITIAL_SCREEN_SCALE;
+  // 1x = 640x360
+  // 2x = 1280x720
+  // 3x = 1920x1080
+  constexpr int INITIAL_SCREEN_SCALE = 2;
+  int current_window_width = BASE_SCREEN_WIDTH*INITIAL_SCREEN_SCALE;
+  int current_window_height = BASE_SCREEN_HEIGHT*INITIAL_SCREEN_SCALE;
 
-	SDL_Window *window = nullptr;
-	SDL_Renderer *renderer = nullptr;
-	SDL_Texture *backbuf = nullptr;
+  SDL_Window *window = nullptr;
+  SDL_Renderer *renderer = nullptr;
+  SDL_Texture *backbuf = nullptr;
 
 #if 0
-	BITMAP *vidbufs[2] = {};
-	int vidbuf_in = 0;
-	int vidbuf_out = 1;
+  BITMAP *vidbufs[2] = {};
+  int vidbuf_in = 0;
+  int vidbuf_out = 1;
 #endif
 }
 
 void gfx::init(void)
 {
-	// Create a window
-	std::string window_title = (
-		std::string("orion's furnace v")
-		+ get_engine_version());
-	window = SDL_CreateWindow(
-		window_title.c_str(),
-		SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED,
-		current_window_width,
-		current_window_height,
-		(0
-			//| SDL_WINDOW_RESIZABLE;
-			));
-	assert(window != nullptr);
+  // Create a window
+  std::string window_title = (
+    std::string("orion's furnace v")
+    + get_engine_version());
+  window = SDL_CreateWindow(
+    window_title.c_str(),
+    SDL_WINDOWPOS_CENTERED,
+    SDL_WINDOWPOS_CENTERED,
+    current_window_width,
+    current_window_height,
+    (0
+      //| SDL_WINDOW_RESIZABLE;
+      ));
+  assert(window != nullptr);
 
-	// Create a renderer for the window
-	renderer = SDL_CreateRenderer(
-		window,
-		-1,
-		(0
-			| SDL_RENDERER_PRESENTVSYNC
-			| SDL_RENDERER_TARGETTEXTURE
-			));
-	assert(renderer != nullptr);
+  // Create a renderer for the window
+  renderer = SDL_CreateRenderer(
+    window,
+    -1,
+    (0
+      | SDL_RENDERER_PRESENTVSYNC
+      | SDL_RENDERER_TARGETTEXTURE
+      ));
+  assert(renderer != nullptr);
 
-	// Create our backbuffer
-	backbuf = SDL_CreateTexture(
-		renderer,
-		SDL_PIXELFORMAT_BGRA8888,
-		SDL_TEXTUREACCESS_TARGET,
-		BASE_SCREEN_WIDTH,
-		BASE_SCREEN_HEIGHT);
-	assert(backbuf != nullptr);
+  // Create our backbuffer
+  backbuf = SDL_CreateTexture(
+    renderer,
+    SDL_PIXELFORMAT_BGRA8888,
+    SDL_TEXTUREACCESS_TARGET,
+    BASE_SCREEN_WIDTH,
+    BASE_SCREEN_HEIGHT);
+  assert(backbuf != nullptr);
 
-	// Target the backbuffer by default
-	int did_set_render_target = SDL_SetRenderTarget(
-		renderer, backbuf);
-	assert(did_set_render_target == 0);
+  // Target the backbuffer by default
+  int did_set_render_target = SDL_SetRenderTarget(
+    renderer, backbuf);
+  assert(did_set_render_target == 0);
 
-	// Initialise SDL_ttf
-	init_font();
+  // Initialise SDL_ttf
+  init_font();
 
-	// Load some assets
-	tile_gfx_floor.ensure_loaded();
-	player_gfx.ensure_loaded();
+  // Load some assets
+  tile_gfx_floor.ensure_loaded();
+  player_gfx.ensure_loaded();
 }
 
 void gfx::clear(int r, int g, int b)
 {
-	// Clear screen
-	SDL_SetRenderDrawColor(renderer,
-		(r < 0 ? 0 : r > 0xFF ? 0xFF : (uint8_t)r),
-		(g < 0 ? 0 : g > 0xFF ? 0xFF : (uint8_t)g),
-		(b < 0 ? 0 : b > 0xFF ? 0xFF : (uint8_t)b),
-		0xFF);
-	SDL_RenderFillRect(renderer, nullptr);
+  // Clear screen
+  SDL_SetRenderDrawColor(renderer,
+    (r < 0 ? 0 : r > 0xFF ? 0xFF : (uint8_t)r),
+    (g < 0 ? 0 : g > 0xFF ? 0xFF : (uint8_t)g),
+    (b < 0 ? 0 : b > 0xFF ? 0xFF : (uint8_t)b),
+    0xFF);
+  SDL_RenderFillRect(renderer, nullptr);
 }
 
 void gfx::clip_nothing(void)
 {
-	// Clear clipping rectangle
-	int did_set_clip_rect = SDL_RenderSetClipRect(renderer, nullptr);
-	assert(did_set_clip_rect == 0);
+  // Clear clipping rectangle
+  int did_set_clip_rect = SDL_RenderSetClipRect(renderer, nullptr);
+  assert(did_set_clip_rect == 0);
 }
 
 void gfx::clip_rect(int px, int py, int pw, int ph)
 {
-	// Set clipping rectangle
-	SDL_Rect rect = {};
-	rect.x = px;
-	rect.y = py;
-	rect.w = pw;
-	rect.h = ph;
+  // Set clipping rectangle
+  SDL_Rect rect = {};
+  rect.x = px;
+  rect.y = py;
+  rect.w = pw;
+  rect.h = ph;
 
-	int did_set_clip_rect = SDL_RenderSetClipRect(renderer, &rect);
-	assert(did_set_clip_rect == 0);
+  int did_set_clip_rect = SDL_RenderSetClipRect(renderer, &rect);
+  assert(did_set_clip_rect == 0);
 }
 
 void gfx::draw_rect(int px, int py, int pw, int ph, int r, int g, int b)
 {
-	SDL_Rect rect = {};
-	rect.x = px;
-	rect.y = py;
-	rect.w = pw;
-	rect.h = ph;
+  SDL_Rect rect = {};
+  rect.x = px;
+  rect.y = py;
+  rect.w = pw;
+  rect.h = ph;
 
-	SDL_SetRenderDrawColor(renderer,
-		(r < 0 ? 0 : r > 0xFF ? 0xFF : (uint8_t)r),
-		(g < 0 ? 0 : g > 0xFF ? 0xFF : (uint8_t)g),
-		(b < 0 ? 0 : b > 0xFF ? 0xFF : (uint8_t)b),
-		0xFF);
-	int did_rect = SDL_RenderFillRect(renderer, &rect);
-	assert(did_rect == 0);
+  SDL_SetRenderDrawColor(renderer,
+    (r < 0 ? 0 : r > 0xFF ? 0xFF : (uint8_t)r),
+    (g < 0 ? 0 : g > 0xFF ? 0xFF : (uint8_t)g),
+    (b < 0 ? 0 : b > 0xFF ? 0xFF : (uint8_t)b),
+    0xFF);
+  int did_rect = SDL_RenderFillRect(renderer, &rect);
+  assert(did_rect == 0);
 }
 
 void gfx::draw_text(int px, int py, int r, int g, int b, const std::string text)
 {
-	font_base.draw(px, py, r, g, b, text);
+  font_base.draw(px, py, r, g, b, text);
 }
 
 void gfx::fetch_text_dims(std::string s, int *px, int *py)
 {
-	font_base.fetch_dims_of(s, px, py);
+  font_base.fetch_dims_of(s, px, py);
 }
 
 void gfx::flip(void)
 {
-	// Clear render target back to default
-	int did_clear_render_target = SDL_SetRenderTarget(
-		renderer, nullptr);
-	assert(did_clear_render_target == 0);
+  // Clear render target back to default
+  int did_clear_render_target = SDL_SetRenderTarget(
+    renderer, nullptr);
+  assert(did_clear_render_target == 0);
 
-	// Blit
-	int did_blit = SDL_RenderCopy(
-		renderer, backbuf, nullptr, nullptr);
-	assert(did_blit == 0);
+  // Blit
+  int did_blit = SDL_RenderCopy(
+    renderer, backbuf, nullptr, nullptr);
+  assert(did_blit == 0);
 
-	// Present
-	SDL_RenderPresent(renderer);
+  // Present
+  SDL_RenderPresent(renderer);
 
-	// Set render target again
-	int did_set_render_target = SDL_SetRenderTarget(
-		renderer, backbuf);
-	assert(did_set_render_target == 0);
+  // Set render target again
+  int did_set_render_target = SDL_SetRenderTarget(
+    renderer, backbuf);
+  assert(did_set_render_target == 0);
 }

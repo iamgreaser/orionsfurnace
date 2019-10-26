@@ -24,16 +24,16 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 //
 void load(std::istream &ips, uint8_t &obj)
 {
-	int v = ips.get();
-	assert(v >= 0); // TODO: throw an exception on EOF instead
-	assert(v <= 0xFF); // this on the other hand should just crash on failure
-	uint8_t vc = (uint8_t)v;
-	obj = *reinterpret_cast<uint8_t *>(&vc);
+  int v = ips.get();
+  assert(v >= 0); // TODO: throw an exception on EOF instead
+  assert(v <= 0xFF); // this on the other hand should just crash on failure
+  uint8_t vc = (uint8_t)v;
+  obj = *reinterpret_cast<uint8_t *>(&vc);
 }
 
 void save(std::ostream &ops, uint8_t &obj)
 {
-	ops.put(*reinterpret_cast<char *>(&obj));
+  ops.put(*reinterpret_cast<char *>(&obj));
 }
 
 //
@@ -41,53 +41,53 @@ void save(std::ostream &ops, uint8_t &obj)
 //
 void load(std::istream &ips, uint16_t &obj)
 {
-	uint8_t v0 = 0;
-	uint8_t v1 = 0;
-	load(ips, v0);
-	load(ips, v1);
-	obj = (uint16_t)(((uint32_t)v0)|(((uint32_t)v1)<<8));
+  uint8_t v0 = 0;
+  uint8_t v1 = 0;
+  load(ips, v0);
+  load(ips, v1);
+  obj = (uint16_t)(((uint32_t)v0)|(((uint32_t)v1)<<8));
 }
 
 void save(std::ostream &ops, uint16_t &obj)
 {
-	uint8_t v0 = (uint8_t)(obj);
-	uint8_t v1 = (uint8_t)(obj>>8);
-	save(ops, v0);
-	save(ops, v1);
+  uint8_t v0 = (uint8_t)(obj);
+  uint8_t v1 = (uint8_t)(obj>>8);
+  save(ops, v0);
+  save(ops, v1);
 }
 
 void load(std::istream &ips, uint32_t &obj)
 {
-	uint16_t v0 = 0;
-	uint16_t v1 = 0;
-	load(ips, v0);
-	load(ips, v1);
-	obj = ((uint32_t)v0)|(((uint32_t)v1)<<16);
+  uint16_t v0 = 0;
+  uint16_t v1 = 0;
+  load(ips, v0);
+  load(ips, v1);
+  obj = ((uint32_t)v0)|(((uint32_t)v1)<<16);
 }
 
 void save(std::ostream &ops, uint32_t &obj)
 {
-	uint16_t v0 = (uint16_t)(obj);
-	uint16_t v1 = (uint16_t)(obj>>16);
-	save(ops, v0);
-	save(ops, v1);
+  uint16_t v0 = (uint16_t)(obj);
+  uint16_t v1 = (uint16_t)(obj>>16);
+  save(ops, v0);
+  save(ops, v1);
 }
 
 void load(std::istream &ips, uint64_t &obj)
 {
-	uint32_t v0 = 0;
-	uint32_t v1 = 0;
-	load(ips, v0);
-	load(ips, v1);
-	obj = ((uint64_t)v0)|(((uint64_t)v1)<<32ULL);
+  uint32_t v0 = 0;
+  uint32_t v1 = 0;
+  load(ips, v0);
+  load(ips, v1);
+  obj = ((uint64_t)v0)|(((uint64_t)v1)<<32ULL);
 }
 
 void save(std::ostream &ops, uint64_t &obj)
 {
-	uint32_t v0 = (uint32_t)(obj);
-	uint32_t v1 = (uint32_t)(obj>>32ULL);
-	save(ops, v0);
-	save(ops, v1);
+  uint32_t v0 = (uint32_t)(obj);
+  uint32_t v1 = (uint32_t)(obj>>32ULL);
+  save(ops, v0);
+  save(ops, v1);
 }
 
 //
@@ -96,42 +96,42 @@ void save(std::ostream &ops, uint64_t &obj)
 
 void load(std::istream &ips, int8_t &obj)
 {
-	load(ips, (uint8_t&)obj);
+  load(ips, (uint8_t&)obj);
 }
 
 void save(std::ostream &ops, int8_t &obj)
 {
-	save(ops, (uint8_t&)obj);
+  save(ops, (uint8_t&)obj);
 }
 
 void load(std::istream &ips, int16_t &obj)
 {
-	load(ips, (uint16_t&)obj);
+  load(ips, (uint16_t&)obj);
 }
 
 void save(std::ostream &ops, int16_t &obj)
 {
-	save(ops, (uint16_t&)obj);
+  save(ops, (uint16_t&)obj);
 }
 
 void load(std::istream &ips, int32_t &obj)
 {
-	load(ips, (uint32_t&)obj);
+  load(ips, (uint32_t&)obj);
 }
 
 void save(std::ostream &ops, int32_t &obj)
 {
-	save(ops, (uint32_t&)obj);
+  save(ops, (uint32_t&)obj);
 }
 
 void load(std::istream &ips, int64_t &obj)
 {
-	load(ips, (uint64_t&)obj);
+  load(ips, (uint64_t&)obj);
 }
 
 void save(std::ostream &ops, int64_t &obj)
 {
-	save(ops, (uint64_t&)obj);
+  save(ops, (uint64_t&)obj);
 }
 
 //
@@ -139,16 +139,16 @@ void save(std::ostream &ops, int64_t &obj)
 //
 void load(std::istream &ips, bool &obj)
 {
-	uint8_t vc = 0;
-	load(ips, vc);
-	assert(vc == 0 || vc == 1);
-	obj = (vc != 0);
+  uint8_t vc = 0;
+  load(ips, vc);
+  assert(vc == 0 || vc == 1);
+  obj = (vc != 0);
 }
 
 void save(std::ostream &ops, bool &obj)
 {
-	uint8_t vc = (obj ? 1 : 0);
-	save(ops, vc);
+  uint8_t vc = (obj ? 1 : 0);
+  save(ops, vc);
 }
 
 //
@@ -156,21 +156,21 @@ void save(std::ostream &ops, bool &obj)
 //
 void load(std::istream &ips, std::string &obj)
 {
-	uint16_t len = 0;
-	load(ips, len);
-	char *buf = new char[len]; // I'd use a VLA, but Microsoft refuse to implement VLAs which is why they're optional in C11
-	ips.read(buf, len);
-	obj = std::string(buf, len);
-	delete buf;
+  uint16_t len = 0;
+  load(ips, len);
+  char *buf = new char[len]; // I'd use a VLA, but Microsoft refuse to implement VLAs which is why they're optional in C11
+  ips.read(buf, len);
+  obj = std::string(buf, len);
+  delete buf;
 }
 
 void save(std::ostream &ops, std::string &obj)
 {
-	size_t raw_len = obj.size();
-	assert(raw_len <= 0xFFFF);
-	uint16_t len = (uint16_t)raw_len;
-	save(ops, len);
-	ops.write(obj.c_str(), len);
+  size_t raw_len = obj.size();
+  assert(raw_len <= 0xFFFF);
+  uint16_t len = (uint16_t)raw_len;
+  save(ops, len);
+  ops.write(obj.c_str(), len);
 }
 
 //
@@ -178,10 +178,10 @@ void save(std::ostream &ops, std::string &obj)
 //
 void load(std::istream &ips, Saveable &obj)
 {
-	obj.load_this(ips);
+  obj.load_this(ips);
 }
 
 void save(std::ostream &ops, Saveable &obj)
 {
-	obj.save_this(ops);
+  obj.save_this(ops);
 }

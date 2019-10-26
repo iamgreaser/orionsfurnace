@@ -30,69 +30,69 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace gfx
 {
-	Sprite tile_gfx_floor("dat/gfx/tiles/floor001.png");
-	Sprite player_gfx("dat/gfx/player/base.png");
+  Sprite tile_gfx_floor("dat/gfx/tiles/floor001.png");
+  Sprite player_gfx("dat/gfx/player/base.png");
 }
 
 Sprite::Sprite(const string filename, int pw, int ph)
-	: m_filename(filename)
-	, m_pw(pw)
-	, m_ph(ph)
+  : m_filename(filename)
+  , m_pw(pw)
+  , m_ph(ph)
 {
 }
 
 Sprite::~Sprite()
 {
-	if (m_loaded_texture != nullptr) {
-		SDL_Texture *texture = static_cast<SDL_Texture *>(m_loaded_texture);
-		SDL_DestroyTexture(texture);
-		m_loaded_texture = nullptr;
-	}
+  if (m_loaded_texture != nullptr) {
+    SDL_Texture *texture = static_cast<SDL_Texture *>(m_loaded_texture);
+    SDL_DestroyTexture(texture);
+    m_loaded_texture = nullptr;
+  }
 }
 
 void Sprite::ensure_loaded(void)
 {
-	if (m_loaded_texture == nullptr) {
-		// Load image
-		SDL_Surface *surface = IMG_Load(m_filename.c_str());
-		if (surface == nullptr)
-		{
-			std::cerr << "SDL ERROR: Attempting to load \"" << m_filename << "\": \"" << SDL_GetError() << "\"" << std::endl;
-			std::cerr.flush();
-		}
-		assert(surface != nullptr);
+  if (m_loaded_texture == nullptr) {
+    // Load image
+    SDL_Surface *surface = IMG_Load(m_filename.c_str());
+    if (surface == nullptr)
+    {
+      std::cerr << "SDL ERROR: Attempting to load \"" << m_filename << "\": \"" << SDL_GetError() << "\"" << std::endl;
+      std::cerr.flush();
+    }
+    assert(surface != nullptr);
 
-		// Create texture
-		SDL_Texture *texture = SDL_CreateTextureFromSurface(
-			renderer, surface);
-		assert(texture != nullptr);
-		m_loaded_texture = static_cast<void *>(texture);
+    // Create texture
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(
+      renderer, surface);
+    assert(texture != nullptr);
+    m_loaded_texture = static_cast<void *>(texture);
 
-		// Free surface as per the SDL manual recommendations
-		// This should save... a little bit of RAM?
-		SDL_FreeSurface(surface);
-	}
+    // Free surface as per the SDL manual recommendations
+    // This should save... a little bit of RAM?
+    SDL_FreeSurface(surface);
+  }
 }
 
 void Sprite::draw(int px, int py, int tx, int ty)
 {
-	this->ensure_loaded();
+  this->ensure_loaded();
 
-	// Build blit rectangles
-	SDL_Rect srcrect = {};
-	SDL_Rect dstrect = {};
-	srcrect.x = tx*m_pw;
-	srcrect.y = ty*m_ph;
-	srcrect.w = m_pw;
-	srcrect.h = m_ph;
-	dstrect.x = px;
-	dstrect.y = py;
-	dstrect.w = m_pw;
-	dstrect.h = m_ph;
+  // Build blit rectangles
+  SDL_Rect srcrect = {};
+  SDL_Rect dstrect = {};
+  srcrect.x = tx*m_pw;
+  srcrect.y = ty*m_ph;
+  srcrect.w = m_pw;
+  srcrect.h = m_ph;
+  dstrect.x = px;
+  dstrect.y = py;
+  dstrect.w = m_pw;
+  dstrect.h = m_ph;
 
-	// Now use them to actually blit
-	SDL_Texture *texture = static_cast<SDL_Texture *>(m_loaded_texture);
-	int did_blit = SDL_RenderCopy(
-		renderer, texture, &srcrect, &dstrect);
-	assert(did_blit == 0);
+  // Now use them to actually blit
+  SDL_Texture *texture = static_cast<SDL_Texture *>(m_loaded_texture);
+  int did_blit = SDL_RenderCopy(
+    renderer, texture, &srcrect, &dstrect);
+  assert(did_blit == 0);
 }
