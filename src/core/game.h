@@ -45,7 +45,11 @@ namespace game
 		Game(std::istream &ips);
 		~Game(void);
 
-		int get_player_count(void) { return m_players.size(); }
+		int get_player_count(void) const {
+			size_t count = m_players.size();
+			assert(count < 0xFFFF);
+			return (int)count;
+		}
 		Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
 		int get_width(void) const { return 15; }
 		int get_height(void) const { return 15; }
@@ -73,7 +77,11 @@ namespace game
 		GameFrame(int player_count = 0);
 		GameFrame(std::istream &ips);
 
-		int get_player_count(void) const { return m_player_inputs.size(); }
+		int get_player_count(void) const {
+			size_t count = m_player_inputs.size();
+			assert(count < 0xFFFF);
+			return (int)count;
+		}
 
 		void player_set_all_inputs(int player_idx,
 			PlayerInput player_input)

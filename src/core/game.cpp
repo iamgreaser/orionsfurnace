@@ -47,14 +47,14 @@ Game::~Game(void)
 
 void Game::add_player(Player player)
 {
-	int player_idx = m_players.size();
+	int player_idx = this->get_player_count();
 	m_players.push_back(player);
 	m_players[player_idx].set_game(this);
 }
 
 void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)
 {
-	assert(player_idx >= 0 && player_idx < (int)m_players.size());
+	assert(player_idx >= 0 && player_idx < this->get_player_count());
 	m_players[player_idx].set_all_inputs(player_input);
 }
 
@@ -113,7 +113,9 @@ void Game::load_this(istream &ips)
 
 void Game::save_this(ostream &ops)
 {
-	uint16_t player_count = m_players.size();
+	int raw_player_count = this->get_player_count();
+	assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
+	uint16_t player_count = (uint16_t)raw_player_count;
 	save(ops, player_count);
 
 	for (uint16_t i = 0; i < player_count; i++) {
@@ -156,7 +158,9 @@ void GameFrame::load_this(istream &ips)
 
 void GameFrame::save_this(ostream &ops)
 {
-	uint16_t player_count = m_player_inputs.size();
+	int raw_player_count = this->get_player_count();
+	assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
+	uint16_t player_count = (uint16_t)raw_player_count;
 	save(ops, player_count);
 
 	for (uint16_t i = 0; i < player_count; i++) {
