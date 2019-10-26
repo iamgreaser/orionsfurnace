@@ -45,26 +45,26 @@ GameLoop::GameLoop(void)
 
 GameLoop::~GameLoop(void)
 {
-	if (m_client != NULL) {
+	if (m_client != nullptr) {
 		delete m_client;
-		m_client = NULL;
+		m_client = nullptr;
 	}
 #if USE_EXTRA_PLAYER
-	if (m_client_extra1 != NULL) {
+	if (m_client_extra1 != nullptr) {
 		delete m_client_extra1;
-		m_client_extra1 = NULL;
+		m_client_extra1 = nullptr;
 	}
 #endif
 
-	if (m_server != NULL) {
+	if (m_server != nullptr) {
 		delete m_server;
-		m_server = NULL;
+		m_server = nullptr;
 	}
 }
 
 void GameLoop::start_server(int port)
 {
-	assert(m_server == NULL);
+	assert(m_server == nullptr);
 	m_server = new net::Server(port);
 }
 
@@ -73,10 +73,10 @@ void GameLoop::start_client(std::string addr, int port)
 	(void)addr;
 	(void)port;
 
-	assert(m_client == NULL);
+	assert(m_client == nullptr);
 #if USE_LOCAL_PIPES
 	m_client = new net::Client(m_local_pipe.end_a());
-	if (m_server != NULL) {
+	if (m_server != nullptr) {
 		// Direct connection
 		m_server->add_client(m_local_pipe.end_b());
 	}
@@ -90,10 +90,10 @@ void GameLoop::start_client(std::string addr, int port)
 
 #if USE_EXTRA_PLAYER
 	// For testing a second player
-	assert(m_client_extra1 == NULL);
+	assert(m_client_extra1 == nullptr);
 #if USE_LOCAL_PIPES
 	m_client_extra1 = new net::Client(m_local_pipe_extra1.end_a());
-	if (m_server != NULL) {
+	if (m_server != nullptr) {
 		// Direct connection
 		m_server->add_client(m_local_pipe_extra1.end_b());
 	}
@@ -127,11 +127,11 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	// Send inputs
 	//
-	if (m_client != NULL) {
+	if (m_client != nullptr) {
 		m_client->set_all_inputs(m_player_inputs[0]);
 	}
 #if USE_EXTRA_PLAYER
-	if (m_client_extra1 != NULL) {
+	if (m_client_extra1 != nullptr) {
 		m_client_extra1->set_all_inputs(m_player_inputs[1]);
 	}
 #endif
@@ -139,11 +139,11 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	// Update client logic
 	//
-	if (m_client != NULL) {
+	if (m_client != nullptr) {
 		m_client->update();
 	}
 #if USE_EXTRA_PLAYER
-	if (m_client_extra1 != NULL) {
+	if (m_client_extra1 != nullptr) {
 		m_client_extra1->update();
 	}
 #endif
@@ -151,18 +151,18 @@ loops::MainLoopState GameLoop::tick(void)
 	//
 	// Update server logic
 	//
-	if (m_server != NULL) {
+	if (m_server != nullptr) {
 		m_server->update();
 	}
 
 	//
 	// Update client logic
 	//
-	if (m_client != NULL) {
+	if (m_client != nullptr) {
 		m_client->update();
 	}
 #if USE_EXTRA_PLAYER
-	if (m_client_extra1 != NULL) {
+	if (m_client_extra1 != nullptr) {
 		m_client_extra1->update();
 	}
 #endif
@@ -225,7 +225,7 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 
 		case SDLK_F2:
 			if (ev.type == SDL_KEYDOWN) {
-				if (m_server != NULL) {
+				if (m_server != nullptr) {
 					m_server->quicksave();
 				}
 			}
@@ -233,7 +233,7 @@ void GameLoop::tick_key_event(SDL_Event &ev)
 
 		case SDLK_F3:
 			if (ev.type == SDL_KEYDOWN) {
-				if (m_server != NULL) {
+				if (m_server != nullptr) {
 					m_server->quickload();
 				}
 			}
@@ -272,9 +272,9 @@ void GameLoop::draw_playfield(void)
 	}
 
 	// Draw game
-	if (m_client != NULL) {
+	if (m_client != nullptr) {
 		Game *game = m_client->game();
-		if (game != NULL) {
+		if (game != nullptr) {
 			game->draw();
 		}
 	}
@@ -293,9 +293,9 @@ void GameLoop::draw_sidebar(void)
 	// Draw our sidebar
 	gfx::clear(0, 0, 0);
 
-	if (m_client != NULL) {
+	if (m_client != nullptr) {
 		Game *game = m_client->game();
-		if (game != NULL) {
+		if (game != nullptr) {
 			for (int pidx = 0; pidx < game->get_player_count(); pidx++) {
 				Player *player = game->get_player_ptr(pidx);
 
@@ -321,7 +321,7 @@ void GameLoop::draw_gui(void)
 	// TODO: more stuff
 
 	std::string central_message = "NO CLIENT";
-	if (m_client != NULL) {
+	if (m_client != nullptr) {
 		central_message = m_client->get_central_message();
 	}
 

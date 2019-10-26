@@ -62,14 +62,14 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
 	hints.ai_protocol = NETWORK_PROTOCOL;
 
 	// Run GAI
-	struct addrinfo *gai = NULL;
+	struct addrinfo *gai = nullptr;
 	int did_gai = getaddrinfo(
 		addr.c_str(),
 		std::to_string(port).c_str(),
 		&hints,
 		&gai);
 
-	if (gai == NULL) {
+	if (gai == nullptr) {
 		std::cerr << "Could not look up host: \"" << std::string(gai_strerror(did_gai)) << std::endl;
 		assert(!"Could not connect: Could not look up host");
 	}
@@ -229,7 +229,7 @@ TCPServer::TCPServer(int port)
 	hints.ai_protocol = NETWORK_PROTOCOL;
 
 	// Run GAI
-	struct addrinfo *gai_base = NULL;
+	struct addrinfo *gai_base = nullptr;
 	int did_gai = getaddrinfo(
 		std::string("localhost").c_str(),
 		std::to_string(port).c_str(),
@@ -240,11 +240,11 @@ TCPServer::TCPServer(int port)
 	struct addrinfo *gai = gai_base;
 
 	// Find an IPv4 or IPv6 port
-	while (gai != NULL && !this->is_good_ai_family(gai->ai_family)) {
+	while (gai != nullptr && !this->is_good_ai_family(gai->ai_family)) {
 		gai = gai->ai_next;
 	}
 
-	if (gai == NULL) {
+	if (gai == nullptr) {
 		std::cerr << "Could not look up host: \"" << std::string(gai_strerror(did_gai)) << std::endl;
 		assert(!"Could not host: Could not look up host");
 	}
@@ -340,7 +340,7 @@ TCPPipeEnd *TCPServer::accept_if_available(void)
 	// Accept if we can
 	if ((base_fds[0].revents & POLLIN) != 0) {
 		// Accept!
-		int new_sockfd = accept(m_sockfd, NULL, NULL);
+		int new_sockfd = accept(m_sockfd, nullptr, nullptr);
 		if (new_sockfd < 0) {
 			perror("server root socket accept");
 			assert(!"could not accept from server root socket");
@@ -355,5 +355,5 @@ TCPPipeEnd *TCPServer::accept_if_available(void)
 	}
 
 	// Nothing to return.
-	return NULL;
+	return nullptr;
 }

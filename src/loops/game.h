@@ -52,11 +52,11 @@ namespace loops
 #endif
 #else
 #endif
-		net::Client *m_client = NULL;
-		net::Server *m_server = NULL;
+		net::Client *m_client = nullptr;
+		net::Server *m_server = nullptr;
 
 #if USE_EXTRA_PLAYER
-		net::Client *m_client_extra1 = NULL;
+		net::Client *m_client_extra1 = nullptr;
 #endif
 	public:
 		GameLoop(void);

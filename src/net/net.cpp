@@ -30,11 +30,11 @@ Node::Node(net::PipeEnd *pipe_end)
 
 Node::~Node(void)
 {
-	if (m_pipe_end != NULL) {
+	if (m_pipe_end != nullptr) {
 		std::cout << "Attempt m_pipe_end delete " << (uintptr_t)(m_pipe_end) << std::endl;
 		//delete m_pipe_end; // FIXME: This crashes in ~ServerClient.
 		std::cout << "Done m_pipe_end delete" << std::endl;
-		m_pipe_end = NULL;
+		m_pipe_end = nullptr;
 	}
 }
 

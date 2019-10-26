@@ -42,7 +42,7 @@ Player::Player(Game *game, int cx, int cy, Direction dir)
 }
 
 Player::Player(void)
-	: m_game(NULL)
+	: m_game(nullptr)
 {
 }
 
@@ -237,7 +237,7 @@ bool Player::attempt_move_by(int dx, int dy)
 
 	// Is there a player at the given cell?
 	Player *other = m_game->get_player_at(cx, cy);
-	if (other != NULL) {
+	if (other != nullptr) {
 		// Is it us?
 		if (other == this) {
 			// Don't push ourselves, that causes stack overflows.

@@ -32,7 +32,7 @@ namespace gfx
 	private:
 		const string m_filename;
 		const int m_ptsize;
-		void *m_loaded_font = NULL;
+		void *m_loaded_font = nullptr;
 	public:
 		Font(const string filename, const int ptsize);
 		~Font();

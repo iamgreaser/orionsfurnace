@@ -49,7 +49,7 @@ namespace net
 	{
 	private:
 		ServerClientStatus m_status;
-		Server *m_server = NULL;
+		Server *m_server = nullptr;
 		GameFrame m_game_frame;
 		int m_player_index;
 		PlayerInput m_player_input;
@@ -67,7 +67,7 @@ namespace net
 	class Server
 	{
 	private:
-		std::ofstream *m_demo_fp = NULL;
+		std::ofstream *m_demo_fp = nullptr;
 		std::vector<std::shared_ptr<ServerClient>> m_clients;
 		net::TCPServer m_tcp_server;
 		Game m_game;

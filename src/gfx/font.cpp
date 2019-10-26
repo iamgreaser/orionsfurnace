@@ -40,19 +40,19 @@ Font::Font(const string filename, int ptsize)
 
 Font::~Font()
 {
-	if (m_loaded_font != NULL) {
+	if (m_loaded_font != nullptr) {
 		TTF_Font *ttf = static_cast<TTF_Font *>(m_loaded_font);
 		TTF_CloseFont(ttf);
-		m_loaded_font = NULL;
+		m_loaded_font = nullptr;
 	}
 }
 
 void Font::ensure_loaded(void)
 {
-	if (m_loaded_font == NULL) {
+	if (m_loaded_font == nullptr) {
 		TTF_Font *ttf = TTF_OpenFont(
 			m_filename.c_str(), m_ptsize);
-		assert(ttf != NULL);
+		assert(ttf != nullptr);
 		m_loaded_font = static_cast<void *>(ttf);
 	}
 }
@@ -78,7 +78,7 @@ void Font::draw(int px, int py, int r, int g, int b, const std::string text)
 	TTF_Font *ttf = static_cast<TTF_Font *>(m_loaded_font);
 	SDL_Surface *surface = TTF_RenderUTF8_Blended(
 		ttf, text.c_str(), fg);
-	assert(surface != NULL);
+	assert(surface != nullptr);
 
 	// Build blit rectangle
 	SDL_Rect dstrect = {};
@@ -90,14 +90,14 @@ void Font::draw(int px, int py, int r, int g, int b, const std::string text)
 	// Build texture
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(
 		renderer, surface);
-	assert(texture != NULL);
+	assert(texture != nullptr);
 
 	// Free surface
 	SDL_FreeSurface(surface);
 
 	// Blit text
 	int did_blit = SDL_RenderCopy(
-		renderer, texture, NULL, &dstrect);
+		renderer, texture, nullptr, &dstrect);
 	assert(did_blit == 0);
 
 	// Destroy texture

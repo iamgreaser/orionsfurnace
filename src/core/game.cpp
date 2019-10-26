@@ -69,7 +69,7 @@ bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
 	if (players_are_blocking) {
 		// Is there a player at the given cell?
 		Player *other = this->get_player_at(cx, cy);
-		if (other != NULL) {
+		if (other != nullptr) {
 			return false;
 		}
 	}
@@ -131,7 +131,7 @@ Player *Game::get_player_at(int cx, int cy)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 GameFrame::GameFrame(int player_count)

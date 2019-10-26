@@ -28,8 +28,8 @@ namespace net
 	class RawPipeEnd : public PipeEnd
 	{
 	protected:
-		std::stringstream *m_send_ss = NULL;
-		std::stringstream *m_recv_ss = NULL;
+		std::stringstream *m_send_ss = nullptr;
+		std::stringstream *m_recv_ss = nullptr;
 	public:
 		RawPipeEnd(std::stringstream *ips, std::stringstream *ops)
 			: m_send_ss(ips)

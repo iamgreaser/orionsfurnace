@@ -38,9 +38,9 @@ namespace gfx
 	int current_window_width = BASE_SCREEN_WIDTH*INITIAL_SCREEN_SCALE;
 	int current_window_height = BASE_SCREEN_HEIGHT*INITIAL_SCREEN_SCALE;
 
-	SDL_Window *window = NULL;
-	SDL_Renderer *renderer = NULL;
-	SDL_Texture *backbuf = NULL;
+	SDL_Window *window = nullptr;
+	SDL_Renderer *renderer = nullptr;
+	SDL_Texture *backbuf = nullptr;
 
 #if 0
 	BITMAP *vidbufs[2] = {};
@@ -64,7 +64,7 @@ void gfx::init(void)
 		(0
 			//| SDL_WINDOW_RESIZABLE;
 			));
-	assert(window != NULL);
+	assert(window != nullptr);
 
 	// Create a renderer for the window
 	renderer = SDL_CreateRenderer(
@@ -74,7 +74,7 @@ void gfx::init(void)
 			| SDL_RENDERER_PRESENTVSYNC
 			| SDL_RENDERER_TARGETTEXTURE
 			));
-	assert(renderer != NULL);
+	assert(renderer != nullptr);
 
 	// Create our backbuffer
 	backbuf = SDL_CreateTexture(
@@ -83,7 +83,7 @@ void gfx::init(void)
 		SDL_TEXTUREACCESS_TARGET,
 		BASE_SCREEN_WIDTH,
 		BASE_SCREEN_HEIGHT);
-	assert(backbuf != NULL);
+	assert(backbuf != nullptr);
 
 	// Target the backbuffer by default
 	int did_set_render_target = SDL_SetRenderTarget(
@@ -106,13 +106,13 @@ void gfx::clear(int r, int g, int b)
 		(g < 0 ? 0 : g > 0xFF ? 0xFF : (uint8_t)g),
 		(b < 0 ? 0 : b > 0xFF ? 0xFF : (uint8_t)b),
 		0xFF);
-	SDL_RenderFillRect(renderer, NULL);
+	SDL_RenderFillRect(renderer, nullptr);
 }
 
 void gfx::clip_nothing(void)
 {
 	// Clear clipping rectangle
-	int did_set_clip_rect = SDL_RenderSetClipRect(renderer, NULL);
+	int did_set_clip_rect = SDL_RenderSetClipRect(renderer, nullptr);
 	assert(did_set_clip_rect == 0);
 }
 
@@ -160,12 +160,12 @@ void gfx::flip(void)
 {
 	// Clear render target back to default
 	int did_clear_render_target = SDL_SetRenderTarget(
-		renderer, NULL);
+		renderer, nullptr);
 	assert(did_clear_render_target == 0);
 
 	// Blit
 	int did_blit = SDL_RenderCopy(
-		renderer, backbuf, NULL, NULL);
+		renderer, backbuf, nullptr, nullptr);
 	assert(did_blit == 0);
 
 	// Present

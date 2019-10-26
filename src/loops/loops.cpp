@@ -48,7 +48,7 @@ loops::Loop *loops::get_loop_for_state(MainLoopState loop_state)
 {
 	switch (loop_state) {
 		case mainloop::EXIT:
-			return NULL;
+			return nullptr;
 
 		case mainloop::GAME:
 			return &game_loop;
@@ -57,7 +57,7 @@ loops::Loop *loops::get_loop_for_state(MainLoopState loop_state)
 			std::cerr << "FATAL: Unhandled loop state \"" << loop_state << "\"." << std::endl;
 			std::cerr.flush();
 			abort();
-			return NULL;
+			return nullptr;
 	}
 }
 
@@ -93,10 +93,10 @@ void loops::run(loops::LaunchMode launch_mode, std::string net_addr, int net_por
 
 		// Deinit and init for loop state transition.
 		if (prev_loop != this_loop) {
-			if (prev_loop != NULL) {
+			if (prev_loop != nullptr) {
 				prev_loop->deinit();
 			}
-			if (this_loop != NULL) {
+			if (this_loop != nullptr) {
 				this_loop->init();
 			}
 		}
@@ -106,7 +106,7 @@ void loops::run(loops::LaunchMode launch_mode, std::string net_addr, int net_por
 		MainLoopState next_loop_state = loop_state;
 
 		// If there is no loop, exit.
-		if (this_loop == NULL) {
+		if (this_loop == nullptr) {
 			break;
 		}
 

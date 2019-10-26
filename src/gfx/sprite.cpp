@@ -43,29 +43,29 @@ Sprite::Sprite(const string filename, int pw, int ph)
 
 Sprite::~Sprite()
 {
-	if (m_loaded_texture != NULL) {
+	if (m_loaded_texture != nullptr) {
 		SDL_Texture *texture = static_cast<SDL_Texture *>(m_loaded_texture);
 		SDL_DestroyTexture(texture);
-		m_loaded_texture = NULL;
+		m_loaded_texture = nullptr;
 	}
 }
 
 void Sprite::ensure_loaded(void)
 {
-	if (m_loaded_texture == NULL) {
+	if (m_loaded_texture == nullptr) {
 		// Load image
 		SDL_Surface *surface = IMG_Load(m_filename.c_str());
-		if (surface == NULL)
+		if (surface == nullptr)
 		{
 			std::cerr << "SDL ERROR: Attempting to load \"" << m_filename << "\": \"" << SDL_GetError() << "\"" << std::endl;
 			std::cerr.flush();
 		}
-		assert(surface != NULL);
+		assert(surface != nullptr);
 
 		// Create texture
 		SDL_Texture *texture = SDL_CreateTextureFromSurface(
 			renderer, surface);
-		assert(texture != NULL);
+		assert(texture != nullptr);
 		m_loaded_texture = static_cast<void *>(texture);
 
 		// Free surface as per the SDL manual recommendations

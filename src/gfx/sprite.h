@@ -31,7 +31,7 @@ namespace gfx
 	{
 	private:
 		const string m_filename;
-		void *m_loaded_texture = NULL;
+		void *m_loaded_texture = nullptr;
 		int m_pw;
 		int m_ph;
 	public:

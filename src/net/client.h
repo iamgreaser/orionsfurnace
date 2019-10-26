@@ -46,7 +46,7 @@ namespace net
 		ClientStatus m_status;
 		PlayerInput m_player_input;
 		int m_player_idx = -1;
-		Game *m_game = NULL;
+		Game *m_game = nullptr;
 		std::string m_disconnect_message = "";
 
 		// Throttle input sending to once a frame

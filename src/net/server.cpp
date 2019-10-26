@@ -37,7 +37,7 @@ ServerClient::ServerClient(Server *server, int player_index, net::PipeEnd *pipe_
 ServerClient::~ServerClient(void)
 {
 	std::cout << "Old ServerClient! " << ((intptr_t)this) << std::endl;
-	if (m_pipe_end != NULL) {
+	if (m_pipe_end != nullptr) {
 		delete m_pipe_end;
 	}
 	std::cout << "Old ServerClient DONE" << std::endl;
@@ -123,7 +123,7 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 		case packets::PROVIDE_INPUT: {
 			// Set frame input.
 			std::cout << "Provide input for player " << m_player_index << std::endl;
-			assert(m_server != NULL);
+			assert(m_server != nullptr);
 			PlayerInput player_input(packet_ss);
 			m_player_input = player_input;
 		} break;
@@ -144,10 +144,10 @@ Server::Server(int port)
 
 Server::~Server(void)
 {
-	if (m_demo_fp != NULL) {
+	if (m_demo_fp != nullptr) {
 		m_demo_fp->close();
 		delete m_demo_fp;
-		m_demo_fp = NULL;
+		m_demo_fp = nullptr;
 	}
 }
 
@@ -162,7 +162,7 @@ void Server::add_client(net::PipeEnd *pipe_end)
 void Server::broadcast_packet(net::Packet &packet)
 {
 	// Start recording demo if we haven't yet
-	if (m_demo_fp == NULL) {
+	if (m_demo_fp == nullptr) {
 		m_demo_fp = new std::ofstream("test.demo");
 		net::GameSnapshotPacket game_snapshot_packet(m_game);
 		save(*m_demo_fp, game_snapshot_packet);
@@ -177,7 +177,7 @@ void Server::broadcast_packet(net::Packet &packet)
 void Server::broadcast_packet_ignoring_client(net::Packet &packet, ServerClient *ignore_sc)
 {
 	// Start recording demo if we haven't yet
-	if (m_demo_fp == NULL) {
+	if (m_demo_fp == nullptr) {
 		m_demo_fp = new std::ofstream("test.demo");
 		net::GameSnapshotPacket game_snapshot_packet(m_game);
 		save(*m_demo_fp, game_snapshot_packet);
@@ -223,7 +223,7 @@ void Server::update(void)
 {
 	// Add a client if one is trying to connect
 	net::TCPPipeEnd *pipe_end = m_tcp_server.accept_if_available();
-	if (pipe_end != NULL) {
+	if (pipe_end != nullptr) {
 		std::cout << "Accepting new client" << std::endl;
 		this->add_client(pipe_end);
 	}

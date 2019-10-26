@@ -38,9 +38,9 @@ Client::Client(net::PipeEnd *pipe_end)
 
 Client::~Client(void)
 {
-	if (m_game != NULL) {
+	if (m_game != nullptr) {
 		delete m_game;
-		m_game = NULL;
+		m_game = nullptr;
 	}
 }
 
@@ -86,9 +86,9 @@ std::string Client::get_central_message(void)
 
 void Client::load_game(std::istream &ips)
 {
-	if (m_game != NULL) {
+	if (m_game != nullptr) {
 		delete m_game;
-		m_game = NULL;
+		m_game = nullptr;
 	}
 
 	m_game = new Game(ips);
@@ -115,7 +115,7 @@ void Client::update(void)
 		case client_status::LOADING_GAME:
 			// All we can do here really is wait.
 			// Until we've got everything we need that is...
-			if (this->m_game == NULL) { break; }
+			if (this->m_game == nullptr) { break; }
 			if (this->m_player_idx < 0) { break; }
 
 			// ALRIGHT WE'RE GOOD NOW
@@ -172,14 +172,14 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
 			// Load game.
 			std::cout << "Load game" << std::endl;
 			this->load_game(packet_ss);
-			assert(m_game != NULL);
+			assert(m_game != nullptr);
 		} break;
 
 		case packets::GAME_FRAME: {
 			// Apply frame inputs.
 			std::cout << "Apply frame inputs" << std::endl;
 			GameFrame game_frame(packet_ss);
-			if (m_game != NULL) {
+			if (m_game != nullptr) {
 				m_game->tick(game_frame);
 			}
 			m_ready_to_send_input = true;
@@ -189,7 +189,7 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
 			// Add the new player
 			std::cout << "Add new player" << std::endl;
 			PlayerAdd player_add(packet_ss);
-			if (m_game != NULL) {
+			if (m_game != nullptr) {
 				assert(player_add.get_player_idx() == m_game->get_player_count());
 				m_game->add_player(player_add.get_player());
 			}
