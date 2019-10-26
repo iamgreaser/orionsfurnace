@@ -24,9 +24,9 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 class Saveable
 {
 public:
-	virtual ~Saveable(void) {}
-	virtual void load_this(std::istream &ips) = 0;
-	virtual void save_this(std::ostream &ops) = 0;
+  virtual ~Saveable(void) {}
+  virtual void load_this(std::istream &ips) = 0;
+  virtual void save_this(std::ostream &ops) = 0;
 };
 
 void load(std::istream &ips, uint8_t &obj);

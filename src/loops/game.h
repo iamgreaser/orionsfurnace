@@ -41,41 +41,41 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace loops
 {
-	class GameLoop : public Loop
-	{
-	private:
-		PlayerInput m_player_inputs[2];
+  class GameLoop : public Loop
+  {
+  private:
+    PlayerInput m_player_inputs[2];
 #if USE_LOCAL_PIPES
-		net::RawPipe m_local_pipe;
+    net::RawPipe m_local_pipe;
 #if USE_EXTRA_PLAYER
-		net::RawPipe m_local_pipe_extra1;
+    net::RawPipe m_local_pipe_extra1;
 #endif
 #else
 #endif
-		net::Client *m_client = nullptr;
-		net::Server *m_server = nullptr;
+    net::Client *m_client = nullptr;
+    net::Server *m_server = nullptr;
 
 #if USE_EXTRA_PLAYER
-		net::Client *m_client_extra1 = nullptr;
+    net::Client *m_client_extra1 = nullptr;
 #endif
-	public:
-		GameLoop(void);
-		~GameLoop(void);
+  public:
+    GameLoop(void);
+    ~GameLoop(void);
 
-		void start_server(int port);
-		void start_client(std::string addr, int port);
+    void start_server(int port);
+    void start_client(std::string addr, int port);
 
-		MainLoopState tick(void) override;
-		void draw(void) override;
+    MainLoopState tick(void) override;
+    void draw(void) override;
 
-	protected:
+  protected:
 #ifdef _LOOPS_GAME_INTERNAL
-		void tick_key_event(SDL_Event &ev);
-		void draw_playfield(void);
-		void draw_sidebar(void);
-		void draw_gui(void);
+    void tick_key_event(SDL_Event &ev);
+    void draw_playfield(void);
+    void draw_sidebar(void);
+    void draw_gui(void);
 #endif
-	};
+  };
 }
 
 #endif /* if !defined(_LOOPS_GAME_H) */

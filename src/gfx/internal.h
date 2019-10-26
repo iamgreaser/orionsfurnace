@@ -22,11 +22,11 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace gfx
 {
-	extern SDL_Window *window;
-	extern SDL_Renderer *renderer;
-	extern SDL_Texture *backbuf;
+  extern SDL_Window *window;
+  extern SDL_Renderer *renderer;
+  extern SDL_Texture *backbuf;
 
-	void init_font(void);
+  void init_font(void);
 }
 using gfx::backbuf;
 

@@ -25,43 +25,43 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace net
 {
-	class RawPipeEnd : public PipeEnd
-	{
-	protected:
-		std::stringstream *m_send_ss = nullptr;
-		std::stringstream *m_recv_ss = nullptr;
-	public:
-		RawPipeEnd(std::stringstream *ips, std::stringstream *ops)
-			: m_send_ss(ips)
-			, m_recv_ss(ops)
-		{
-			m_send_ss = ips;
-			m_recv_ss = ops;
-		}
-		std::ostream &send_stream(void) override {
-			return static_cast<std::ostream&>(*m_send_ss);
-		}
-		std::istream &recv_stream(void) override {
-			return static_cast<std::istream&>(*m_recv_ss);
-		}
-	};
+  class RawPipeEnd : public PipeEnd
+  {
+  protected:
+    std::stringstream *m_send_ss = nullptr;
+    std::stringstream *m_recv_ss = nullptr;
+  public:
+    RawPipeEnd(std::stringstream *ips, std::stringstream *ops)
+      : m_send_ss(ips)
+      , m_recv_ss(ops)
+    {
+      m_send_ss = ips;
+      m_recv_ss = ops;
+    }
+    std::ostream &send_stream(void) override {
+      return static_cast<std::ostream&>(*m_send_ss);
+    }
+    std::istream &recv_stream(void) override {
+      return static_cast<std::istream&>(*m_recv_ss);
+    }
+  };
 
-	class RawPipe
-	{
-	protected:
-		std::stringstream m_a_to_b;
-		std::stringstream m_b_to_a;
-		RawPipeEnd m_end_a;
-		RawPipeEnd m_end_b;
-	public:
-		RawPipe(void)
-			: m_end_a(&m_b_to_a, &m_a_to_b)
-			, m_end_b(&m_a_to_b, &m_b_to_a)
-		{
-		}
-		RawPipeEnd &end_a(void) { return m_end_a; }
-		RawPipeEnd &end_b(void) { return m_end_b; }
-	};
+  class RawPipe
+  {
+  protected:
+    std::stringstream m_a_to_b;
+    std::stringstream m_b_to_a;
+    RawPipeEnd m_end_a;
+    RawPipeEnd m_end_b;
+  public:
+    RawPipe(void)
+      : m_end_a(&m_b_to_a, &m_a_to_b)
+      , m_end_b(&m_a_to_b, &m_b_to_a)
+    {
+    }
+    RawPipeEnd &end_a(void) { return m_end_a; }
+    RawPipeEnd &end_b(void) { return m_end_b; }
+  };
 }
 
 #endif /* if !defined(NET_PIPE_H) */

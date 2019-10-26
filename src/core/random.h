@@ -23,16 +23,16 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 class Random
 {
 protected:
-	uint32_t m_seed;
+  uint32_t m_seed;
 public:
-	Random(void);
-	Random(uint32_t seed);
+  Random(void);
+  Random(uint32_t seed);
 
-	uint32_t get_seed(void) { return m_seed; }
-	void set_seed(uint32_t seed) { m_seed = seed; }
-	uint32_t next_int(uint32_t open_upper_bound);
+  uint32_t get_seed(void) { return m_seed; }
+  void set_seed(uint32_t seed) { m_seed = seed; }
+  uint32_t next_int(uint32_t open_upper_bound);
 protected:
-	uint32_t next_raw(void);
+  uint32_t next_raw(void);
 };
 
 #endif /* if !defined(CORE_RANDOM_H) */

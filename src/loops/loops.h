@@ -22,41 +22,41 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace loops
 {
-	namespace launch_mode
-	{
-		enum LaunchMode
-		{
-			PLAYER_SERVER = 0,
-			CLIENT,
-			//HEADLESS_SERVER,
-		};
-	}
-	using launch_mode::LaunchMode;
+  namespace launch_mode
+  {
+    enum LaunchMode
+    {
+      PLAYER_SERVER = 0,
+      CLIENT,
+      //HEADLESS_SERVER,
+    };
+  }
+  using launch_mode::LaunchMode;
 
-	namespace mainloop
-	{
-		enum MainLoopState
-		{
-			GAME,
+  namespace mainloop
+  {
+    enum MainLoopState
+    {
+      GAME,
 
-			EXIT,
-		};
-	}
+      EXIT,
+    };
+  }
 
-	using mainloop::MainLoopState;
+  using mainloop::MainLoopState;
 
-	class Loop
-	{
-	public:
-		virtual void init(void) {};
-		virtual void deinit(void) {};
-		virtual MainLoopState tick(void) = 0;
-		virtual void draw(void) = 0;
-	};
+  class Loop
+  {
+  public:
+    virtual void init(void) {};
+    virtual void deinit(void) {};
+    virtual MainLoopState tick(void) = 0;
+    virtual void draw(void) = 0;
+  };
 
-	constexpr int TICKS_PER_SECOND = 60;
+  constexpr int TICKS_PER_SECOND = 60;
 
-	void run(loops::LaunchMode launch_mode, std::string net_addr, int net_port);
+  void run(loops::LaunchMode launch_mode, std::string net_addr, int net_port);
 }
 
 #endif /* if !defined(LOOPS_LOOPS_H) */

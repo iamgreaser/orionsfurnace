@@ -28,43 +28,43 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace net
 {
-	class TCPPipeEnd : public PipeEnd
-	{
-	protected:
-		int m_sockfd;
-		bool m_is_dead = false;
-		std::stringstream m_send_ss;
-		std::stringstream m_recv_ss;
-		std::string m_send_buf = "";
-	public:
-		TCPPipeEnd(int sockfd);
-		TCPPipeEnd(std::string addr, int port);
-		~TCPPipeEnd(void);
+  class TCPPipeEnd : public PipeEnd
+  {
+  protected:
+    int m_sockfd;
+    bool m_is_dead = false;
+    std::stringstream m_send_ss;
+    std::stringstream m_recv_ss;
+    std::string m_send_buf = "";
+  public:
+    TCPPipeEnd(int sockfd);
+    TCPPipeEnd(std::string addr, int port);
+    ~TCPPipeEnd(void);
 
-		std::ostream &send_stream(void) override {
-			return static_cast<std::ostream&>(m_send_ss);
-		}
-		std::istream &recv_stream(void) override {
-			return static_cast<std::istream&>(m_recv_ss);
-		}
+    std::ostream &send_stream(void) override {
+      return static_cast<std::ostream&>(m_send_ss);
+    }
+    std::istream &recv_stream(void) override {
+      return static_cast<std::istream&>(m_recv_ss);
+    }
 
-		void pump_recv(void) override;
-		void pump_send(void) override;
-	};
+    void pump_recv(void) override;
+    void pump_send(void) override;
+  };
 
-	class TCPServer
-	{
-	protected:
-		int m_sockfd;
-	public:
-		TCPServer(int port);
-		~TCPServer(void);
+  class TCPServer
+  {
+  protected:
+    int m_sockfd;
+  public:
+    TCPServer(int port);
+    ~TCPServer(void);
 
-		TCPPipeEnd *accept_if_available(void);
+    TCPPipeEnd *accept_if_available(void);
 
-	protected:
-		bool is_good_ai_family(int family) const;
-	};
+  protected:
+    bool is_good_ai_family(int family) const;
+  };
 }
 
 #endif /* if !defined(NET_TCP_H) */

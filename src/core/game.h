@@ -31,72 +31,72 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace game
 {
-	using std::istream;
-	using std::ostream;
-	using std::vector;
+  using std::istream;
+  using std::ostream;
+  using std::vector;
 
-	class Game : public Saveable
-	{
-	private:
-		vector<Player> m_players;
-		Random m_random;
-	public:
-		Game(void);
-		Game(std::istream &ips);
-		~Game(void);
+  class Game : public Saveable
+  {
+  private:
+    vector<Player> m_players;
+    Random m_random;
+  public:
+    Game(void);
+    Game(std::istream &ips);
+    ~Game(void);
 
-		int get_player_count(void) const {
-			size_t count = m_players.size();
-			assert(count < 0xFFFF);
-			return (int)count;
-		}
-		Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
-		int get_width(void) const { return 15; }
-		int get_height(void) const { return 15; }
-		Random &random(void) { return m_random; }
+    int get_player_count(void) const {
+      size_t count = m_players.size();
+      assert(count < 0xFFFF);
+      return (int)count;
+    }
+    Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
+    int get_width(void) const { return 15; }
+    int get_height(void) const { return 15; }
+    Random &random(void) { return m_random; }
 
-		void add_player(Player player);
-		void player_set_all_inputs(int player_idx,
-			PlayerInput player_input);
+    void add_player(Player player);
+    void player_set_all_inputs(int player_idx,
+      PlayerInput player_input);
 
-		bool can_step_into(int cx, int cy, bool players_are_blocking);
-		Player *get_player_at(int cx, int cy);
+    bool can_step_into(int cx, int cy, bool players_are_blocking);
+    Player *get_player_at(int cx, int cy);
 
-		void tick(const GameFrame &game_frame);
-		void draw(void);
+    void tick(const GameFrame &game_frame);
+    void draw(void);
 
-		void load_this(istream &ips) override;
-		void save_this(ostream &ops) override;
-	};
+    void load_this(istream &ips) override;
+    void save_this(ostream &ops) override;
+  };
 
-	class GameFrame : public Saveable
-	{
-	private:
-		vector<PlayerInput> m_player_inputs;
-	public:
-		GameFrame(int player_count = 0);
-		GameFrame(std::istream &ips);
+  class GameFrame : public Saveable
+  {
+  private:
+    vector<PlayerInput> m_player_inputs;
+  public:
+    GameFrame(int player_count = 0);
+    GameFrame(std::istream &ips);
 
-		int get_player_count(void) const {
-			size_t count = m_player_inputs.size();
-			assert(count < 0xFFFF);
-			return (int)count;
-		}
+    int get_player_count(void) const {
+      size_t count = m_player_inputs.size();
+      assert(count < 0xFFFF);
+      return (int)count;
+    }
 
-		void player_set_all_inputs(int player_idx,
-			PlayerInput player_input)
-		{
-			m_player_inputs[player_idx] = player_input;
-		}
+    void player_set_all_inputs(int player_idx,
+      PlayerInput player_input)
+    {
+      m_player_inputs[player_idx] = player_input;
+    }
 
-		PlayerInput player_get_all_inputs(int player_idx) const
-		{
-			return m_player_inputs[player_idx];
-		}
+    PlayerInput player_get_all_inputs(int player_idx) const
+    {
+      return m_player_inputs[player_idx];
+    }
 
-		void load_this(istream &ips) override;
-		void save_this(ostream &ops) override;
-	};
+    void load_this(istream &ips) override;
+    void save_this(ostream &ops) override;
+  };
 }
 
 #endif /* if !defined(CORE_GAME_H) */

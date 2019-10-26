@@ -31,65 +31,65 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace net
 {
-	namespace server_client_status
-	{
-		enum ServerClientStatus
-		{
-			// TODO: Use these!
-			AWAITING_HELLO = 0,
-			SENDING_YOUR_PLAYER,
-			SENDING_GAME,
-			PLAYING_GAME,
-			DISCONNECTED,
-		};
-	}
-	using server_client_status::ServerClientStatus;
+  namespace server_client_status
+  {
+    enum ServerClientStatus
+    {
+      // TODO: Use these!
+      AWAITING_HELLO = 0,
+      SENDING_YOUR_PLAYER,
+      SENDING_GAME,
+      PLAYING_GAME,
+      DISCONNECTED,
+    };
+  }
+  using server_client_status::ServerClientStatus;
 
-	class ServerClient : public Node
-	{
-	private:
-		ServerClientStatus m_status;
-		Server *m_server = nullptr;
-		GameFrame m_game_frame;
-		int m_player_index;
-		PlayerInput m_player_input;
-		bool m_disconnected = false;
-	public:
-		ServerClient(Server *server, int player_index, net::PipeEnd *pipe_end);
-		~ServerClient(void);
-		PlayerInput get_player_input(void) {
-			return m_player_input;
-		}
-		void update(void) override;
-		void handle_input_packet(int packet_id, std::istream &packet_ss) override;
-	};
+  class ServerClient : public Node
+  {
+  private:
+    ServerClientStatus m_status;
+    Server *m_server = nullptr;
+    GameFrame m_game_frame;
+    int m_player_index;
+    PlayerInput m_player_input;
+    bool m_disconnected = false;
+  public:
+    ServerClient(Server *server, int player_index, net::PipeEnd *pipe_end);
+    ~ServerClient(void);
+    PlayerInput get_player_input(void) {
+      return m_player_input;
+    }
+    void update(void) override;
+    void handle_input_packet(int packet_id, std::istream &packet_ss) override;
+  };
 
-	class Server
-	{
-	private:
-		std::ofstream *m_demo_fp = nullptr;
-		std::vector<std::shared_ptr<ServerClient>> m_clients;
-		net::TCPServer m_tcp_server;
-		Game m_game;
-	public:
-		Server(int port);
-		~Server(void);
+  class Server
+  {
+  private:
+    std::ofstream *m_demo_fp = nullptr;
+    std::vector<std::shared_ptr<ServerClient>> m_clients;
+    net::TCPServer m_tcp_server;
+    Game m_game;
+  public:
+    Server(int port);
+    ~Server(void);
 
-		Game &game(void) {
-			return m_game;
-		}
+    Game &game(void) {
+      return m_game;
+    }
 
-		void add_client(net::PipeEnd *pipe_end);
+    void add_client(net::PipeEnd *pipe_end);
 
-		void broadcast_packet(net::Packet &packet);
-		void broadcast_packet_ignoring_client(net::Packet &packet, ServerClient *ignore_sc);
+    void broadcast_packet(net::Packet &packet);
+    void broadcast_packet_ignoring_client(net::Packet &packet, ServerClient *ignore_sc);
 
-		void quicksave(void);
-		void quickload(void);
+    void quicksave(void);
+    void quickload(void);
 
-		void game_tick(GameFrame game_frame);
-		void update(void);
-	};
+    void game_tick(GameFrame game_frame);
+    void update(void);
+  };
 }
 
 #endif /* if !defined(NET_SERVER_H) */

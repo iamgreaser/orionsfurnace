@@ -25,29 +25,29 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace gfx
 {
-	using std::string;
+  using std::string;
 
-	class Font
-	{
-	private:
-		const string m_filename;
-		const int m_ptsize;
-		void *m_loaded_font = nullptr;
-	public:
-		Font(const string filename, const int ptsize);
-		~Font();
+  class Font
+  {
+  private:
+    const string m_filename;
+    const int m_ptsize;
+    void *m_loaded_font = nullptr;
+  public:
+    Font(const string filename, const int ptsize);
+    ~Font();
 
-		void ensure_loaded(void);
+    void ensure_loaded(void);
 
-		void draw(int px, int py,
-			int r, int g, int b,
-			const std::string text);
-		void fetch_dims_of(
-			std::string s,
-			int *pw, int *ph);
-	};
+    void draw(int px, int py,
+      int r, int g, int b,
+      const std::string text);
+    void fetch_dims_of(
+      std::string s,
+      int *pw, int *ph);
+  };
 
-	extern Font font_base;
+  extern Font font_base;
 }
 
 using gfx::Font;
