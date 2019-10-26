@@ -43,12 +43,12 @@ namespace game
   public:
     Game(void);
     Game(std::istream &ips);
-    ~Game(void);
+    ~Game(void) override;
 
     int get_player_count(void) const {
       size_t count = m_players.size();
       assert(count < 0xFFFF);
-      return (int)count;
+      return static_cast<int>(count);
     }
     Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
     int get_width(void) const { return 15; }
@@ -66,7 +66,7 @@ namespace game
     void draw(void);
 
     void load_this(istream &ips) override;
-    void save_this(ostream &ops) override;
+    void save_this(ostream &ops) const override;
   };
 
   class GameFrame : public Saveable
@@ -80,22 +80,28 @@ namespace game
     int get_player_count(void) const {
       size_t count = m_player_inputs.size();
       assert(count < 0xFFFF);
-      return (int)count;
+      return static_cast<int>(count);
     }
 
     void player_set_all_inputs(int player_idx,
-      PlayerInput player_input)
+      PlayerInput &&player_input)
+    {
+      m_player_inputs[player_idx] = std::move(player_input);
+    }
+
+    void player_set_all_inputs(int player_idx,
+      const PlayerInput &player_input)
     {
       m_player_inputs[player_idx] = player_input;
     }
 
-    PlayerInput player_get_all_inputs(int player_idx) const
+    const PlayerInput &player_get_all_inputs(int player_idx) const
     {
       return m_player_inputs[player_idx];
     }
 
     void load_this(istream &ips) override;
-    void save_this(ostream &ops) override;
+    void save_this(ostream &ops) const override;
   };
 }
 

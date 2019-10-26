@@ -109,7 +109,7 @@ void ClientHello::load_this(std::istream &ips)
   load(ips, m_nickname);
 }
 
-void ClientHello::save_this(std::ostream &ops)
+void ClientHello::save_this(std::ostream &ops) const
 {
   save(ops, m_version);
   save(ops, m_nickname);

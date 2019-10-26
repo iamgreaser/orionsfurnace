@@ -115,7 +115,7 @@ namespace net
       load(ss, m_value);
     }
 
-    void save_this(std::ostream &ops) override
+    void save_this(std::ostream &ops) const override
     {
       // Build datagram contents
       uint8_t packet_id = PID;
@@ -170,7 +170,7 @@ namespace net
     bool is_current_version(void);
 
     void load_this(std::istream &ips) override;
-    void save_this(std::ostream &ops) override;
+    void save_this(std::ostream &ops) const override;
   };
 
 }

@@ -189,7 +189,7 @@ void Player::load_this(istream &ips)
   load(ips, m_input_cooldown);
 }
 
-void Player::save_this(ostream &ops)
+void Player::save_this(ostream &ops) const
 {
   save(ops, m_cx);
   save(ops, m_cy);
@@ -303,7 +303,7 @@ void PlayerInput::load_this(std::istream &ips)
   }
 }
 
-void PlayerInput::save_this(std::ostream &ops)
+void PlayerInput::save_this(std::ostream &ops) const
 {
   uint8_t dirmask = 0;
   for (int i = 0; i < 4; i++) {
@@ -334,7 +334,7 @@ void PlayerAdd::load_this(std::istream &ips)
   load(ips, m_player);
 }
 
-void PlayerAdd::save_this(std::ostream &ops)
+void PlayerAdd::save_this(std::ostream &ops) const
 {
   save(ops, m_player_idx);
   save(ops, m_player);

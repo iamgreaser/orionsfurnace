@@ -111,7 +111,7 @@ void Game::load_this(istream &ips)
   }
 }
 
-void Game::save_this(ostream &ops)
+void Game::save_this(ostream &ops) const
 {
   int raw_player_count = this->get_player_count();
   assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
@@ -156,7 +156,7 @@ void GameFrame::load_this(istream &ips)
   }
 }
 
-void GameFrame::save_this(ostream &ops)
+void GameFrame::save_this(ostream &ops) const
 {
   int raw_player_count = this->get_player_count();
   assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);

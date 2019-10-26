@@ -26,35 +26,35 @@ class Saveable
 public:
   virtual ~Saveable(void) {}
   virtual void load_this(std::istream &ips) = 0;
-  virtual void save_this(std::ostream &ops) = 0;
+  virtual void save_this(std::ostream &ops) const = 0;
 };
 
 void load(std::istream &ips, uint8_t &obj);
-void save(std::ostream &ops, uint8_t &obj);
+void save(std::ostream &ops, uint8_t obj);
 
 void load(std::istream &ips, uint16_t &obj);
-void save(std::ostream &ops, uint16_t &obj);
+void save(std::ostream &ops, uint16_t obj);
 void load(std::istream &ips, uint32_t &obj);
-void save(std::ostream &ops, uint32_t &obj);
+void save(std::ostream &ops, uint32_t obj);
 void load(std::istream &ips, uint64_t &obj);
-void save(std::ostream &ops, uint64_t &obj);
+void save(std::ostream &ops, uint64_t obj);
 
 void load(std::istream &ips, int8_t &obj);
-void save(std::ostream &ops, int8_t &obj);
+void save(std::ostream &ops, int8_t obj);
 void load(std::istream &ips, int16_t &obj);
-void save(std::ostream &ops, int16_t &obj);
+void save(std::ostream &ops, int16_t obj);
 void load(std::istream &ips, int32_t &obj);
-void save(std::ostream &ops, int32_t &obj);
+void save(std::ostream &ops, int32_t obj);
 void load(std::istream &ips, int64_t &obj);
-void save(std::ostream &ops, int64_t &obj);
+void save(std::ostream &ops, int64_t obj);
 
 void load(std::istream &ips, bool &obj);
-void save(std::ostream &ops, bool &obj);
+void save(std::ostream &ops, bool obj);
 
 void load(std::istream &ips, std::string &obj);
-void save(std::ostream &ops, std::string &obj);
+void save(std::ostream &ops, const std::string &obj);
 
 void load(std::istream &ips, Saveable &obj);
-void save(std::ostream &ops, Saveable &obj);
+void save(std::ostream &ops, const Saveable &obj);
 
 #endif /* if !defined(CORE_SAVE_H) */
