@@ -111,7 +111,10 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 
 			// Send a game snapshot to the client
 			// Also send a "This Is You" packet
-			net::ThisIsYouPacket this_is_you_packet(m_player_index);
+			assert(m_player_index >= 0);
+			assert(m_player_index <= 0xFFFF);
+			uint16_t saved_player_index = (uint16_t)m_player_index;
+			net::ThisIsYouPacket this_is_you_packet(saved_player_index);
 			net::GameSnapshotPacket game_snapshot_packet(game);
 			this->send_packet(this_is_you_packet);
 			this->send_packet(game_snapshot_packet);
