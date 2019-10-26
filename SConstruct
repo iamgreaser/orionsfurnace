@@ -13,7 +13,13 @@ import subprocess
 #
 WARNINGS_ARE_ERRORS = True
 
+vars = Variables("build_settings.py", ARGUMENTS)
+vars.Add("CC", "C compiler", "gcc")
+vars.Add("CXX", "C++ compiler", "g++")
+
 env = Environment(
+    variables = vars,
+
     COMMON_FLAGS = ["-g", "-Og"],
     CFLAGS = ["${COMMON_FLAGS}", "-Wall", "-Wextra", "-pedantic", "-std=c11",],
     CXXFLAGS = ["${COMMON_FLAGS}", "-Wall", "-Wextra", "-pedantic", "-std=c++11",],
@@ -35,6 +41,11 @@ env.Append(
         "SDL2_ttf",
     ],
 )
+
+if "clang" in env["CC"]:
+    env["CCFLAGS"] += ["-Weverything",]
+if "clang" in env["CXX"]:
+    env["CXXFLAGS"] += ["-Weverything",]
 
 if WARNINGS_ARE_ERRORS:
     env.MergeFlags(["-Werror",])

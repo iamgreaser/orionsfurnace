@@ -12,6 +12,7 @@ build/
 *.save
 
 # SCons
+build_settings.py
 .sconsign.dblite
 
 # VIM
