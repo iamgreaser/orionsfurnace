@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _CORE_GAME_H
-#define _CORE_GAME_H
+#ifndef CORE_GAME_H
+#define CORE_GAME_H
 
 #include "core/core.h"
 
@@ -91,4 +91,4 @@ namespace game
 	};
 }
 
-#endif /* if !defined(_CORE_GAME_H) */
+#endif /* if !defined(CORE_GAME_H) */

@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _GFX_SPRITE_H
-#define _GFX_SPRITE_H
+#ifndef GFX_SPRITE_H
+#define GFX_SPRITE_H
 
 #include <cstddef>
 #include <string>
@@ -49,4 +49,4 @@ namespace gfx
 
 using gfx::Sprite;
 
-#endif /* if !defined(_GFX_SPRITE_H) */
+#endif /* if !defined(GFX_SPRITE_H) */

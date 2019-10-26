@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _CORE_CORE_H
-#define _CORE_CORE_H
+#ifndef CORE_CORE_H
+#define CORE_CORE_H
 
 namespace direction
 {
@@ -41,4 +41,4 @@ class Player;
 class PlayerInput;
 class PlayerAdd;
 
-#endif /* if !defined(_CORE_CORE_H) */
+#endif /* if !defined(CORE_CORE_H) */

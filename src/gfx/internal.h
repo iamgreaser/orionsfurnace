@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _GFX_INTERNAL_H
-#define _GFX_INTERNAL_H
+#ifndef GFX_INTERNAL_H
+#define GFX_INTERNAL_H
 
 #include <SDL.h>
 
@@ -30,4 +30,4 @@ namespace gfx
 }
 using gfx::backbuf;
 
-#endif /* if !defined(_GFX_INTERNAL_H) */
+#endif /* if !defined(GFX_INTERNAL_H) */

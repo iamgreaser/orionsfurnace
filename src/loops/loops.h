@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _LOOPS_LOOPS_H
-#define _LOOPS_LOOPS_H
+#ifndef LOOPS_LOOPS_H
+#define LOOPS_LOOPS_H
 
 #include <string>
 
@@ -59,4 +59,4 @@ namespace loops
 	void run(loops::LaunchMode launch_mode, std::string net_addr, int net_port);
 }
 
-#endif /* if !defined(_LOOPS_LOOPS_H) */
+#endif /* if !defined(LOOPS_LOOPS_H) */

@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef _CORE_VERSION_H
-#define _CORE_VERSION_H
+#ifndef CORE_VERSION_H
+#define CORE_VERSION_H
 #include <string>
 std::string get_engine_version(void);
-#endif /* if !defined(_CORE_VERSION_H) */
+#endif /* if !defined(CORE_VERSION_H) */
