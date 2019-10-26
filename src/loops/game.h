@@ -30,7 +30,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "net/tcp.h"
 
 #ifdef LOOPS_GAME_INTERNAL
-#include <SDL.h>
+union SDL_Event;
 #endif
 
 #include <fstream>
@@ -58,6 +58,10 @@ namespace loops
 #if USE_EXTRA_PLAYER
     net::Client *m_client_extra1 = nullptr;
 #endif
+    void tick_key_event(union SDL_Event &ev);
+    void draw_playfield(void);
+    void draw_sidebar(void);
+    void draw_gui(void);
   public:
     GameLoop(void);
     virtual ~GameLoop(void);
@@ -67,14 +71,6 @@ namespace loops
 
     MainLoopState tick(void) override;
     void draw(void) override;
-
-  protected:
-#ifdef LOOPS_GAME_INTERNAL
-    void tick_key_event(SDL_Event &ev);
-    void draw_playfield(void);
-    void draw_sidebar(void);
-    void draw_gui(void);
-#endif
   };
 }
 
