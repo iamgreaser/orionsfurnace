@@ -307,7 +307,8 @@ void PlayerInput::save_this(std::ostream &ops)
 	uint8_t dirmask = 0;
 	for (int i = 0; i < 4; i++) {
 		if (m_input_move[i]) {
-			dirmask |= (1<<i);
+			assert(i >= 0 && i <= 8);
+			dirmask |= (uint8_t)(1<<i);
 		}
 	}
 	save(ops, dirmask);
@@ -315,9 +316,10 @@ void PlayerInput::save_this(std::ostream &ops)
 
 
 PlayerAdd::PlayerAdd(int player_idx, Player player)
-	: m_player_idx(player_idx)
-	, m_player(player)
+	: m_player(player)
 {
+	assert(player_idx >= 0 && player_idx <= 0xFFFF);
+	m_player_idx = (uint16_t)player_idx;
 }
 
 PlayerAdd::PlayerAdd(std::istream &ips)
