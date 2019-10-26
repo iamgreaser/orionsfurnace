@@ -53,7 +53,7 @@ env.Append(
     ],
 )
 
-if "gcc" in env["CC"] or "g++" in env["CXX"]:
+if "gcc" in env["CC"] or ("g++" in env["CXX"] and "clang++" not in env["CXX"]):
     env.Append(
         C_AND_CXX_FLAGS = [
             "-Wconversion",
