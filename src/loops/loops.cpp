@@ -36,9 +36,9 @@ using std::chrono::steady_clock;
 
 namespace loops
 {
-  int this_tick = 0;
+  static int this_tick = 0;
 
-  GameLoop game_loop;
+  static GameLoop game_loop;
 
   void int_update_tick(void);
 
