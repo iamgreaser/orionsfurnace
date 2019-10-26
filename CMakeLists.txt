@@ -54,7 +54,7 @@ set(COMMON_FLAGS "${COMMON_FLAGS} -gdwarf-4 -ggdb3 -fno-omit-frame-pointer")
 # Check for compiler specific options
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Aggressive warnings
-  set(COMMON_FLAGS "${COMMON_FLAGS} -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
+  set(COMMON_FLAGS "${COMMON_FLAGS} -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded")
   # Hardening and fail-fast behavior
   set(COMMON_FLAGS "${COMMON_FLAGS} -fstack-check")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
