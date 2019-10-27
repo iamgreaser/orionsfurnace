@@ -37,7 +37,7 @@ union SDL_Event;
 #include <memory>
 #include <string>
 
-#define USE_LOCAL_PIPES 0
+#define USE_LOCAL_PIPES 1
 
 namespace loops
 {

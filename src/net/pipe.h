@@ -21,6 +21,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "net/net.h"
 
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 namespace net
@@ -28,10 +29,10 @@ namespace net
   class RawPipeEnd : public PipeEnd
   {
   protected:
-    std::stringstream *m_send_ss = nullptr;
-    std::stringstream *m_recv_ss = nullptr;
+    std::shared_ptr<std::stringstream> m_send_ss;
+    std::shared_ptr<std::stringstream> m_recv_ss;
   public:
-    RawPipeEnd(std::stringstream *ips, std::stringstream *ops)
+    RawPipeEnd(std::shared_ptr<std::stringstream> ips, std::shared_ptr<std::stringstream> ops)
       : m_send_ss(ips)
       , m_recv_ss(ops)
     {
@@ -49,18 +50,20 @@ namespace net
   class RawPipe
   {
   protected:
-    std::stringstream m_a_to_b;
-    std::stringstream m_b_to_a;
-    RawPipeEnd m_end_a;
-    RawPipeEnd m_end_b;
+    std::shared_ptr<std::stringstream> m_a_to_b;
+    std::shared_ptr<std::stringstream> m_b_to_a;
+    std::shared_ptr<RawPipeEnd> m_end_a;
+    std::shared_ptr<RawPipeEnd> m_end_b;
   public:
     RawPipe(void)
-      : m_end_a(&m_b_to_a, &m_a_to_b)
-      , m_end_b(&m_a_to_b, &m_b_to_a)
+      : m_a_to_b(new std::stringstream())
+      , m_b_to_a(new std::stringstream())
+      , m_end_a(new RawPipeEnd(m_b_to_a, m_a_to_b))
+      , m_end_b(new RawPipeEnd(m_a_to_b, m_b_to_a))
     {
     }
-    RawPipeEnd &end_a(void) { return m_end_a; }
-    RawPipeEnd &end_b(void) { return m_end_b; }
+    std::shared_ptr<PipeEnd> end_a(void) { return m_end_a; }
+    std::shared_ptr<PipeEnd> end_b(void) { return m_end_b; }
   };
 }
 

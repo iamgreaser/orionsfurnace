@@ -61,19 +61,23 @@ void GameLoop::start_client(std::string addr, int port)
 
   assert(m_client == nullptr);
 #if USE_LOCAL_PIPES
-  m_client.reset(new net::Client(m_local_pipe.end_a()));
-  if (m_server != nullptr) {
-    // Direct connection
-    m_server.get()->add_client(m_local_pipe.end_b());
+  if (addr == "") {
+    m_client.reset(new net::Client(m_local_pipe.end_a()));
+    if (m_server != nullptr) {
+      // Direct connection
+      m_server.get()->add_client(m_local_pipe.end_b());
+    }
+    return;
   }
 #else
   if (addr == "") {
     addr = "localhost";
   }
+#endif
+
   std::shared_ptr<net::TCPPipeEnd> client_socket(
     new net::TCPPipeEnd(addr, port));
   m_client.reset(new net::Client(client_socket));
-#endif
 }
 
 loops::MainLoopState GameLoop::tick(void)
