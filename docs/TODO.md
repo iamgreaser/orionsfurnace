@@ -25,6 +25,7 @@ I think that's it for now. **EDIT: It wasn't it. This has been edited since putt
 * [x] Report disconnects properly
 * [ ] Clean up the pointer misusage in favour of `shared_ptr`
 * [x] Get rid of the `Player::set_game()` kludge
+* [ ] Either fix up the local pipes API, or throw it out
 * [ ] Use `GameFrame` for announcing new players?
 
 ## Features we'll need

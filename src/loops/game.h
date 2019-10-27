@@ -34,6 +34,7 @@ union SDL_Event;
 #endif
 
 #include <fstream>
+#include <memory>
 #include <string>
 
 #define USE_LOCAL_PIPES 0
@@ -48,8 +49,8 @@ namespace loops
     net::RawPipe m_local_pipe;
 #else
 #endif
-    net::Client *m_client = nullptr;
-    net::Server *m_server = nullptr;
+    std::shared_ptr<net::Client> m_client;
+    std::shared_ptr<net::Server> m_server;
 
     void tick_key_event(union SDL_Event &ev);
     void draw_playfield(void);

@@ -34,6 +34,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <cassert>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <string>
 
@@ -45,21 +46,12 @@ GameLoop::GameLoop(void)
 
 GameLoop::~GameLoop(void)
 {
-  if (m_client != nullptr) {
-    delete m_client;
-    m_client = nullptr;
-  }
-
-  if (m_server != nullptr) {
-    delete m_server;
-    m_server = nullptr;
-  }
 }
 
 void GameLoop::start_server(int port)
 {
   assert(m_server == nullptr);
-  m_server = new net::Server(port);
+  m_server.reset(new net::Server(port));
 }
 
 void GameLoop::start_client(std::string addr, int port)
@@ -69,17 +61,17 @@ void GameLoop::start_client(std::string addr, int port)
 
   assert(m_client == nullptr);
 #if USE_LOCAL_PIPES
-  m_client = new net::Client(m_local_pipe.end_a());
+  m_client.reset(new net::Client(m_local_pipe.end_a()));
   if (m_server != nullptr) {
     // Direct connection
-    m_server->add_client(m_local_pipe.end_b());
+    m_server.get()->add_client(m_local_pipe.end_b());
   }
 #else
   if (addr == "") {
     addr = "localhost";
   }
   net::TCPPipeEnd *client_socket = new net::TCPPipeEnd(addr, port);
-  m_client = new net::Client(client_socket);
+  m_client.reset(new net::Client(client_socket));
 #endif
 }
 
@@ -109,28 +101,28 @@ loops::MainLoopState GameLoop::tick(void)
   // Send inputs
   //
   if (m_client != nullptr) {
-    m_client->set_all_inputs(m_player_inputs);
+    m_client.get()->set_all_inputs(m_player_inputs);
   }
 
   //
   // Update client logic
   //
   if (m_client != nullptr) {
-    m_client->update();
+    m_client.get()->update();
   }
 
   //
   // Update server logic
   //
   if (m_server != nullptr) {
-    m_server->update();
+    m_server.get()->update();
   }
 
   //
   // Update client logic
   //
   if (m_client != nullptr) {
-    m_client->update();
+    m_client.get()->update();
   }
 
   // Continue with the game
