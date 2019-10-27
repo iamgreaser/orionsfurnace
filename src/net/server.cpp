@@ -26,7 +26,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 using net::Server;
 using net::ServerClient;
 
-ServerClient::ServerClient(Server *server, int player_index, net::PipeEnd *pipe_end)
+ServerClient::ServerClient(Server *server, int player_index, std::shared_ptr<net::PipeEnd> pipe_end)
   : net::Node::Node(pipe_end)
   , m_server(server)
   , m_player_index(player_index)
@@ -147,7 +147,7 @@ Server::~Server(void)
   }
 }
 
-void Server::add_client(net::PipeEnd *pipe_end)
+void Server::add_client(std::shared_ptr<net::PipeEnd> pipe_end)
 {
   //int client_index = m_clients.size();
   // Add a new client
@@ -221,7 +221,7 @@ void Server::update(void)
   net::TCPPipeEnd *pipe_end = m_tcp_server.accept_if_available();
   if (pipe_end != nullptr) {
     std::cout << "Accepting new client" << std::endl;
-    this->add_client(pipe_end);
+    this->add_client(std::shared_ptr<net::TCPPipeEnd>(pipe_end));
   }
 
   // Form a frame

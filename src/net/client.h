@@ -23,6 +23,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/save.h"
 
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <string>
 
@@ -52,7 +53,7 @@ namespace net
     // Throttle input sending to once a frame
     bool m_ready_to_send_input = false;
   public:
-    Client(net::PipeEnd *pipe_end);
+    Client(std::shared_ptr<net::PipeEnd> pipe_end);
     ~Client(void);
 
     Game *game(void);

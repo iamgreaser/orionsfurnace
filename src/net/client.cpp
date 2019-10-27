@@ -32,7 +32,7 @@ using net::GameSnapshotPacket;
 using net::GameFramePacket;
 
 
-Client::Client(net::PipeEnd *pipe_end)
+Client::Client(std::shared_ptr<net::PipeEnd> pipe_end)
   : net::Node::Node(pipe_end)
 {
 }

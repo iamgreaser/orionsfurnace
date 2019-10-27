@@ -70,7 +70,8 @@ void GameLoop::start_client(std::string addr, int port)
   if (addr == "") {
     addr = "localhost";
   }
-  net::TCPPipeEnd *client_socket = new net::TCPPipeEnd(addr, port);
+  std::shared_ptr<net::TCPPipeEnd> client_socket(
+    new net::TCPPipeEnd(addr, port));
   m_client.reset(new net::Client(client_socket));
 #endif
 }

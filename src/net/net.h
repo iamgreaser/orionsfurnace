@@ -24,6 +24,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <cassert>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <string>
 
@@ -156,10 +157,10 @@ namespace net
   class Node
   {
   protected:
-    net::PipeEnd *m_pipe_end;
+    std::shared_ptr<net::PipeEnd> m_pipe_end;
     std::string m_input_buf;
   public:
-    Node(net::PipeEnd *pipe_end);
+    Node(std::shared_ptr<net::PipeEnd> pipe_end);
     void send_packet(net::Packet &packet);
     virtual ~Node(void);
     virtual void update(void) = 0;
