@@ -37,27 +37,20 @@ union SDL_Event;
 #include <string>
 
 #define USE_LOCAL_PIPES 0
-#define USE_EXTRA_PLAYER 0
 
 namespace loops
 {
   class GameLoop : public Loop
   {
   private:
-    PlayerInput m_player_inputs[2];
+    PlayerInput m_player_inputs;
 #if USE_LOCAL_PIPES
     net::RawPipe m_local_pipe;
-#if USE_EXTRA_PLAYER
-    net::RawPipe m_local_pipe_extra1;
-#endif
 #else
 #endif
     net::Client *m_client = nullptr;
     net::Server *m_server = nullptr;
 
-#if USE_EXTRA_PLAYER
-    net::Client *m_client_extra1 = nullptr;
-#endif
     void tick_key_event(union SDL_Event &ev);
     void draw_playfield(void);
     void draw_sidebar(void);

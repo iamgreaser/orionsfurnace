@@ -49,12 +49,6 @@ GameLoop::~GameLoop(void)
     delete m_client;
     m_client = nullptr;
   }
-#if USE_EXTRA_PLAYER
-  if (m_client_extra1 != nullptr) {
-    delete m_client_extra1;
-    m_client_extra1 = nullptr;
-  }
-#endif
 
   if (m_server != nullptr) {
     delete m_server;
@@ -87,19 +81,6 @@ void GameLoop::start_client(std::string addr, int port)
   net::TCPPipeEnd *client_socket = new net::TCPPipeEnd(addr, port);
   m_client = new net::Client(client_socket);
 #endif
-
-#if USE_EXTRA_PLAYER
-  // For testing a second player
-  assert(m_client_extra1 == nullptr);
-#if USE_LOCAL_PIPES
-  m_client_extra1 = new net::Client(m_local_pipe_extra1.end_a());
-  if (m_server != nullptr) {
-    // Direct connection
-    m_server->add_client(m_local_pipe_extra1.end_b());
-  }
-#else
-#endif
-#endif
 }
 
 loops::MainLoopState GameLoop::tick(void)
@@ -128,13 +109,8 @@ loops::MainLoopState GameLoop::tick(void)
   // Send inputs
   //
   if (m_client != nullptr) {
-    m_client->set_all_inputs(m_player_inputs[0]);
+    m_client->set_all_inputs(m_player_inputs);
   }
-#if USE_EXTRA_PLAYER
-  if (m_client_extra1 != nullptr) {
-    m_client_extra1->set_all_inputs(m_player_inputs[1]);
-  }
-#endif
 
   //
   // Update client logic
@@ -142,11 +118,6 @@ loops::MainLoopState GameLoop::tick(void)
   if (m_client != nullptr) {
     m_client->update();
   }
-#if USE_EXTRA_PLAYER
-  if (m_client_extra1 != nullptr) {
-    m_client_extra1->update();
-  }
-#endif
 
   //
   // Update server logic
@@ -161,11 +132,6 @@ loops::MainLoopState GameLoop::tick(void)
   if (m_client != nullptr) {
     m_client->update();
   }
-#if USE_EXTRA_PLAYER
-  if (m_client_extra1 != nullptr) {
-    m_client_extra1->update();
-  }
-#endif
 
   // Continue with the game
   return mainloop::GAME;
@@ -176,49 +142,25 @@ void GameLoop::tick_key_event(SDL_Event &ev)
   switch(ev.key.keysym.sym)
   {
     case SDLK_w:
-      m_player_inputs[0].set_input_move(
+      m_player_inputs.set_input_move(
         direction::NORTH,
         ev.type == SDL_KEYDOWN);
       break;
 
     case SDLK_s:
-      m_player_inputs[0].set_input_move(
+      m_player_inputs.set_input_move(
         direction::SOUTH,
         ev.type == SDL_KEYDOWN);
       break;
 
     case SDLK_a:
-      m_player_inputs[0].set_input_move(
+      m_player_inputs.set_input_move(
         direction::WEST,
         ev.type == SDL_KEYDOWN);
       break;
 
     case SDLK_d:
-      m_player_inputs[0].set_input_move(
-        direction::EAST,
-        ev.type == SDL_KEYDOWN);
-      break;
-
-    case SDLK_UP:
-      m_player_inputs[1].set_input_move(
-        direction::NORTH,
-        ev.type == SDL_KEYDOWN);
-      break;
-
-    case SDLK_DOWN:
-      m_player_inputs[1].set_input_move(
-        direction::SOUTH,
-        ev.type == SDL_KEYDOWN);
-      break;
-
-    case SDLK_LEFT:
-      m_player_inputs[1].set_input_move(
-        direction::WEST,
-        ev.type == SDL_KEYDOWN);
-      break;
-
-    case SDLK_RIGHT:
-      m_player_inputs[1].set_input_move(
+      m_player_inputs.set_input_move(
         direction::EAST,
         ev.type == SDL_KEYDOWN);
       break;
