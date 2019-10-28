@@ -21,6 +21,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/helpers.h"
 #include "core/game.h"
 #include "net/net.h"
+#include "net/packet/client_hello.h"
 #include "net/packet/packet.h"
 
 #include <cstddef>

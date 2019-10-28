@@ -49,25 +49,6 @@ namespace net
     //virtual void save_this(std::ostream &ops) = 0;
   };
 
-  class ClientHello final : public Saveable
-  {
-  private:
-    std::string m_version;
-    std::string m_nickname;
-  public:
-    ClientHello(std::string nickname = "");
-    ClientHello(std::istream &ips);
-
-    std::string get_version(void) {
-      return m_version;
-    }
-    bool is_current_version(void);
-
-    void load_this(std::istream &ips) override;
-    void save_this(std::ostream &ops) const override;
-  };
-
-
   template <uint8_t PID, class T>
   class ClassPacket final : public Packet
   {
@@ -133,7 +114,6 @@ namespace net
   };
 
   typedef class ClassPacket<packets::DISCONNECT, std::string> DisconnectPacket;
-  typedef class ClassPacket<packets::HELLO, ClientHello> HelloPacket;
   typedef class ClassPacket<packets::THIS_IS_YOU, uint16_t> ThisIsYouPacket;
   typedef class ClassPacket<packets::GAME_SNAPSHOT, Game> GameSnapshotPacket;
   typedef class ClassPacket<packets::GAME_FRAME, GameFrame> GameFramePacket;
