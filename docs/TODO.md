@@ -2,14 +2,11 @@ vim: set sts=2 sw=2 et :
 
 # Milestones
 
-## Alpha 2
+## Alpha 3
 
-* [x] Report disconnects properly
-* [x] Clean up the pointer misusage in favour of `shared_ptr`
-  * There's probably more that can use it, or maybe we could use it a little less, but the remaining pointers are pretty much all backlinks.
-* [x] Get rid of the `Player::set_game()` kludge
-* [x] Either fix up the local pipes API, or throw it out
-* [x] Make stuff like `TCP_NODELAY` happen
+* [ ] Implement a camera so we're not stuck with 15x15
+* [ ] Implement a world
+* [ ] Windows-specific networking support
 
 ----------------------------------------------------------------------------
 
@@ -24,11 +21,9 @@ vim: set sts=2 sw=2 et :
 * [ ] Make it possible to remove players
 * [ ] Make it possible for a client to save
 * [ ] Handle saves with mismatched player counts better
-* [ ] Windows-specific networking support
-* [ ] Implement a world
-* [ ] Implement a camera so we're not stuck with 15x15
 * [ ] Make headless server builds a thing
 * [ ] Implement nicknames
+* [ ] Implement chat
 
 ## Ponies
 
@@ -42,6 +37,15 @@ vim: set sts=2 sw=2 et :
 ----------------------------------------------------------------------------
 
 # Completed milestones
+
+## Alpha 2
+
+* [x] Report disconnects properly
+* [x] Clean up the pointer misusage in favour of `shared_ptr`
+  * There's probably more that can use it, or maybe we could use it a little less, but the remaining pointers are pretty much all backlinks.
+* [x] Get rid of the `Player::set_game()` kludge
+* [x] Either fix up the local pipes API, or throw it out
+* [x] Make stuff like `TCP_NODELAY` happen
 
 ## Alpha 1
 
