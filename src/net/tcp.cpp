@@ -15,18 +15,40 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#ifdef _WIN32
+// TODO: Abolish Windows. But until then, this needs Winsock support.
+//
+// This requires Windows Vista at a bare minimum.
+// In practice, you will be using Windows 7 or later.
+#define _WIN32_WINNT 0x0600
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#endif
+
 #include "net/tcp.h"
 
 #include "core/helpers.h"
 
 #include <cerrno>
+#include <chrono>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <thread>
 
-// TODO: Abolish Windows. But until then, this needs Winsock support.
+#ifdef _WIN32
+static int32_t winsock_refcount = 0;
+static WSADATA winsock_wsadata;
+#define SHUT_RDWR SD_BOTH
+#ifndef POLLIN
+#define POLLIN POLLRDNORM
+#endif
+
+#else
+
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -34,6 +56,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <netinet/tcp.h>
 #include <poll.h>
 #include <unistd.h>
+#endif
 
 // Use 64KB for recv
 const int TCP_RECV_BUFFER_SIZE = (64<<10);
@@ -51,13 +74,62 @@ const int NETWORK_PROTOCOL = IPPROTO_SCTP;
 using net::TCPPipeEnd;
 using net::TCPServer;
 
+#ifdef _WIN32
+void inc_winsock_refcount(void)
+{
+  if (winsock_refcount == 0) {
+    if (WSAStartup(MAKEWORD(2, 2), &winsock_wsadata)) {
+      PANIC("WSAStartup failed");
+    }
+  }
+  winsock_refcount += 1;
+}
+
+void dec_winsock_refcount(void)
+{
+  winsock_refcount -= 1;
+  if (winsock_refcount < 0) {
+    PANIC("dec_winsock_refcount decremented too far");
+  }
+
+  if (winsock_refcount == 0) {
+    WSACleanup();
+  }
+}
+#endif
+
+
 TCPPipeEnd::TCPPipeEnd(int sockfd)
   : m_sockfd(sockfd)
 {
+#ifdef _WIN32
+  inc_winsock_refcount();
+#endif
+
+  // Make this socket non-blocking
+#ifdef _WIN32
+  int non_blocking = 1;
+  if (ioctlsocket(m_sockfd, FIONBIO, (u_long *)&non_blocking) != 0) {
+    PANIC("Could not accept: Could not make non-blocking");
+  }
+#else
+  int fd_flags = fcntl(m_sockfd, F_GETFL);
+  if (fd_flags == -1) {
+    perror("setting non-blocking");
+    PANIC("Could not accept: Could not make non-blocking");
+  }
+  if (fcntl(m_sockfd, F_SETFL, fd_flags | O_NONBLOCK) != 0) {
+    perror("setting non-blocking");
+    PANIC("Could not accept: Could not make non-blocking");
+  }
+#endif
 }
 
 TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
 {
+#ifdef _WIN32
+  inc_winsock_refcount();
+#endif
   // Set up hints for GAI
   struct addrinfo hints = {};
   hints.ai_socktype = NETWORK_SOCKTYPE;
@@ -95,7 +167,11 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
   int tcp_nodelay = 1;
   int did_tcp_nodelay = setsockopt(
     m_sockfd, IPPROTO_TCP, TCP_NODELAY,
+#ifdef _WIN32
+    static_cast<const char *>(reinterpret_cast<void *>(&tcp_nodelay)),
+#else
     static_cast<void *>(&tcp_nodelay),
+#endif
     sizeof(tcp_nodelay));
 
   if (did_tcp_nodelay < 0) {
@@ -103,16 +179,54 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
     PANIC("Could not host: Could not set TCP_NODELAY");
   }
 
+  // Make this socket non-blocking
+#ifdef _WIN32
+  int non_blocking = 1;
+  if (ioctlsocket(m_sockfd, FIONBIO, (u_long *)&non_blocking) != 0) {
+    PANIC("Could not connect: Could not make non-blocking");
+  }
+#else
+  int fd_flags = fcntl(m_sockfd, F_GETFL);
+  if (fd_flags == -1) {
+    perror("setting non-blocking");
+    PANIC("Could not connect: Could not make non-blocking");
+  }
+  if (fcntl(m_sockfd, F_SETFL, fd_flags | O_NONBLOCK) != 0) {
+    perror("setting non-blocking");
+    PANIC("Could not connect: Could not make non-blocking");
+  }
+#endif
 
   // Now connect to it
-  int did_connect = connect(
-    m_sockfd,
-    const_cast<const struct sockaddr *>(gai->ai_addr),
-    static_cast<socklen_t>(gai->ai_addrlen));
+  for (;;) {
+    // TODO: Add a timeout
+    int did_connect = connect(
+      m_sockfd,
+      const_cast<const struct sockaddr *>(gai->ai_addr),
+      static_cast<socklen_t>(gai->ai_addrlen));
 
-  if (did_connect < 0) {
-    perror("connecting to client socket");
-    PANIC("Could not connect: Could not, well, connect");
+    if (did_connect < 0) {
+      int e = errno;
+
+      if (e == EINPROGRESS) {
+        // Operation in progress, keep going
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        continue;
+      }
+
+      if (e == EISCONN) {
+        // We are connected, let's go
+        break;
+      }
+      perror("connecting to client socket");
+      std::cerr << "Errno = " << e << std::endl;
+      PANIC("Could not connect: Could not, well, connect");
+
+    } else {
+      // We are connected, let's go
+      break;
+
+    }
   }
 
   // Free GAI
@@ -123,9 +237,16 @@ TCPPipeEnd::~TCPPipeEnd(void)
 {
   if (m_sockfd != -1) {
     shutdown(m_sockfd, SHUT_RDWR);
+#ifdef _WIN32
+    closesocket(m_sockfd);
+#else
     close(m_sockfd);
+#endif
     m_sockfd = -1;
   }
+#ifdef _WIN32
+  dec_winsock_refcount();
+#endif
 }
 
 void TCPPipeEnd::pump_recv(void)
@@ -139,7 +260,7 @@ void TCPPipeEnd::pump_recv(void)
     m_sockfd,
     recv_buf,
     sizeof(recv_buf),
-    MSG_DONTWAIT);
+    0);
 
   if (got_bytes < 0) {
     int e = errno;
@@ -196,7 +317,7 @@ void TCPPipeEnd::pump_send(void)
     m_sockfd,
     m_send_buf.c_str(),
     m_send_buf.size(),
-    MSG_DONTWAIT);
+    0);
 
   if (wrote_bytes < 0) {
     int e = errno;
@@ -229,6 +350,9 @@ void TCPPipeEnd::pump_send(void)
 
 TCPServer::TCPServer(int port)
 {
+#ifdef _WIN32
+  inc_winsock_refcount();
+#endif
   // Set up hints for GAI
   struct addrinfo hints = {};
   hints.ai_socktype = NETWORK_SOCKTYPE;
@@ -274,13 +398,35 @@ TCPServer::TCPServer(int port)
   int reuse_addr = 1;
   int did_reuse_addr = setsockopt(
     m_sockfd, SOL_SOCKET, SO_REUSEADDR,
+#ifdef _WIN32
+    static_cast<const char *>(reinterpret_cast<void *>(&reuse_addr)),
+#else
     static_cast<void *>(&reuse_addr),
+#endif
     sizeof(reuse_addr));
 
   if (did_reuse_addr < 0) {
     perror("setting SO_REUSEADDR");
     PANIC("Could not host: Could not set SO_REUSEADDR");
   }
+
+  // Make this socket non-blocking
+#ifdef _WIN32
+  int non_blocking = 1;
+  if (ioctlsocket(m_sockfd, FIONBIO, (u_long *)&non_blocking) != 0) {
+    PANIC("Could not connect: Could not make non-blocking");
+  }
+#else
+  int fd_flags = fcntl(m_sockfd, F_GETFL);
+  if (fd_flags == -1) {
+    perror("setting non-blocking");
+    PANIC("Could not connect: Could not make non-blocking");
+  }
+  if (fcntl(m_sockfd, F_SETFL, fd_flags | O_NONBLOCK) != 0) {
+    perror("setting non-blocking");
+    PANIC("Could not connect: Could not make non-blocking");
+  }
+#endif
 
   // Now bind it
   int did_bind = bind(
@@ -309,16 +455,25 @@ TCPServer::~TCPServer(void)
 {
   if (m_sockfd != -1) {
     shutdown(m_sockfd, SHUT_RDWR);
+#ifdef _WIN32
+    closesocket(m_sockfd);
+#else
     close(m_sockfd);
+#endif
     m_sockfd = -1;
   }
+#ifdef _WIN32
+  dec_winsock_refcount();
+#endif
 }
 
 bool TCPServer::is_good_ai_family(int family) const
 {
   switch (family) {
+#ifndef _WIN32
     case AF_LOCAL:
       return false;
+#endif
 
     case AF_INET:
     case AF_INET6:
@@ -332,11 +487,19 @@ bool TCPServer::is_good_ai_family(int family) const
 std::shared_ptr<TCPPipeEnd> TCPServer::accept_if_available(void)
 {
   // Check for new client connections
+#ifdef _WIN32
+  WSAPOLLFD base_fds[1] = {};
+  base_fds[0].fd = m_sockfd;
+  base_fds[0].events = POLLIN;
+  base_fds[0].revents = 0;
+  int poll_result = WSAPoll(base_fds, 1, 0);
+#else
   struct pollfd base_fds[1] = {};
   base_fds[0].fd = m_sockfd;
   base_fds[0].events = POLLIN;
   base_fds[0].revents = 0;
   int poll_result = poll(base_fds, 1, 0);
+#endif
 
   if (poll_result < 0) {
     perror("server root socket poll");
