@@ -39,13 +39,9 @@ Client::Client(std::shared_ptr<net::PipeEnd> pipe_end)
 
 Client::~Client(void)
 {
-  if (m_game != nullptr) {
-    delete m_game;
-    m_game = nullptr;
-  }
 }
 
-Game *Client::game(void)
+std::shared_ptr<Game> Client::game(void)
 {
   return m_game;
 }
@@ -87,12 +83,7 @@ std::string Client::get_central_message(void)
 
 void Client::load_game(std::istream &ips)
 {
-  if (m_game != nullptr) {
-    delete m_game;
-    m_game = nullptr;
-  }
-
-  m_game = new Game(ips);
+  m_game.reset(new Game(ips));
 }
 
 void Client::update(void)
@@ -189,7 +180,7 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
       //std::cout << "Apply frame inputs" << std::endl;
       GameFrame game_frame(packet_ss);
       if (m_game != nullptr) {
-        m_game->tick(game_frame);
+        m_game.get()->tick(game_frame);
       }
       m_ready_to_send_input = true;
     } break;
@@ -199,8 +190,8 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
       std::cout << "Add new player" << std::endl;
       PlayerAdd player_add(packet_ss);
       if (m_game != nullptr) {
-        assert(player_add.get_player_idx() == m_game->get_player_count());
-        m_game->add_player(player_add.make_player(m_game));
+        assert(player_add.get_player_idx() == m_game.get()->get_player_count());
+        m_game.get()->add_player(player_add.make_player(m_game));
       }
     } break;
 

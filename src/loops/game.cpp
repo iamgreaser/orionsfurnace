@@ -212,9 +212,9 @@ void GameLoop::draw_playfield(void)
 
   // Draw game
   if (m_client != nullptr) {
-    Game *game = m_client->game();
+    std::shared_ptr<Game> game = m_client->game();
     if (game != nullptr) {
-      game->draw();
+      game.get()->draw();
     }
   }
 
@@ -233,10 +233,10 @@ void GameLoop::draw_sidebar(void)
   gfx::clear(0, 0, 0);
 
   if (m_client != nullptr) {
-    Game *game = m_client->game();
+    std::shared_ptr<Game> game = m_client->game();
     if (game != nullptr) {
       for (int pidx = 0; pidx < game->get_player_count(); pidx++) {
-        Player *player = game->get_player_ptr(pidx);
+        Player *player = game.get()->get_player_ptr(pidx);
 
         std::stringstream ss;
         ss << "Player pos: (";

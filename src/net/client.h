@@ -47,7 +47,7 @@ namespace net
     ClientStatus m_status = client_status::SENDING_HELLO;
     PlayerInput m_player_input;
     int m_player_idx = -1;
-    Game *m_game = nullptr;
+    std::shared_ptr<Game> m_game = nullptr;
     std::string m_disconnect_message = "";
 
     // Throttle input sending to once a frame
@@ -56,7 +56,7 @@ namespace net
     Client(std::shared_ptr<net::PipeEnd> pipe_end);
     ~Client(void);
 
-    Game *game(void);
+    std::shared_ptr<Game> game(void);
     int get_player_idx(void);
     PlayerInput get_player_input(void);
     void set_all_inputs(PlayerInput player_input);

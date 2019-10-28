@@ -70,12 +70,12 @@ namespace net
     std::ofstream *m_demo_fp = nullptr;
     std::vector<std::shared_ptr<ServerClient>> m_clients;
     net::TCPServer m_tcp_server;
-    Game m_game;
+    std::shared_ptr<Game> m_game = std::make_shared<Game>();
   public:
     Server(int port);
     ~Server(void);
 
-    Game &game(void) {
+    std::shared_ptr<Game> game(void) {
       return m_game;
     }
 

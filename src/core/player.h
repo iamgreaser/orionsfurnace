@@ -25,6 +25,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <cassert>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 
 class PlayerInput : public Saveable
 {
@@ -123,8 +124,8 @@ public:
   PlayerAdd(int player_idx, int32_t cx, int32_t cy, Direction dir);
   PlayerAdd(std::istream &ips);
 
-  Player make_player(Game *game) {
-    return Player(game, m_cx, m_cy, m_dir);
+  Player make_player(std::shared_ptr<Game> game) {
+    return Player(game.get(), m_cx, m_cy, m_dir);
   }
   int get_player_idx(void) { return m_player_idx; }
 

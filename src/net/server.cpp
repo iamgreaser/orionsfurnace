@@ -79,25 +79,29 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
         break;
       }
 
-      Game &game = m_server->game();
-      m_player_index = game.get_player_count();
+      std::shared_ptr<Game> game = m_server->game();
+      m_player_index = game.get()->get_player_count();
 
       // TODO: Add spawn points
       // FIXME: This COULD spawn one player atop another, or atop a wall or something!
       // (but at least it terminates)
-      int cx = static_cast<int>(game.random().next_int(static_cast<uint32_t>(game.get_width())));
-      int cy = static_cast<int>(game.random().next_int(static_cast<uint32_t>(game.get_height())));
+      int cx = static_cast<int>(game.get()->random().next_int(
+        static_cast<uint32_t>(game.get()->get_width())));
+      int cy = static_cast<int>(game.get()->random().next_int(
+        static_cast<uint32_t>(game.get()->get_height())));
       for (int i = 0; i < 100; i++) {
-        if (game.can_step_into(cx, cy, true)) {
+        if (game.get()->can_step_into(cx, cy, true)) {
           // Our position is good!
           break;
         }
-        cx = static_cast<int>(game.random().next_int(static_cast<uint32_t>(game.get_width())));
-        cy = static_cast<int>(game.random().next_int(static_cast<uint32_t>(game.get_height())));
+        cx = static_cast<int>(game.get()->random().next_int(
+          static_cast<uint32_t>(game.get()->get_width())));
+        cy = static_cast<int>(game.get()->random().next_int(
+          static_cast<uint32_t>(game.get()->get_height())));
       }
 
       // Add the player
-      game.add_player(Player(&game, cx, cy, direction::SOUTH));
+      game.get()->add_player(Player(game.get(), cx, cy, direction::SOUTH));
 
       // Add the player to everyone else
       // TODO: Cut down on redundancy here and use the same Player object
@@ -111,7 +115,7 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
       assert(m_player_index <= 0xFFFF);
       uint16_t saved_player_index = static_cast<uint16_t>(m_player_index);
       net::ThisIsYouPacket this_is_you_packet(saved_player_index);
-      net::GameSnapshotPacket game_snapshot_packet(game);
+      net::GameSnapshotPacket game_snapshot_packet(*game.get());
       this->send_packet(this_is_you_packet);
       this->send_packet(game_snapshot_packet);
     } break;
@@ -160,7 +164,7 @@ void Server::broadcast_packet(net::Packet &packet)
   // Start recording demo if we haven't yet
   if (m_demo_fp == nullptr) {
     m_demo_fp = new std::ofstream("test.demo");
-    net::GameSnapshotPacket game_snapshot_packet(m_game);
+    net::GameSnapshotPacket game_snapshot_packet(*m_game.get());
     save(*m_demo_fp, game_snapshot_packet);
   }
 
@@ -175,7 +179,7 @@ void Server::broadcast_packet_ignoring_client(net::Packet &packet, ServerClient 
   // Start recording demo if we haven't yet
   if (m_demo_fp == nullptr) {
     m_demo_fp = new std::ofstream("test.demo");
-    net::GameSnapshotPacket game_snapshot_packet(m_game);
+    net::GameSnapshotPacket game_snapshot_packet(*m_game.get());
     save(*m_demo_fp, game_snapshot_packet);
   }
 
@@ -190,7 +194,7 @@ void Server::broadcast_packet_ignoring_client(net::Packet &packet, ServerClient 
 void Server::game_tick(GameFrame game_frame)
 {
   // Tick game
-  m_game.tick(game_frame);
+  m_game.get()->tick(game_frame);
 
   // Add input to demo
   net::GameFramePacket game_frame_packet(game_frame);
@@ -200,18 +204,18 @@ void Server::game_tick(GameFrame game_frame)
 void Server::quicksave(void)
 {
   std::ofstream fp("quick.save");
-  save(fp, m_game);
+  save(fp, *m_game.get());
   fp.close();
 }
 
 void Server::quickload(void)
 {
   std::ifstream fp("quick.save");
-  load(fp, m_game);
+  load(fp, *m_game.get());
   fp.close();
 
   // Broadcast to everyone
-  net::GameSnapshotPacket game_snapshot_packet(m_game);
+  net::GameSnapshotPacket game_snapshot_packet(*m_game.get());
   this->broadcast_packet(game_snapshot_packet);
 }
 
@@ -225,9 +229,9 @@ void Server::update(void)
   }
 
   // Form a frame
-  GameFrame game_frame(m_game.get_player_count());
+  GameFrame game_frame(m_game.get()->get_player_count());
 
-  for (int i = 0; i < m_game.get_player_count(); i++) {
+  for (int i = 0; i < m_game.get()->get_player_count(); i++) {
     game_frame.player_set_all_inputs(
       i, m_clients[i]->get_player_input());
   }
