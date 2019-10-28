@@ -23,7 +23,8 @@ I think that's it for now. **EDIT: It wasn't it. This has been edited since putt
 ## Cleanups
 
 * [x] Report disconnects properly
-* [ ] Clean up the pointer misusage in favour of `shared_ptr`
+* [x] Clean up the pointer misusage in favour of `shared_ptr`
+  * There's probably more that can use it, or maybe we could use it a little less, but the remaining pointers are pretty much all backlinks.
 * [x] Get rid of the `Player::set_game()` kludge
 * [x] Either fix up the local pipes API, or throw it out
 * [ ] Use `GameFrame` for announcing new players?
