@@ -23,10 +23,10 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/core.h"
 #include "core/game.h"
 #include "core/player.h"
-#include "net/client.h"
+#include "net/client/client.h"
 #include "net/net.h"
 #include "net/pipe.h"
-#include "net/server.h"
+#include "net/server/server.h"
 #include "net/tcp.h"
 
 #ifdef LOOPS_GAME_INTERNAL

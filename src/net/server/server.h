@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef NET_SERVER_H
-#define NET_SERVER_H
+#ifndef NET_SERVER_SERVER_H
+#define NET_SERVER_SERVER_H
 
 #include "core/core.h"
 #include "core/game.h"
@@ -92,4 +92,4 @@ namespace net
   };
 }
 
-#endif /* if !defined(NET_SERVER_H) */
+#endif /* if !defined(NET_SERVER_SERVER_H) */

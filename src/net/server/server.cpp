@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "net/server.h"
+#include "net/server/server.h"
 
 #include "core/core.h"
 #include "core/game.h"

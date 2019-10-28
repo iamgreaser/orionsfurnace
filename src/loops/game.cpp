@@ -25,9 +25,9 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "gfx/gfx.h"
 #include "gfx/sprite.h"
 #include "loops/loops.h"
-#include "net/client.h"
+#include "net/client/client.h"
 #include "net/net.h"
-#include "net/server.h"
+#include "net/server/server.h"
 
 #include <SDL.h>
 
