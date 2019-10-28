@@ -56,6 +56,10 @@ namespace net
     Client(std::shared_ptr<net::PipeEnd> pipe_end);
     ~Client(void);
 
+    bool is_playing(void) {
+      return (m_status == client_status::PLAYING_GAME);
+    }
+
     std::shared_ptr<Game> game(void);
     int get_player_idx(void);
     PlayerInput get_player_input(void);

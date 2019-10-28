@@ -199,6 +199,13 @@ void GameLoop::draw_playfield(void)
     CAM_X, CAM_Y,
     CAM_W, CAM_H);
 
+  // Do we have a player?
+  if (!(m_client != nullptr && m_client.get()->is_playing())) {
+    // No - draw a dummy colour.
+    gfx::clear(40, 0, 20);
+    return;
+  }
+
   // Draw tiles
   for (int cy = 0; cy < CAM_H_CELLS; cy++) {
     int py = CAM_Y + (cy*CELL_H);
