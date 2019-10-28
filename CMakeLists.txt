@@ -62,9 +62,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(COMMON_FLAGS "${COMMON_FLAGS} -fstack-check")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # Aggressive warnings
-  set(COMMON_FLAGS "${COMMON_FLAGS} -Wlogical-op -Wformat-overflow=2 -Wformat-signedness -Wformat-truncation=2 -Wstringop-truncation -Wduplicated-cond -Walloca -Warray-bounds=2 -Wtrampolines -Wcast-align=strict")
+  set(COMMON_FLAGS "${COMMON_FLAGS} -Wlogical-op -Wformat-overflow=2 -Wformat-signedness -Wformat-truncation=2 -Wduplicated-cond -Walloca -Warray-bounds=2 -Wtrampolines")
+  set(COMMON_FLAGS "${COMMON_FLAGS} -Wstringop-truncation -Wcast-align=strict")
   # Hardening and fail-fast behavior
-  set(COMMON_FLAGS "${COMMON_FLAGS} -fstack-clash-protection -static-libubsan -fcf-protection=full")
+  set(COMMON_FLAGS "${COMMON_FLAGS} -static-libubsan")
+  set(COMMON_FLAGS "${COMMON_FLAGS} -fstack-clash-protection -fcf-protection=full")
   # Verbose debugging information and tracking
   set(COMMON_FLAGS "${COMMON_FLAGS} -fvar-tracking -fvar-tracking-assignments")
   # Hinting suggestions
