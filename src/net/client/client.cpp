@@ -58,6 +58,11 @@ PlayerInput Client::get_player_input(void)
   return m_player_input;
 }
 
+Player *Client::get_player_ptr(void)
+{
+  return m_game.get()->get_player_ptr(m_player_idx);
+}
+
 void Client::set_all_inputs(PlayerInput player_input)
 {
   m_player_input = player_input;

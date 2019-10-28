@@ -38,11 +38,17 @@ namespace gfx
   constexpr int SIDEBAR_W = BASE_SCREEN_WIDTH-SIDEBAR_X;
   constexpr int SIDEBAR_H = BASE_SCREEN_HEIGHT;
 
+  extern int cam_px;
+  extern int cam_py;
+
   void init(bool use_software_rendering);
 
-  void clear(int r, int g, int b);
   void clip_nothing(void);
   void clip_rect(int px, int py, int pw, int ph);
+
+  void set_camera(int px, int py);
+
+  void clear(int r, int g, int b);
   void draw_rect(int px, int py, int pw, int ph, int r, int g, int b);
   void draw_text(int px, int py, int r, int g, int b, const std::string text);
   void fetch_text_dims(std::string s, int *px, int *py);

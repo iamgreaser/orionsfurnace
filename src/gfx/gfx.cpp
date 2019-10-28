@@ -38,15 +38,12 @@ namespace gfx
   int current_window_width = BASE_SCREEN_WIDTH*INITIAL_SCREEN_SCALE;
   int current_window_height = BASE_SCREEN_HEIGHT*INITIAL_SCREEN_SCALE;
 
+  int cam_px = 0;
+  int cam_py = 0;
+
   SDL_Window *window = nullptr;
   SDL_Renderer *renderer = nullptr;
   SDL_Texture *backbuf = nullptr;
-
-#if 0
-  BITMAP *vidbufs[2] = {};
-  int vidbuf_in = 0;
-  int vidbuf_out = 1;
-#endif
 }
 
 void gfx::init(bool use_software_rendering)
@@ -100,17 +97,6 @@ void gfx::init(bool use_software_rendering)
   player_gfx.ensure_loaded();
 }
 
-void gfx::clear(int r, int g, int b)
-{
-  // Clear screen
-  SDL_SetRenderDrawColor(renderer,
-    (r < 0 ? 0 : r > 0xFF ? 0xFF : static_cast<uint8_t>(r)),
-    (g < 0 ? 0 : g > 0xFF ? 0xFF : static_cast<uint8_t>(g)),
-    (b < 0 ? 0 : b > 0xFF ? 0xFF : static_cast<uint8_t>(b)),
-    0xFF);
-  SDL_RenderFillRect(renderer, nullptr);
-}
-
 void gfx::clip_nothing(void)
 {
   // Clear clipping rectangle
@@ -131,11 +117,28 @@ void gfx::clip_rect(int px, int py, int pw, int ph)
   assert(did_set_clip_rect == 0);
 }
 
+void gfx::set_camera(int px, int py)
+{
+  cam_px = px;
+  cam_py = py;
+}
+
+void gfx::clear(int r, int g, int b)
+{
+  // Clear screen
+  SDL_SetRenderDrawColor(renderer,
+    (r < 0 ? 0 : r > 0xFF ? 0xFF : static_cast<uint8_t>(r)),
+    (g < 0 ? 0 : g > 0xFF ? 0xFF : static_cast<uint8_t>(g)),
+    (b < 0 ? 0 : b > 0xFF ? 0xFF : static_cast<uint8_t>(b)),
+    0xFF);
+  SDL_RenderFillRect(renderer, nullptr);
+}
+
 void gfx::draw_rect(int px, int py, int pw, int ph, int r, int g, int b)
 {
   SDL_Rect rect = {};
-  rect.x = px;
-  rect.y = py;
+  rect.x = px - cam_px;
+  rect.y = py - cam_py;
   rect.w = pw;
   rect.h = ph;
 
@@ -150,7 +153,7 @@ void gfx::draw_rect(int px, int py, int pw, int ph, int r, int g, int b)
 
 void gfx::draw_text(int px, int py, int r, int g, int b, const std::string text)
 {
-  font_base.draw(px, py, r, g, b, text);
+  font_base.draw(px - cam_px, py - cam_py, r, g, b, text);
 }
 
 void gfx::fetch_text_dims(std::string s, int *px, int *py)

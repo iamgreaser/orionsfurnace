@@ -85,8 +85,8 @@ void Sprite::draw(int px, int py, int tx, int ty)
   srcrect.y = ty*m_ph;
   srcrect.w = m_pw;
   srcrect.h = m_ph;
-  dstrect.x = px;
-  dstrect.y = py;
+  dstrect.x = px - cam_px;
+  dstrect.y = py - cam_py;
   dstrect.w = m_pw;
   dstrect.h = m_ph;
 

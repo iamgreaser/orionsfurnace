@@ -4,7 +4,7 @@ vim: set sts=2 sw=2 et :
 
 ## Alpha 3
 
-* [ ] Implement a camera so we're not stuck with 15x15
+* [x] Implement a camera so we're not stuck with 15x15
 * [ ] Implement a world
 * [ ] Windows-specific networking support
 

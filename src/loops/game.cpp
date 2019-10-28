@@ -199,27 +199,37 @@ void GameLoop::draw_playfield(void)
     CAM_X, CAM_Y,
     CAM_W, CAM_H);
 
-  // Do we have a player?
-  if (!(m_client != nullptr && m_client.get()->is_playing())) {
-    // No - draw a dummy colour.
-    gfx::clear(40, 0, 20);
-    return;
-  }
-
-  // Draw tiles
-  for (int cy = 0; cy < CAM_H_CELLS; cy++) {
-    int py = CAM_Y + (cy*CELL_H);
-
-    for (int cx = 0; cx < CAM_W_CELLS; cx++) {
-      int px = CAM_X + (cx*CELL_W);
-
-      gfx::tile_gfx_floor.draw(px, py);
-    }
-  }
+  gfx::clear(40, 0, 20);
 
   // Draw game
-  if (m_client != nullptr) {
+  if (m_client != nullptr && m_client.get()->is_playing()) {
     std::shared_ptr<Game> game = m_client->game();
+    Player *player = m_client->get_player_ptr();
+
+    // Get camera centre
+    int rel_px = 0;
+    int rel_py = 0;
+    player->calc_interp_pos(&rel_px, &rel_py);
+    // Actually make it the centre, rather than centering on the top-left of the player
+    rel_px += CELL_W / 2;
+    rel_py += CELL_H / 2;
+    // Move from camera centre to top left
+    rel_px -= (CAM_W_CELLS * CELL_W) / 2;
+    rel_py -= (CAM_H_CELLS * CELL_H) / 2;
+
+    gfx::set_camera(rel_px, rel_py);
+
+    // Draw tiles
+    for (int cy = 0; cy < CAM_H_CELLS; cy++) {
+      int py = CAM_Y + (cy*CELL_H);
+
+      for (int cx = 0; cx < CAM_W_CELLS; cx++) {
+        int px = CAM_X + (cx*CELL_W);
+
+        gfx::tile_gfx_floor.draw(px, py);
+      }
+    }
+
     if (game != nullptr) {
       game.get()->draw();
     }
@@ -227,6 +237,9 @@ void GameLoop::draw_playfield(void)
 
   // Clear clipping rectangle
   gfx::clip_nothing();
+
+  // Reset camera
+  gfx::set_camera(0, 0);
 }
 
 void GameLoop::draw_sidebar(void)

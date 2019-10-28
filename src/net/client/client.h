@@ -63,6 +63,7 @@ namespace net
     std::shared_ptr<Game> game(void);
     int get_player_idx(void);
     PlayerInput get_player_input(void);
+    Player *get_player_ptr(void);
     void set_all_inputs(PlayerInput player_input);
     std::string get_central_message(void);
 
