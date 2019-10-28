@@ -18,6 +18,9 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CORE_HELPERS_H
 #define CORE_HELPERS_H
 
+#include <cstdlib>
+#include <cstdio>
+
 #define PANIC(fmt, ...) { fprintf(stderr, "%s:%d:%s() | Fatal error!" fmt, __FILE__, __LINE__, __func__, ## __VA_ARGS__); abort(); }
 
 #endif /* if !defined(CORE_HELPERS_H) */
