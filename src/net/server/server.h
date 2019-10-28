@@ -31,38 +31,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace net
 {
-  namespace server_client_status
-  {
-    enum ServerClientStatus
-    {
-      // TODO: Use these!
-      AWAITING_HELLO = 0,
-      SENDING_YOUR_PLAYER,
-      SENDING_GAME,
-      PLAYING_GAME,
-      DISCONNECTED,
-    };
-  }
-  using server_client_status::ServerClientStatus;
-
-  class ServerClient final : public Node
-  {
-  private:
-    ServerClientStatus m_status;
-    Server *m_server = nullptr;
-    GameFrame m_game_frame;
-    int m_player_index;
-    PlayerInput m_player_input;
-    bool m_disconnected = false;
-  public:
-    ServerClient(Server *server, int player_index, std::shared_ptr<net::PipeEnd> pipe_end);
-    ~ServerClient(void);
-    PlayerInput get_player_input(void) {
-      return m_player_input;
-    }
-    void update(void) override;
-    void handle_input_packet(int packet_id, std::istream &packet_ss) override;
-  };
+  class ServerClient;
 
   class Server final
   {
