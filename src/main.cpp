@@ -59,6 +59,9 @@ void show_help(char *arg0)
   cerr << "    --client ADDR PORT" << endl;
   cerr << "        Starts a client connecting to IPv4/v6 address ADDR at TCP port PORT." << endl;
   cerr << endl;
+  cerr << "    --software" << endl;
+  cerr << "        Force software rendering in SDL2." << endl;
+  cerr << endl;
 }
 
 int main(int argc, char *argv[])
