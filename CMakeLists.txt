@@ -7,6 +7,7 @@ set(TARGET "orions-furnace")
 
 # Options
 option(HINT_SUGGESTIONS "Use hinting suggestions" OFF)
+option(SANITIZE "Enable sanitizers (requires various lib*san libraries)" ON)
 
 # Check for native cmake Libraries
 find_package(PkgConfig REQUIRED)
@@ -50,7 +51,9 @@ configure_file (
 # Aggressive warnings
 set(COMMON_FLAGS "-Wall -Wextra -Wconversion -Wpedantic -pedantic -Wformat=2 -Wnull-dereference -Wuninitialized -Wstrict-aliasing=2 -Wfloat-equal -Wshadow -Wpointer-arith -Wwrite-strings -Wcast-qual -Wdate-time")
 # Hardening and fail-fast behavior
-set(COMMON_FLAGS "${COMMON_FLAGS} -fsanitize=address -fsanitize=undefined -fstack-protector-all -fsanitize-address-use-after-scope")
+if (SANITIZE)
+  set(COMMON_FLAGS "${COMMON_FLAGS} -fsanitize=address -fsanitize=undefined -fstack-protector-all -fsanitize-address-use-after-scope")
+endif()
 # Verbose debugging information and tracking
 set(COMMON_FLAGS "${COMMON_FLAGS} -gdwarf-4 -ggdb3 -fno-omit-frame-pointer")
 
@@ -65,8 +68,10 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(COMMON_FLAGS "${COMMON_FLAGS} -Wlogical-op -Wformat-overflow=2 -Wformat-signedness -Wformat-truncation=2 -Wduplicated-cond -Walloca -Warray-bounds=2 -Wtrampolines")
   set(COMMON_FLAGS "${COMMON_FLAGS} -Wstringop-truncation -Wcast-align=strict")
   # Hardening and fail-fast behavior
-  set(COMMON_FLAGS "${COMMON_FLAGS} -static-libubsan")
-  set(COMMON_FLAGS "${COMMON_FLAGS} -fstack-clash-protection -fcf-protection=full")
+  if (SANITIZE)
+    set(COMMON_FLAGS "${COMMON_FLAGS} -static-libubsan")
+    set(COMMON_FLAGS "${COMMON_FLAGS} -fstack-clash-protection -fcf-protection=full")
+  endif()
   # Verbose debugging information and tracking
   set(COMMON_FLAGS "${COMMON_FLAGS} -fvar-tracking -fvar-tracking-assignments")
   # Hinting suggestions
