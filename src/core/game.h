@@ -51,8 +51,8 @@ namespace game
       return static_cast<int>(count);
     }
     Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
-    int get_width(void) const { return 15; }
-    int get_height(void) const { return 15; }
+    int get_width(void) const { return 32; }
+    int get_height(void) const { return 32; }
     Random &random(void) { return m_random; }
 
     void add_player(Player player);

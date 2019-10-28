@@ -219,12 +219,19 @@ void GameLoop::draw_playfield(void)
 
     gfx::set_camera(rel_px, rel_py);
 
-    // Draw tiles
-    for (int cy = 0; cy < CAM_H_CELLS; cy++) {
-      int py = CAM_Y + (cy*CELL_H);
+    // Calculate relative cell offset
+    // TODO: find a consistent way of biasing against truncation division
+    int rel_cx = (rel_px < 0 ? (rel_px-(24-1))/24 : rel_px/24);
+    int rel_cy = (rel_py < 0 ? (rel_py-(24-1))/24 : rel_py/24);
 
-      for (int cx = 0; cx < CAM_W_CELLS; cx++) {
+    // Draw tiles
+    for (int cy = 0 + rel_cy; cy < CAM_H_CELLS+1 + rel_cy; cy++) {
+      int py = CAM_Y + (cy*CELL_H);
+      if (py < 0) { continue; }
+
+      for (int cx = 0 + rel_cx; cx < CAM_W_CELLS+1 + rel_cx; cx++) {
         int px = CAM_X + (cx*CELL_W);
+        if (px < 0) { continue; }
 
         gfx::tile_gfx_floor.draw(px, py);
       }
