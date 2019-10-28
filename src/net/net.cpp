@@ -17,10 +17,9 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "net/net.h"
 
-#include "core/version.h"
+#include "net/packet/packet.h"
 
 using net::Node;
-using net::ClientHello;
 
 Node::Node(std::shared_ptr<net::PipeEnd> pipe_end)
   : m_pipe_end(pipe_end)
@@ -80,33 +79,4 @@ void Node::update_packets(void)
     // Handle packet.
     this->handle_input_packet(packet_id, packet_ss);
   }
-}
-
-
-ClientHello::ClientHello(std::string nickname)
-  : m_version(get_engine_version())
-  , m_nickname(nickname)
-{
-}
-
-ClientHello::ClientHello(std::istream &ips)
-{
-  load(ips, *this);
-}
-
-bool ClientHello::is_current_version(void)
-{
-  return (m_version == get_engine_version());
-}
-
-void ClientHello::load_this(std::istream &ips)
-{
-  load(ips, m_version);
-  load(ips, m_nickname);
-}
-
-void ClientHello::save_this(std::ostream &ops) const
-{
-  save(ops, m_version);
-  save(ops, m_nickname);
 }

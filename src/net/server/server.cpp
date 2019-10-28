@@ -22,6 +22,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/player.h"
 #include "core/version.h"
 #include "net/net.h"
+#include "net/packet/packet.h"
 #include "net/server/server_client.h"
 
 using net::ServerClient;
