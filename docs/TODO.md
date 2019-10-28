@@ -2,19 +2,14 @@ vim: set sts=2 sw=2 et :
 
 # Milestones
 
-## Alpha 1
+## Alpha 2
 
-A few things before I inflict this upon people:
-
-* [x] Implement the proper join sequence
-* [x] Implement disconnection
-* [x] Implement a send/recv over pipe interface and use it - needed for the next 2 or 3:
-* [x] Make the server open a TCP port
-* [x] Make the client use said TCP port
-* [x] Allow launching as a client or a nondedicated server
-* [x] Put a donk^H^H^H^H licence on it
-
-I think that's it for now. **EDIT: It wasn't it. This has been edited since putting it together. --GM**
+* [x] Report disconnects properly
+* [x] Clean up the pointer misusage in favour of `shared_ptr`
+  * There's probably more that can use it, or maybe we could use it a little less, but the remaining pointers are pretty much all backlinks.
+* [x] Get rid of the `Player::set_game()` kludge
+* [x] Either fix up the local pipes API, or throw it out
+* [x] Make stuff like `TCP_NODELAY` happen
 
 ----------------------------------------------------------------------------
 
@@ -22,18 +17,12 @@ I think that's it for now. **EDIT: It wasn't it. This has been edited since putt
 
 ## Cleanups
 
-* [x] Report disconnects properly
-* [x] Clean up the pointer misusage in favour of `shared_ptr`
-  * There's probably more that can use it, or maybe we could use it a little less, but the remaining pointers are pretty much all backlinks.
-* [x] Get rid of the `Player::set_game()` kludge
-* [x] Either fix up the local pipes API, or throw it out
 * [ ] Use `GameFrame` for announcing new players?
 
 ## Features we'll need
 
 * [ ] Make it possible to remove players
 * [ ] Make it possible for a client to save
-* [x] Make stuff like `TCP_NODELAY` happen
 * [ ] Handle saves with mismatched player counts better
 * [ ] Windows-specific networking support
 * [ ] Implement a world
@@ -53,4 +42,18 @@ I think that's it for now. **EDIT: It wasn't it. This has been edited since putt
 ----------------------------------------------------------------------------
 
 # Completed milestones
+
+## Alpha 1
+
+A few things before I inflict this upon people:
+
+* [x] Implement the proper join sequence
+* [x] Implement disconnection
+* [x] Implement a send/recv over pipe interface and use it - needed for the next 2 or 3:
+* [x] Make the server open a TCP port
+* [x] Make the client use said TCP port
+* [x] Allow launching as a client or a nondedicated server
+* [x] Put a donk^H^H^H^H licence on it
+
+I think that's it for now. **EDIT: It wasn't it. This has been edited since putting it together. --GM**
 
