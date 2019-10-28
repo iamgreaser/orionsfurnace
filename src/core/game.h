@@ -35,7 +35,7 @@ namespace game
   using std::ostream;
   using std::vector;
 
-  class Game : public Saveable
+  class Game final : public Saveable
   {
   private:
     vector<Player> m_players;

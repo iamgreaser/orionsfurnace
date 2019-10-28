@@ -41,7 +41,7 @@ union SDL_Event;
 
 namespace loops
 {
-  class GameLoop : public Loop
+  class GameLoop final : public Loop
   {
   private:
     PlayerInput m_player_inputs;

@@ -27,7 +27,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <iostream>
 #include <memory>
 
-class PlayerInput : public Saveable
+class PlayerInput final : public Saveable
 {
 private:
   bool m_input_move[4] = {};
@@ -65,7 +65,7 @@ namespace diagonal_fixer
 }
 using diagonal_fixer::DiagonalFixer;
 
-class Player : public Saveable
+class Player final : public Saveable
 {
 private:
   Game *m_game;
@@ -113,7 +113,7 @@ protected:
   void calc_interp_pos(int *px, int *py);
 };
 
-class PlayerAdd : public Saveable
+class PlayerAdd final : public Saveable
 {
 private:
   uint16_t m_player_idx;

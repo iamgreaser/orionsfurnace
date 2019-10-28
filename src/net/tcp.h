@@ -38,7 +38,7 @@ namespace net
   public:
     TCPPipeEnd(int sockfd);
     TCPPipeEnd(std::string addr, int port);
-    ~TCPPipeEnd(void) override;
+    ~TCPPipeEnd(void) override final;
 
     std::ostream &send_stream(void) override {
       return static_cast<std::ostream&>(m_send_ss);

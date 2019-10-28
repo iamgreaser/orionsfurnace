@@ -83,7 +83,7 @@ namespace net
   };
 
   template <uint8_t PID, class T>
-  class ClassPacket : public Packet
+  class ClassPacket final : public Packet
   {
   private:
     T m_value;
@@ -168,7 +168,7 @@ namespace net
     virtual void handle_input_packet(int packet_id, std::istream &packet_ss) = 0;
   };
 
-  class ClientHello: public Saveable
+  class ClientHello final : public Saveable
   {
   private:
     std::string m_version;

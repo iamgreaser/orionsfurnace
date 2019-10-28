@@ -45,7 +45,7 @@ namespace net
   }
   using server_client_status::ServerClientStatus;
 
-  class ServerClient : public Node
+  class ServerClient final : public Node
   {
   private:
     ServerClientStatus m_status;
@@ -64,7 +64,7 @@ namespace net
     void handle_input_packet(int packet_id, std::istream &packet_ss) override;
   };
 
-  class Server
+  class Server final
   {
   private:
     std::shared_ptr<std::ofstream> m_demo_fp;

@@ -26,7 +26,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 namespace net
 {
-  class RawPipeEnd : public PipeEnd
+  class RawPipeEnd final : public PipeEnd
   {
   protected:
     std::shared_ptr<std::stringstream> m_send_ss;

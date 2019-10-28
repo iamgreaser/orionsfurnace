@@ -41,7 +41,7 @@ namespace net
   }
   using client_status::ClientStatus;
 
-  class Client : public Node
+  class Client final : public Node
   {
   private:
     ClientStatus m_status = client_status::SENDING_HELLO;
