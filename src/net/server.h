@@ -67,7 +67,7 @@ namespace net
   class Server
   {
   private:
-    std::ofstream *m_demo_fp = nullptr;
+    std::shared_ptr<std::ofstream> m_demo_fp;
     std::vector<std::shared_ptr<ServerClient>> m_clients;
     net::TCPServer m_tcp_server;
     std::shared_ptr<Game> m_game = std::make_shared<Game>();

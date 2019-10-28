@@ -144,11 +144,6 @@ Server::Server(int port)
 
 Server::~Server(void)
 {
-  if (m_demo_fp != nullptr) {
-    m_demo_fp->close();
-    delete m_demo_fp;
-    m_demo_fp = nullptr;
-  }
 }
 
 void Server::add_client(std::shared_ptr<net::PipeEnd> pipe_end)
@@ -163,12 +158,12 @@ void Server::broadcast_packet(net::Packet &packet)
 {
   // Start recording demo if we haven't yet
   if (m_demo_fp == nullptr) {
-    m_demo_fp = new std::ofstream("test.demo");
+    m_demo_fp.reset(new std::ofstream("test.demo"));
     net::GameSnapshotPacket game_snapshot_packet(*m_game.get());
-    save(*m_demo_fp, game_snapshot_packet);
+    save(*m_demo_fp.get(), game_snapshot_packet);
   }
 
-  save(*m_demo_fp, packet);
+  save(*m_demo_fp.get(), packet);
   for (std::shared_ptr<ServerClient> sc : m_clients) {
     sc.get()->send_packet(packet);
   }
@@ -178,12 +173,12 @@ void Server::broadcast_packet_ignoring_client(net::Packet &packet, ServerClient 
 {
   // Start recording demo if we haven't yet
   if (m_demo_fp == nullptr) {
-    m_demo_fp = new std::ofstream("test.demo");
+    m_demo_fp.reset(new std::ofstream("test.demo"));
     net::GameSnapshotPacket game_snapshot_packet(*m_game.get());
-    save(*m_demo_fp, game_snapshot_packet);
+    save(*m_demo_fp.get(), game_snapshot_packet);
   }
 
-  save(*m_demo_fp, packet);
+  save(*m_demo_fp.get(), packet);
   for (std::shared_ptr<ServerClient> sc : m_clients) {
     if (sc.get() != ignore_sc) {
       sc.get()->send_packet(packet);
