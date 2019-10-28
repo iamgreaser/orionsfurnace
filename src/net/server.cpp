@@ -222,10 +222,10 @@ void Server::quickload(void)
 void Server::update(void)
 {
   // Add a client if one is trying to connect
-  net::TCPPipeEnd *pipe_end = m_tcp_server.accept_if_available();
+  std::shared_ptr<net::TCPPipeEnd> pipe_end = m_tcp_server.accept_if_available();
   if (pipe_end != nullptr) {
     std::cout << "Accepting new client" << std::endl;
-    this->add_client(std::shared_ptr<net::TCPPipeEnd>(pipe_end));
+    this->add_client(pipe_end);
   }
 
   // Form a frame

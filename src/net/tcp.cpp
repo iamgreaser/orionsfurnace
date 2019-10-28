@@ -329,7 +329,7 @@ bool TCPServer::is_good_ai_family(int family) const
   }
 }
 
-TCPPipeEnd *TCPServer::accept_if_available(void)
+std::shared_ptr<TCPPipeEnd> TCPServer::accept_if_available(void)
 {
   // Check for new client connections
   struct pollfd base_fds[1] = {};
@@ -353,8 +353,7 @@ TCPPipeEnd *TCPServer::accept_if_available(void)
     }
 
     // Now add a client
-    net::TCPPipeEnd *pipe_end = new net::TCPPipeEnd(
-      new_sockfd);
+    std::shared_ptr<TCPPipeEnd> pipe_end = std::make_shared<TCPPipeEnd>(new_sockfd);
 
     // And return!
     return pipe_end;
