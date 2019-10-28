@@ -5,6 +5,9 @@ include_directories(${CMAKE_BINARY_DIR})
 
 set(TARGET "orions-furnace")
 
+# Options
+option(HINT_SUGGESTIONS "Use hinting suggestions" OFF)
+
 # Check for native cmake Libraries
 find_package(PkgConfig REQUIRED)
 find_package(SDL2 REQUIRED)
@@ -36,7 +39,7 @@ target_compile_options(${TARGET} PUBLIC ${SDL2_IMAGE_CFLAGS_OTHER})
 execute_process(COMMAND  git describe --always --dirty
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     OUTPUT_VARIABLE GIT_VERSION
-		OUTPUT_STRIP_TRAILING_WHITESPACE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 configure_file (
@@ -65,9 +68,11 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # Verbose debugging information and tracking
   set(COMMON_FLAGS "${COMMON_FLAGS} -fvar-tracking -fvar-tracking-assignments")
   # Hinting suggestions
-  set(COMMON_FLAGS "${COMMON_FLAGS} -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wsuggest-attribute=malloc -Wsuggest-attribute=format -Wmissing-format-attribute -Wsuggest-attribute=cold")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override")
-  set(COMMON_FLAGS "${COMMON_FLAGS} -Wvector-operation-performance -Winline")
+  if (HINT_SUGGESTIONS)
+    set(COMMON_FLAGS "${COMMON_FLAGS} -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wsuggest-attribute=malloc -Wsuggest-attribute=format -Wmissing-format-attribute -Wsuggest-attribute=cold")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override")
+    set(COMMON_FLAGS "${COMMON_FLAGS} -Wvector-operation-performance -Winline")
+  endif()
   # Display template errors/warnings in a slightly more legible way
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-show-template-tree")
 endif()
