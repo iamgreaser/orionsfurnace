@@ -44,6 +44,7 @@ namespace gfx
   };
 
   extern Sprite tile_gfx_floor;
+  extern Sprite tile_gfx_wall;
   extern Sprite player_gfx;
 }
 

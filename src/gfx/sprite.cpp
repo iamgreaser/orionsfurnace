@@ -31,6 +31,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 namespace gfx
 {
   Sprite tile_gfx_floor("dat/gfx/tiles/floor001.png");
+  Sprite tile_gfx_wall("dat/gfx/tiles/wall001.png");
   Sprite player_gfx("dat/gfx/player/base.png");
 }
 

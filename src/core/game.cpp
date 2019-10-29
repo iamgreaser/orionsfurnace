@@ -45,8 +45,8 @@ Game::Game(void)
   int height = world->get_height();
   for (uint16_t y = 0; y < height; y++) {
     for (uint16_t x = 0; x < width; x++) {
-      if (m_random.next_int(100) < 3) {
-        *(world->cell_type_at(x, y)) = cell_type::SPACE;
+      if (m_random.next_int(100) < 10) {
+        *(world->cell_type_at(x, y)) = cell_type::WALL;
       }
     }
   }
@@ -77,6 +77,19 @@ bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
   // Is this in range of the map?
   if (cx < 0 || cy < 0 || cx >= this->get_width() || cy >= this->get_height()) {
     return false;
+  }
+
+  // Is this solid?
+  switch (*m_world.get()->cell_type_at(cx, cy)) {
+    case cell_type::SPACE:
+    case cell_type::FLOOR:
+      break;
+
+    case cell_type::WALL:
+      return false;
+
+    default:
+      return true;
   }
 
   // Do we care to check for existing players?

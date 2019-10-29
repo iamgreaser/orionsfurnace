@@ -34,7 +34,7 @@ namespace cell_type
   enum CellType {
     SPACE = 0,
     FLOOR,
-    //WALL,
+    WALL,
   };
 }
 

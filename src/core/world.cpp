@@ -94,8 +94,9 @@ void World::draw_in_cell_range(
           gfx::tile_gfx_floor.draw(px, py);
           break;
 
-        //case cell_type::WALL:
-        //  break;
+        case cell_type::WALL:
+          gfx::tile_gfx_wall.draw(px, py, 0, 0);
+          break;
 
         default:
           PANIC("Unhandled tile type");
