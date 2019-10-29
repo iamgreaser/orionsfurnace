@@ -131,10 +131,11 @@ void Game::load_this(istream &ips)
   uint16_t player_count = 0;
   load(ips, player_count);
   m_players.clear();
-
   for (uint16_t i = 0; i < player_count; i++) {
     m_players.push_back(Player(this, ips));
   }
+
+  m_world = std::make_shared<World>(ips);
 }
 
 void Game::save_this(ostream &ops) const
@@ -143,10 +144,11 @@ void Game::save_this(ostream &ops) const
   assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
   uint16_t player_count = static_cast<uint16_t>(raw_player_count);
   save(ops, player_count);
-
   for (uint16_t i = 0; i < player_count; i++) {
     save(ops, m_players[i]);
   }
+
+  save(ops, *m_world.get());
 }
 
 Player *Game::get_player_at(int cx, int cy)

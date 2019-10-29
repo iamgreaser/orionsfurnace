@@ -29,6 +29,16 @@ namespace direction
 }
 using direction::Direction;
 
+namespace cell_type
+{
+  enum CellType {
+    SPACE = 0,
+    FLOOR,
+    //WALL,
+  };
+}
+
+using cell_type::CellType;
 namespace game
 {
   class Game;
@@ -36,6 +46,12 @@ namespace game
 }
 using game::Game;
 using game::GameFrame;
+
+namespace world
+{
+  class World;
+}
+using world::World;
 
 class Player;
 class PlayerInput;
