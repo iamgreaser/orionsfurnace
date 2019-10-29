@@ -86,10 +86,16 @@ namespace world
     std::shared_ptr<Layer<CellType>> m_cell_types;
 
   public:
-    World(int width, int height);
+    World(uint16_t width, uint16_t height);
     World(std::istream &ips);
+
     uint16_t get_width(void) { return m_width; }
     uint16_t get_height(void) { return m_height; }
+
+    CellType *cell_type_at(int x, int y) {
+      return m_cell_types.get()->at(x, y);
+    }
+
     void load_this(std::istream &ips);
     void save_this(std::ostream &ops) const;
 

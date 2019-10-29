@@ -38,6 +38,18 @@ namespace game
 Game::Game(void)
 {
   m_world = std::make_shared<World>(32, 32);
+
+  World *world = m_world.get();
+
+  int width = world->get_width();
+  int height = world->get_height();
+  for (uint16_t y = 0; y < height; y++) {
+    for (uint16_t x = 0; x < width; x++) {
+      if (m_random.next_int(100) < 3) {
+        *(world->cell_type_at(x, y)) = cell_type::SPACE;
+      }
+    }
+  }
 }
 
 Game::Game(std::istream &ips)

@@ -22,13 +22,16 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <cassert>
 #include <cstddef>
+#include <iostream>
 #include <memory>
 
-World::World(int width, int height)
+World::World(uint16_t width, uint16_t height)
   : m_width(width)
   , m_height(height)
   , m_cell_types(std::make_shared<Layer<CellType>>(width, height, cell_type::FLOOR))
 {
+  assert(m_width >= 1);
+  assert(m_height >= 1);
 }
 
 World::World(std::istream &ips)
@@ -74,13 +77,30 @@ void World::save_this(std::ostream &ops) const
 void World::draw_in_cell_range(
   int cx_imin, int cy_imin, int cx_emax, int cy_emax)
 {
+  Layer<CellType> *cell_types = m_cell_types.get();
+
   for (int cy = cy_imin; cy < cy_emax; cy++) {
     int py = CAM_Y + (cy*CELL_H);
 
     for (int cx = cx_imin; cx < cx_emax; cx++) {
       int px = CAM_X + (cx*CELL_W);
 
-      gfx::tile_gfx_floor.draw(px, py);
+      switch (*(cell_types->at(cx, cy))) {
+        case cell_type::SPACE:
+          // TODO: space tile?
+          break;
+
+        case cell_type::FLOOR:
+          gfx::tile_gfx_floor.draw(px, py);
+          break;
+
+        //case cell_type::WALL:
+        //  break;
+
+        default:
+          PANIC("Unhandled tile type");
+          break;
+      }
     }
   }
 }
