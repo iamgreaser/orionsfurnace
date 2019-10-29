@@ -17,6 +17,9 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "core/world.h"
 
+#include "gfx/gfx.h"
+#include "gfx/sprite.h"
+
 #include <cassert>
 #include <cstddef>
 #include <memory>
@@ -62,6 +65,20 @@ void World::save_this(std::ostream &ops) const
     for (uint16_t x = 0; x < m_height; x++) {
       // NOTE: Interleave these here
       save(ops, *(m_cell_types.get()->at_const(x, y)));
+    }
+  }
+}
+
+void World::draw_in_cell_range(
+  int cx_imin, int cy_imin, int cx_emax, int cy_emax)
+{
+  for (int cy = cy_imin; cy < cy_emax; cy++) {
+    int py = CAM_Y + (cy*CELL_H);
+
+    for (int cx = cx_imin; cx < cx_emax; cx++) {
+      int px = CAM_X + (cx*CELL_W);
+
+      gfx::tile_gfx_floor.draw(px, py);
     }
   }
 }

@@ -117,15 +117,8 @@ void Game::draw(void)
   if (cx_emax > width) { cx_emax = width; }
   if (cy_emax > height) { cy_emax = height; }
 
-  for (int cy = cy_imin; cy < cy_emax; cy++) {
-    int py = CAM_Y + (cy*CELL_H);
-
-    for (int cx = cx_imin; cx < cx_emax; cx++) {
-      int px = CAM_X + (cx*CELL_W);
-
-      gfx::tile_gfx_floor.draw(px, py);
-    }
-  }
+  m_world.get()->draw_in_cell_range(
+    cx_imin, cy_imin, cx_emax, cy_emax);
 
   for (Player &p : m_players) {
     p.draw();

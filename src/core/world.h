@@ -92,6 +92,9 @@ namespace world
     uint16_t get_height(void) { return m_height; }
     void load_this(std::istream &ips);
     void save_this(std::ostream &ops) const;
+
+    void draw_in_cell_range(
+      int cx_imin, int cy_imin, int cx_emax, int cy_emax);
   };
 }
 
