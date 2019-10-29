@@ -219,28 +219,6 @@ void GameLoop::draw_playfield(void)
 
     gfx::set_camera(rel_px, rel_py);
 
-    // Calculate relative cell offset
-    // TODO: find a consistent way of biasing against truncation division
-    int rel_cx = (rel_px < 0 ? (rel_px-(24-1))/24 : rel_px/24);
-    int rel_cy = (rel_py < 0 ? (rel_py-(24-1))/24 : rel_py/24);
-    int width = game.get()->get_width();
-    int height = game.get()->get_height();
-
-    // Draw tiles
-    for (int cy = 0 + rel_cy; cy < CAM_H_CELLS+1 + rel_cy; cy++) {
-      if (cy < 0) { continue; }
-      if (cy >= height) { break; }
-      int py = CAM_Y + (cy*CELL_H);
-
-      for (int cx = 0 + rel_cx; cx < CAM_W_CELLS+1 + rel_cx; cx++) {
-        if (cx < 0) { continue; }
-        if (cx >= width) { break; }
-        int px = CAM_X + (cx*CELL_W);
-
-        gfx::tile_gfx_floor.draw(px, py);
-      }
-    }
-
     if (game != nullptr) {
       game.get()->draw();
     }
