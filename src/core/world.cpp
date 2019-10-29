@@ -64,7 +64,9 @@ void World::save_this(std::ostream &ops) const
   for (uint16_t y = 0; y < m_height; y++) {
     for (uint16_t x = 0; x < m_height; x++) {
       // NOTE: Interleave these here
-      save(ops, *(m_cell_types.get()->at_const(x, y)));
+      uint16_t cell_type_ui = static_cast<uint16_t>(
+        *(m_cell_types.get()->at_const(x, y)));
+      save(ops, cell_type_ui);
     }
   }
 }
