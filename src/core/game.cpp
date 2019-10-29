@@ -20,6 +20,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/core.h"
 #include "core/helpers.h"
 #include "core/save.h"
+#include "core/world.h"
 #include "gfx/gfx.h"
 #include "gfx/sprite.h"
 
@@ -36,6 +37,7 @@ namespace game
 
 Game::Game(void)
 {
+  m_world = std::make_shared<World>(32, 32);
 }
 
 Game::Game(std::istream &ips)

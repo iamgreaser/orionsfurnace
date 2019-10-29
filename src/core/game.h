@@ -23,10 +23,12 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/player.h"
 #include "core/random.h"
 #include "core/save.h"
+#include "core/world.h"
 #include "net/net.h"
 
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 namespace game
@@ -39,6 +41,7 @@ namespace game
   {
   private:
     vector<Player> m_players;
+    std::shared_ptr<World> m_world = nullptr;
     Random m_random;
   public:
     Game(void);
