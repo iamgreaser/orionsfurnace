@@ -107,14 +107,20 @@ void Game::draw(void)
   int height = this->get_height();
 
   // Draw tiles
-  for (int cy = 0 + rel_cy; cy < CAM_H_CELLS+1 + rel_cy; cy++) {
-    if (cy < 0) { continue; }
-    if (cy >= height) { break; }
+  // inclusive min, exclusive max
+  int cx_imin = 0 + rel_cx;
+  int cy_imin = 0 + rel_cy;
+  int cx_emax = (CAM_W_CELLS+1) + rel_cx;
+  int cy_emax = (CAM_H_CELLS+1) + rel_cy;
+  if (cx_imin < 0) { cx_imin = 0; }
+  if (cy_imin < 0) { cy_imin = 0; }
+  if (cx_emax > width) { cx_emax = width; }
+  if (cy_emax > height) { cy_emax = height; }
+
+  for (int cy = cy_imin; cy < cy_emax; cy++) {
     int py = CAM_Y + (cy*CELL_H);
 
-    for (int cx = 0 + rel_cx; cx < CAM_W_CELLS+1 + rel_cx; cx++) {
-      if (cx < 0) { continue; }
-      if (cx >= width) { break; }
+    for (int cx = cx_imin; cx < cx_emax; cx++) {
       int px = CAM_X + (cx*CELL_W);
 
       gfx::tile_gfx_floor.draw(px, py);
