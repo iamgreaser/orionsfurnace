@@ -94,9 +94,15 @@ void World::draw_in_cell_range(
           gfx::tile_gfx_floor.draw(px, py);
           break;
 
-        case cell_type::WALL:
-          gfx::tile_gfx_wall.draw(px, py, 0, 0);
-          break;
+        case cell_type::WALL: {
+          bool joined_n = (cy-1 >= 0 && *cell_types->at(cx, cy-1) == cell_type::WALL);
+          bool joined_s = (cy+1 < m_height && *cell_types->at(cx, cy+1) == cell_type::WALL);
+          bool joined_w = (cx-1 >= 0 && *cell_types->at(cx-1, cy) == cell_type::WALL);
+          bool joined_e = (cx+1 < m_width && *cell_types->at(cx+1, cy) == cell_type::WALL);
+          int subx = ((joined_w ? 2 : 0) + (joined_e ? 1 : 0));
+          int suby = ((joined_n ? 2 : 0) + (joined_s ? 1 : 0));
+          gfx::tile_gfx_wall.draw(px, py, subx, suby);
+        } break;
 
         default:
           PANIC("Unhandled tile type");
