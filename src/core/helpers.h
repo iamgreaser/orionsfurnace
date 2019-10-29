@@ -21,6 +21,10 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <cstdlib>
 #include <cstdio>
 
-#define PANIC(fmt, ...) { fprintf(stderr, "%s:%d:%s() | Fatal error!" fmt, __FILE__, __LINE__, __func__, ## __VA_ARGS__); abort(); }
-
+// TODO: Work out how to shut up one specific GCC warning
+#if 0
+#define PANIC(fmt, ...) { fprintf(stderr, "%s:%d:%s() | Fatal error! " fmt, __FILE__, __LINE__, __func__, ## __VA_ARGS__); abort(); }
+#else
+#define PANIC(fmt) { fprintf(stderr, "%s:%d:%s() | Fatal error! %s", __FILE__, __LINE__, __func__, fmt); abort(); }
+#endif
 #endif /* if !defined(CORE_HELPERS_H) */
