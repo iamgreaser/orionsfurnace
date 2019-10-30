@@ -236,6 +236,12 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
         continue;
       }
 
+      if (e == EALREADY) {
+        // Operation in progress, keep going
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        continue;
+      }
+
       if (e == EISCONN) {
         // We are connected, let's go
         break;
