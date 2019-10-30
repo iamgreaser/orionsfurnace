@@ -123,10 +123,15 @@ public:
   PlayerAdd(int player_idx, int32_t cx, int32_t cy, Direction dir);
   PlayerAdd(std::istream &ips);
 
-  Player make_player(std::shared_ptr<Game> game) {
+  Player make_player(std::shared_ptr<Game> game) const {
     return Player(game.get(), m_cx, m_cy, m_dir);
   }
-  int get_player_idx(void) { return m_player_idx; }
+  Player make_player(Game &game) const {
+    return Player(&game, m_cx, m_cy, m_dir);
+  }
+  int get_player_idx(void) const {
+    return m_player_idx;
+  }
 
   void load_this(std::istream &ips) override;
   void save_this(std::ostream &ops) const override;

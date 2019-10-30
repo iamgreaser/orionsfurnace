@@ -33,7 +33,6 @@ namespace packets
     PROVIDE_INPUT = 0x10, // C // TODO!
     GAME_SNAPSHOT = 0x20, // S
     GAME_FRAME = 0x30, // S
-    ADD_PLAYER = 0x40, // S
   };
 }
 
@@ -118,7 +117,6 @@ namespace net
   typedef class ClassPacket<packets::GAME_SNAPSHOT, Game> GameSnapshotPacket;
   typedef class ClassPacket<packets::GAME_FRAME, GameFrame> GameFramePacket;
   typedef class ClassPacket<packets::PROVIDE_INPUT, PlayerInput> ProvideInputPacket;
-  typedef class ClassPacket<packets::ADD_PLAYER, PlayerAdd> AddPlayerPacket;
 }
 
 #endif /* if !defined(NET_PACKET_PACKET_H) */

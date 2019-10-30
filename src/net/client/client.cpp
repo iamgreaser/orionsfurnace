@@ -192,6 +192,8 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
       m_ready_to_send_input = true;
     } break;
 
+#if 0
+    // FIXME: REMOVE WHEN INTEGRATED
     case packets::ADD_PLAYER: {
       // Add the new player
       std::cout << "Add new player" << std::endl;
@@ -201,6 +203,7 @@ void Client::handle_input_packet(int packet_id, std::istream &packet_ss)
         m_game.get()->add_player(player_add.make_player(m_game));
       }
     } break;
+#endif
 
     default: {
       std::cerr << "ERR: Unhandled packet ID " << std::hex << packet_id << " on client recv" << std::dec << std::endl;

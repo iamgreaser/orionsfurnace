@@ -53,7 +53,13 @@ namespace game
       assert(count < 0xFFFF);
       return static_cast<int>(count);
     }
-    Player *get_player_ptr(int pidx) { return &m_players[pidx]; }
+    Player *get_player_ptr(int pidx) {
+      if (pidx >= 0 && pidx < this->get_player_count()) {
+        return &m_players[pidx];
+      } else {
+        return nullptr;
+      }
+    }
     int get_width(void) const { return static_cast<int>(m_world.get()->get_width()); }
     int get_height(void) const { return static_cast<int>(m_world.get()->get_height()); }
     Random &random(void) { return m_random; }
@@ -75,6 +81,7 @@ namespace game
   class GameFrame : public Saveable
   {
   private:
+    vector<PlayerAdd> m_player_adds;
     vector<PlayerInput> m_player_inputs;
   public:
     GameFrame(int player_count = 0);
@@ -103,6 +110,12 @@ namespace game
       return m_player_inputs[player_idx];
     }
 
+    void add_player(PlayerAdd pa)
+    {
+      m_player_adds.push_back(pa);
+    }
+
+    void inject_player_adds(Game &game) const;
     void load_this(istream &ips) override;
     void save_this(ostream &ops) const override;
   };

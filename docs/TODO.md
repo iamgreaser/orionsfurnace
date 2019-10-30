@@ -6,6 +6,9 @@ vim: set sts=2 sw=2 et :
 
 * [x] Implement a camera so we're not stuck with 15x15
 * [x] Implement a world
+* [ ] Use `GameFrame` for announcing new players
+* [ ] Make it possible to remove players
+* [ ] Handle saves with mismatched player counts better
 * [ ] Windows-specific networking support
 
 ----------------------------------------------------------------------------
@@ -14,13 +17,11 @@ vim: set sts=2 sw=2 et :
 
 ## Cleanups
 
-* [ ] Use `GameFrame` for announcing new players?
+Empty. THE CODE IS PERFECTLY CLEAN
 
 ## Features we'll need
 
-* [ ] Make it possible to remove players
 * [ ] Make it possible for a client to save
-* [ ] Handle saves with mismatched player counts better
 * [ ] Make headless server builds a thing
 * [ ] Implement nicknames
 * [ ] Implement chat

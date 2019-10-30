@@ -47,6 +47,12 @@ void Server::add_client(std::shared_ptr<net::PipeEnd> pipe_end)
     new ServerClient(this, -1, pipe_end)));
 }
 
+void Server::add_player(PlayerAdd pa)
+{
+  std::cout << "Add new player" << std::endl;
+  m_player_adds.push_back(pa);
+}
+
 void Server::broadcast_packet(net::Packet &packet)
 {
   // Start recording demo if we haven't yet
@@ -116,12 +122,18 @@ void Server::update(void)
     this->add_client(pipe_end);
   }
 
-  // Form a frame
-  GameFrame game_frame(m_game.get()->get_player_count());
+  Game *game = m_game.get();
 
-  for (int i = 0; i < m_game.get()->get_player_count(); i++) {
+  // Form a frame
+  GameFrame game_frame(game->get_player_count());
+
+  for (int i = 0; i < game->get_player_count(); i++) {
     game_frame.player_set_all_inputs(
       i, m_clients[i]->get_player_input());
+  }
+
+  for (PlayerAdd &pa : m_player_adds) {
+    game_frame.add_player(pa);
   }
 
   this->game_tick(game_frame);

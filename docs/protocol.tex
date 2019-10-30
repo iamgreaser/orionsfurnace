@@ -185,7 +185,7 @@
   \end{subsection}
 
   \begin{subsection}{Game frame (0x30) (S)}
-    Gives the client a frame with input.
+    Gives the client a frame with player additions, removals, and input.
 
     \begin{tabular}{lll}
       \hline
@@ -194,21 +194,7 @@
       \texttt{GameFrame} & \texttt{game\_frame} & The game frame to apply to the game state \\
       \hline
     \end{tabular}
-  \end{subsection}
 
-  \begin{subsection}{Add player (0x40) (S)}
-    Adds a player to the game.
-
-    \begin{tabular}{lll}
-      \hline
-      Type & Name & Description \\
-      \hline
-      \texttt{uint16\_t} & \texttt{player\_index} & The index of the given player \\
-      \texttt{int32\_t} & \texttt{cx} & The X position of the player \\
-      \texttt{int32\_t} & \texttt{cy} & The Y position of the player \\
-      \texttt{Direction} & \texttt{dir} & The direction the player is facing \\
-      \hline
-    \end{tabular}
   \end{subsection}
 \end{section}
 \end{document}

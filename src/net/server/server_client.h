@@ -56,6 +56,9 @@ namespace net
     PlayerInput get_player_input(void) {
       return m_player_input;
     }
+    int get_player_index(void) {
+      return m_player_index;
+    }
     void update(void) override;
     void handle_input_packet(int packet_id, std::istream &packet_ss) override;
   };
