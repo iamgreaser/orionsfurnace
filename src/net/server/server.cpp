@@ -53,6 +53,17 @@ void Server::add_player(PlayerAdd pa)
   m_player_adds.push_back(pa);
 }
 
+int Server::register_new_player(void)
+{
+  int player_idx = m_next_player_idx;
+  m_next_player_idx += 1;
+
+  // FIXME: Handle this elsewhere
+  m_game.get()->spawn_player(player_idx);
+
+  return player_idx;
+}
+
 void Server::broadcast_packet(net::Packet &packet)
 {
   // Start recording demo if we haven't yet

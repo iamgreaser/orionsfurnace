@@ -66,9 +66,13 @@ void Game::add_player(Player player)
   m_players.push_back(player);
 }
 
-int Game::spawn_new_player(void)
+void Game::spawn_player(int player_idx)
 {
-  int player_idx = static_cast<int>(m_players.size());
+  // FIXME: accept any slot
+  int expected_player_idx = static_cast<int>(m_players.size());
+  assert(expected_player_idx == player_idx);
+  (void)expected_player_idx; // Shut the compiler up
+  (void)player_idx; // Shut the compiler up
 
   // TODO: Add spawn points
   // FIXME: This COULD spawn one player atop another, or atop a wall or something!
@@ -91,8 +95,6 @@ int Game::spawn_new_player(void)
   // Add the player
   this->add_player(Player(
     this, cx, cy, direction::SOUTH));
-
-  return player_idx;
 }
 
 void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)

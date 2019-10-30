@@ -41,6 +41,7 @@ namespace net
     std::vector<PlayerAdd> m_player_adds;
     net::TCPServer m_tcp_server;
     std::shared_ptr<Game> m_game = std::make_shared<Game>();
+    int m_next_player_idx = 0;
   public:
     Server(int port);
     ~Server(void);
@@ -51,6 +52,7 @@ namespace net
 
     void add_client(std::shared_ptr<net::PipeEnd> pipe_end);
     void add_player(PlayerAdd pa);
+    int register_new_player(void);
 
     void broadcast_packet(net::Packet &packet);
     void broadcast_packet_ignoring_client(net::Packet &packet, ServerClient *ignore_sc);
