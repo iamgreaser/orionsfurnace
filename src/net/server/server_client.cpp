@@ -81,16 +81,6 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 
       std::shared_ptr<Game> game = m_server->game();
       m_player_index = m_server->register_new_player();
-      Player *player = game.get()->get_player_ptr(m_player_index);
-
-      // FIXME: we need to eventually remove this thing
-      if (player != nullptr) {
-        m_server->add_player(PlayerAdd(
-          m_player_index,
-          player->get_x(),
-          player->get_y(),
-          player->get_dir()));
-      }
 
       // Send a game snapshot to the client
       // Also send a "This Is You" packet

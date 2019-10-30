@@ -38,7 +38,6 @@ namespace net
   private:
     std::shared_ptr<std::ofstream> m_demo_fp;
     std::vector<std::shared_ptr<ServerClient>> m_clients;
-    std::vector<PlayerAdd> m_player_adds;
     net::TCPServer m_tcp_server;
     std::shared_ptr<Game> m_game = std::make_shared<Game>();
     int m_next_player_idx = 0;
@@ -51,7 +50,6 @@ namespace net
     }
 
     void add_client(std::shared_ptr<net::PipeEnd> pipe_end);
-    void add_player(PlayerAdd pa);
     int register_new_player(void);
 
     void broadcast_packet(net::Packet &packet);

@@ -138,8 +138,14 @@ bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
 
 void Game::tick(const GameFrame &game_frame)
 {
-  // Add players
-  game_frame.inject_player_adds(*this);
+  // TODO: Also remove players
+
+  for (int i = 0; i < game_frame.get_player_count(); i++) {
+    if (i >= this->get_player_count()) {
+      this->spawn_player(i);
+    }
+    assert(i < this->get_player_count());
+  }
 
   //std::cout << "Players: Got " << game_frame.get_player_count() << ", Expected " << this->get_player_count() << std::endl;
   assert(game_frame.get_player_count() == this->get_player_count());
@@ -238,29 +244,8 @@ GameFrame::GameFrame(std::istream &ips)
   load(ips, *this);
 }
 
-void GameFrame::inject_player_adds(Game &game) const
-{
-  for (const PlayerAdd &pa : m_player_adds) {
-    if (game.get_player_ptr(pa.get_player_idx()) != nullptr) {
-      // Currently, ignore this.
-      // FIXME: Actually fix this.
-      //PANIC("AAAAAA");
-      continue;
-    } else {
-      game.add_player(pa.make_player(game));
-    }
-  }
-}
-
 void GameFrame::load_this(istream &ips)
 {
-  uint16_t player_add_count = 0;
-  load(ips, player_add_count);
-  m_player_adds.clear();
-  for (uint16_t i = 0; i < player_add_count; i++) {
-    m_player_adds.push_back(PlayerAdd(ips));
-  }
-
   uint16_t player_count = 0;
   load(ips, player_count);
   m_player_inputs.clear();
@@ -271,14 +256,6 @@ void GameFrame::load_this(istream &ips)
 
 void GameFrame::save_this(ostream &ops) const
 {
-  int raw_player_add_count = static_cast<int>(m_player_adds.size());
-  assert(raw_player_add_count >= 0 && raw_player_add_count <= 0xFFFF);
-  uint16_t player_add_count = static_cast<uint16_t>(raw_player_add_count);
-  save(ops, player_add_count);
-  for (uint16_t i = 0; i < player_add_count; i++) {
-    save(ops, m_player_adds[i]);
-  }
-
   int raw_player_count = this->get_player_count();
   assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
   uint16_t player_count = static_cast<uint16_t>(raw_player_count);

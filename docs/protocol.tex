@@ -185,7 +185,12 @@
   \end{subsection}
 
   \begin{subsection}{Game frame (0x30) (S)}
-    Gives the client a frame with player additions, removals, and input.
+    Gives the client a frame with player input.
+
+    \begin{itemize}
+      \item To add players to the game, add their inputs to this packet.
+      \item To remove players from the game, omit their inputs from this packet.
+    \end{itemize}
 
     \begin{tabular}{lll}
       \hline

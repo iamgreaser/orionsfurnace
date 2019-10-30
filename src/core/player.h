@@ -112,29 +112,4 @@ public:
   void calc_interp_pos(int *px, int *py);
 };
 
-class PlayerAdd final : public Saveable
-{
-private:
-  uint16_t m_player_idx;
-  int32_t m_cx;
-  int32_t m_cy;
-  Direction m_dir;
-public:
-  PlayerAdd(int player_idx, int32_t cx, int32_t cy, Direction dir);
-  PlayerAdd(std::istream &ips);
-
-  Player make_player(std::shared_ptr<Game> game) const {
-    return Player(game.get(), m_cx, m_cy, m_dir);
-  }
-  Player make_player(Game &game) const {
-    return Player(&game, m_cx, m_cy, m_dir);
-  }
-  int get_player_idx(void) const {
-    return m_player_idx;
-  }
-
-  void load_this(std::istream &ips) override;
-  void save_this(std::ostream &ops) const override;
-};
-
 #endif /* if !defined(CORE_PLAYER_H) */
