@@ -8,6 +8,7 @@ set(TARGET "orions-furnace")
 # Options
 option(HINT_SUGGESTIONS "Use hinting suggestions" OFF)
 option(SANITIZE "Enable sanitizers (requires various lib*san libraries)" ON)
+option(I_SHOULD_UPDATE_MINGW "Disable certain things so it builds on GCC 7.2.0" OFF)
 
 # Check for native cmake Libraries
 find_package(PkgConfig REQUIRED)
@@ -66,7 +67,9 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # Aggressive warnings
   set(COMMON_FLAGS "${COMMON_FLAGS} -Wlogical-op -Wformat-overflow=2 -Wformat-signedness -Wformat-truncation=2 -Wduplicated-cond -Walloca -Warray-bounds=2 -Wtrampolines")
-  set(COMMON_FLAGS "${COMMON_FLAGS} -Wstringop-truncation -Wcast-align=strict")
+  if (!I_SHOULD_UPDATE_MINGW)
+    set(COMMON_FLAGS "${COMMON_FLAGS} -Wstringop-truncation -Wcast-align=strict")
+  endif()
   # Hardening and fail-fast behavior
   if (SANITIZE)
     set(COMMON_FLAGS "${COMMON_FLAGS} -static-libubsan")
@@ -80,8 +83,10 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsuggest-final-types -Wsuggest-final-methods -Wsuggest-override")
     set(COMMON_FLAGS "${COMMON_FLAGS} -Wvector-operation-performance -Winline")
   endif()
-  # Display template errors/warnings in a slightly more legible way
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-show-template-tree")
+  if (!I_SHOULD_UPDATE_MINGW)
+    # Display template errors/warnings in a slightly more legible way
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-show-template-tree")
+  endif()
 endif()
 
 # Apply options

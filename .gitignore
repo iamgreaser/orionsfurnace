@@ -2,6 +2,10 @@
 build/
 cbuild/
 
+# Windows
+*.exe
+*.dll
+
 # TeX output
 *.aux
 *.log
