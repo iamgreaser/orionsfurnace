@@ -9,7 +9,9 @@ vim: set sts=2 sw=2 et :
 * [x] Don't send player adds on top of game snapshots
   * There's a workaround for this, but I'd like to see it fixed properly.
   * SOLVED: Player adds have been removed in favour of GameFrame.
-* [ ] ... more stuff to come?
+* [ ] Handle non-contiguous player IDs (i.e. use a map instead of a vector)
+* [ ] Make it possible to remove players
+* [ ] Handle newlines in text properly
 
 ----------------------------------------------------------------------------
 
@@ -26,10 +28,7 @@ Empty. THIS CODE IS PERFECT
 ## Features we'll need
 
 * [ ] Handle IPv4 *and* IPv6 for the same server
-* [ ] Handle non-contiguous player IDs
-* [ ] Handle newlines in text properly
 * [ ] Separate players from board objects
-* [ ] Make it possible to remove players
 * [ ] Make it possible for a client to save
 * [ ] Make headless server builds a thing
 * [ ] Implement nicknames
