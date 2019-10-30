@@ -392,13 +392,15 @@ TCPServer::TCPServer(int port)
 #endif
   // Set up hints for GAI
   struct addrinfo hints = {};
+  hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = NETWORK_SOCKTYPE;
   hints.ai_protocol = NETWORK_PROTOCOL;
+  hints.ai_flags = AI_PASSIVE;
 
   // Run GAI
   struct addrinfo *gai_base = nullptr;
   int did_gai = getaddrinfo(
-    std::string("localhost").c_str(),
+    nullptr,
     std::to_string(port).c_str(),
     &hints,
     &gai_base);
