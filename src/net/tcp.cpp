@@ -215,6 +215,12 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
         continue;
       }
 
+      if (e == WSAEALREADY) {
+        // Operation in progress, keep going
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        continue;
+      }
+
       if (e == WSAEISCONN) {
         // We are connected, let's go
         break;
