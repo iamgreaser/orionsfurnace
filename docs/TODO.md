@@ -9,7 +9,7 @@ vim: set sts=2 sw=2 et :
 * [ ] Use `GameFrame` for announcing new players
 * [ ] Make it possible to remove players
 * [ ] Handle saves with mismatched player counts better
-* [ ] Windows-specific networking support
+* [x] Windows-specific networking support
 
 ----------------------------------------------------------------------------
 

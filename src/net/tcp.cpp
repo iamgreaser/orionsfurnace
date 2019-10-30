@@ -206,6 +206,22 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
       static_cast<socklen_t>(gai->ai_addrlen));
 
     if (did_connect < 0) {
+#ifdef _WIN32
+      int e = WSAGetLastError();
+
+      if (e == WSAEWOULDBLOCK) {
+        // Operation in progress, keep going
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        continue;
+      }
+
+      if (e == WSAEISCONN) {
+        // We are connected, let's go
+        break;
+      }
+      perror("connecting to client socket");
+      std::cerr << "WSAGetLastError = " << e << std::endl;
+#else
       int e = errno;
 
       if (e == EINPROGRESS) {
@@ -220,6 +236,7 @@ TCPPipeEnd::TCPPipeEnd(std::string addr, int port)
       }
       perror("connecting to client socket");
       std::cerr << "Errno = " << e << std::endl;
+#endif
       PANIC("Could not connect: Could not, well, connect");
 
     } else {
@@ -263,15 +280,23 @@ void TCPPipeEnd::pump_recv(void)
     0);
 
   if (got_bytes < 0) {
-    int e = errno;
 
     // Check if this is because we would block.
+#ifdef _WIN32
+    int e = WSAGetLastError();
+
+    if (e == WSAEWOULDBLOCK) { return; }
+    std::cerr << "recv: WSAGetLastError = " << e << std::endl;
+#else
+    int e = errno;
+
     // NOTE: On Linux they're the same, but POSIX allows them to differ.
     if (e == EAGAIN) { return; }
     if (e == EWOULDBLOCK) { return; }
+    perror("recv");
+#endif
 
     // Mark this socket as disconnected
-    perror("recv");
     m_disconnect_message = std::string(strerror(e));
     m_disconnected = true;
     return;
@@ -320,15 +345,21 @@ void TCPPipeEnd::pump_send(void)
     0);
 
   if (wrote_bytes < 0) {
+    // Check if this is because we would block.
+#ifdef _WIN32
+    int e = WSAGetLastError();
+
+    if (e == WSAEWOULDBLOCK) { return; }
+    std::cerr << "send: WSAGetLastError = " << e << std::endl;
+#else
     int e = errno;
 
-    // Check if this is because we would block.
     // NOTE: On Linux they're the same, but POSIX allows them to differ.
     if (e == EAGAIN) { return; }
     if (e == EWOULDBLOCK) { return; }
-
-    // Mark this socket as disconnected
     perror("send");
+#endif
+
     m_disconnect_message = std::string(strerror(e));
     m_disconnected = true;
     return;
