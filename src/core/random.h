@@ -28,7 +28,7 @@ public:
   Random(void);
   Random(uint32_t seed);
 
-  uint32_t get_seed(void) { return m_seed; }
+  uint32_t get_seed(void) const { return m_seed; }
   void set_seed(uint32_t seed) { m_seed = seed; }
   uint32_t next_int(uint32_t open_upper_bound);
 protected:

@@ -194,6 +194,10 @@ void Game::load_this(istream &ips)
   }
 
   m_world = std::make_shared<World>(ips);
+
+  uint32_t seed = 0;
+  load(ips, seed);
+  m_random.set_seed(seed);
 }
 
 void Game::save_this(ostream &ops) const
@@ -207,6 +211,9 @@ void Game::save_this(ostream &ops) const
   }
 
   save(ops, *m_world.get());
+
+  uint32_t seed = m_random.get_seed();
+  save(ops, seed);
 }
 
 Player *Game::get_player_at(int cx, int cy)
