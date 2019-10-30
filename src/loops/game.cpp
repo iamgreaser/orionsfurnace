@@ -209,13 +209,15 @@ void GameLoop::draw_playfield(void)
     // Get camera centre
     int rel_px = 0;
     int rel_py = 0;
-    player->calc_interp_pos(&rel_px, &rel_py);
-    // Actually make it the centre, rather than centering on the top-left of the player
-    rel_px += CELL_W / 2;
-    rel_py += CELL_H / 2;
-    // Move from camera centre to top left
-    rel_px -= (CAM_W_CELLS * CELL_W) / 2;
-    rel_py -= (CAM_H_CELLS * CELL_H) / 2;
+    if (player != nullptr) {
+      player->calc_interp_pos(&rel_px, &rel_py);
+      // Actually make it the centre, rather than centering on the top-left of the player
+      rel_px += CELL_W / 2;
+      rel_py += CELL_H / 2;
+      // Move from camera centre to top left
+      rel_px -= (CAM_W_CELLS * CELL_W) / 2;
+      rel_py -= (CAM_H_CELLS * CELL_H) / 2;
+    }
 
     gfx::set_camera(rel_px, rel_py);
 
