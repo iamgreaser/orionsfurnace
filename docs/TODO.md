@@ -6,9 +6,7 @@ vim: set sts=2 sw=2 et :
 
 * [x] Implement a camera so we're not stuck with 15x15
 * [x] Implement a world
-* [ ] Use `GameFrame` for announcing new players
-* [ ] Make it possible to remove players
-* [ ] Handle saves with mismatched player counts better
+* [x] Use `GameFrame` for announcing new players
 * [x] Windows-specific networking support
 
 ----------------------------------------------------------------------------
@@ -17,10 +15,16 @@ vim: set sts=2 sw=2 et :
 
 ## Cleanups
 
-Empty. THE CODE IS PERFECTLY CLEAN
+## Bugfixes
+
+* [ ] Handle saves with mismatched player counts better
+* [ ] Don't send player adds on top of game snapshots
+  * There's a workaround for this, but I'd like to see it fixed properly.
 
 ## Features we'll need
 
+* [ ] Handle non-contiguous player IDs
+* [ ] Make it possible to remove players
 * [ ] Make it possible for a client to save
 * [ ] Make headless server builds a thing
 * [ ] Implement nicknames
