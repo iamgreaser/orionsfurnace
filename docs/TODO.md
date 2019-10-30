@@ -2,6 +2,14 @@ vim: set sts=2 sw=2 et :
 
 # Milestones
 
+## Alpha 4
+
+* [x] Handle saves with mismatched player counts better
+  * SOLVED: Player counts are autodetected via GameFrame, which triggers respawns when players are missing.
+* [x] Don't send player adds on top of game snapshots
+  * There's a workaround for this, but I'd like to see it fixed properly.
+  * SOLVED: Player adds have been removed in favour of GameFrame.
+* [ ] ... more stuff to come?
 
 ----------------------------------------------------------------------------
 
@@ -9,11 +17,11 @@ vim: set sts=2 sw=2 et :
 
 ## Cleanups
 
+Empty. THIS CODE IS BEAUTIFUL
+
 ## Bugfixes
 
-* [ ] Handle saves with mismatched player counts better
-* [ ] Don't send player adds on top of game snapshots
-  * There's a workaround for this, but I'd like to see it fixed properly.
+Empty. THIS CODE IS PERFECT
 
 ## Features we'll need
 
