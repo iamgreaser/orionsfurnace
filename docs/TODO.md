@@ -19,6 +19,7 @@ vim: set sts=2 sw=2 et :
 
 * [ ] Handle IPv4 *and* IPv6 for the same server
 * [ ] Handle non-contiguous player IDs
+* [ ] Separate players from board objects
 * [ ] Make it possible to remove players
 * [ ] Make it possible for a client to save
 * [ ] Make headless server builds a thing

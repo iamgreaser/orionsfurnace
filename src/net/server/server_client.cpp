@@ -102,8 +102,12 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 
       // Add the player
       game.get()->add_player(Player(game.get(), cx, cy, direction::SOUTH));
+      Player *player = game.get()->get_player_ptr(m_player_index);
       m_server->add_player(PlayerAdd(
-        m_player_index, cx, cy, direction::SOUTH));
+        m_player_index,
+        player->get_x(),
+        player->get_y(),
+        player->get_dir()));
 
       // Send a game snapshot to the client
       // Also send a "This Is You" packet
