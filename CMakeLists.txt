@@ -37,6 +37,11 @@ target_link_libraries(${TARGET} ${SDL2_IMAGE_LIBRARIES})
 target_include_directories(${TARGET} PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS})
 target_compile_options(${TARGET} PUBLIC ${SDL2_IMAGE_CFLAGS_OTHER})
 
+# Winsock
+if (WIN32)
+  target_link_libraries(${TARGET} "-lws2_32")
+endif()
+
 # Generate version information
 execute_process(COMMAND  git describe --always --dirty
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
