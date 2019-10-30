@@ -65,6 +65,7 @@ namespace game
     Random &random(void) { return m_random; }
 
     void add_player(Player player);
+    int spawn_new_player(void);
     void player_set_all_inputs(int player_idx,
       PlayerInput player_input);
 

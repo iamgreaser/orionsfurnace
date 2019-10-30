@@ -66,6 +66,35 @@ void Game::add_player(Player player)
   m_players.push_back(player);
 }
 
+int Game::spawn_new_player(void)
+{
+  int player_idx = static_cast<int>(m_players.size());
+
+  // TODO: Add spawn points
+  // FIXME: This COULD spawn one player atop another, or atop a wall or something!
+  // (but at least it terminates)
+  int cx = static_cast<int>(this->random().next_int(
+    static_cast<uint32_t>(this->get_width())));
+  int cy = static_cast<int>(this->random().next_int(
+    static_cast<uint32_t>(this->get_height())));
+  for (int i = 0; i < 100; i++) {
+    if (this->can_step_into(cx, cy, true)) {
+      // Our position is good!
+      break;
+    }
+    cx = static_cast<int>(this->random().next_int(
+      static_cast<uint32_t>(this->get_width())));
+    cy = static_cast<int>(this->random().next_int(
+      static_cast<uint32_t>(this->get_height())));
+  }
+
+  // Add the player
+  this->add_player(Player(
+    this, cx, cy, direction::SOUTH));
+
+  return player_idx;
+}
+
 void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)
 {
   assert(player_idx >= 0 && player_idx < this->get_player_count());

@@ -80,28 +80,7 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
       }
 
       std::shared_ptr<Game> game = m_server->game();
-      m_player_index = game.get()->get_player_count();
-
-      // TODO: Add spawn points
-      // FIXME: This COULD spawn one player atop another, or atop a wall or something!
-      // (but at least it terminates)
-      int cx = static_cast<int>(game.get()->random().next_int(
-        static_cast<uint32_t>(game.get()->get_width())));
-      int cy = static_cast<int>(game.get()->random().next_int(
-        static_cast<uint32_t>(game.get()->get_height())));
-      for (int i = 0; i < 100; i++) {
-        if (game.get()->can_step_into(cx, cy, true)) {
-          // Our position is good!
-          break;
-        }
-        cx = static_cast<int>(game.get()->random().next_int(
-          static_cast<uint32_t>(game.get()->get_width())));
-        cy = static_cast<int>(game.get()->random().next_int(
-          static_cast<uint32_t>(game.get()->get_height())));
-      }
-
-      // Add the player
-      game.get()->add_player(Player(game.get(), cx, cy, direction::SOUTH));
+      m_player_index = game.get()->spawn_new_player();
       Player *player = game.get()->get_player_ptr(m_player_index);
       m_server->add_player(PlayerAdd(
         m_player_index,
