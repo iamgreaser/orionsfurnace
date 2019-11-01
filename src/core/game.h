@@ -62,11 +62,18 @@ namespace game
     }
     Player *get_player_ptr(int player_idx) {
       assert(player_idx >= 0 && player_idx < 0xFFFF);
-      try {
-        return &m_players.at(static_cast<uint16_t>(player_idx));
-      } catch (std::out_of_range &e) {
-        (void)e;
+      uint16_t key = static_cast<uint16_t>(player_idx);
+
+      // Apparently, Windows can't handle C++11 exceptions.
+      // Yeah, your guess is good as mine.
+      //
+      // If you use Windows and C++11 exceptions work for you,
+      // would you like to maintain the Windows stuff? :) --GM
+
+      if (m_players.find(key) == m_players.end()) {
         return nullptr;
+      } else {
+        return &m_players.at(key);
       }
     }
     int get_width(void) const { return static_cast<int>(m_world.get()->get_width()); }
@@ -124,10 +131,11 @@ namespace game
     {
       assert(player_idx >= 0 && player_idx < 0xFFFF);
       uint16_t key = static_cast<uint16_t>(player_idx);
-      try {
-        m_player_inputs.at(key) = std::move(player_input);
-      } catch (std::out_of_range &e) {
-        m_player_inputs.emplace(key, std::move(player_input));
+
+      if (m_player_inputs.find(key) == m_player_inputs.end()) {
+        m_player_inputs.emplace(key, player_input);
+      } else {
+        m_player_inputs.at(key) = player_input;
       }
     }
 
