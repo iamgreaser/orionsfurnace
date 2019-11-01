@@ -26,10 +26,10 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 using net::ServerClient;
 
-ServerClient::ServerClient(Server *server, int player_index, std::shared_ptr<net::PipeEnd> pipe_end)
+ServerClient::ServerClient(Server *server, int player_idx, std::shared_ptr<net::PipeEnd> pipe_end)
   : net::Node::Node(pipe_end)
   , m_server(server)
-  , m_player_index(player_index)
+  , m_player_idx(player_idx)
 {
   std::cout << "New ServerClient " << reinterpret_cast<void *>(this) << std::endl;
 }
@@ -46,6 +46,12 @@ void ServerClient::update(void)
   this->update_packets();
 
   m_pipe_end->pump_send();
+
+  if (!m_disconnected) {
+    if (m_pipe_end->is_disconnected()) {
+      m_disconnected = true;
+    }
+  }
 }
 
 void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
@@ -80,14 +86,14 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
       }
 
       std::shared_ptr<Game> game = m_server->game();
-      m_player_index = m_server->register_new_player();
+      m_player_idx = m_server->register_new_player();
 
       // Send a game snapshot to the client
       // Also send a "This Is You" packet
-      assert(m_player_index >= 0);
-      assert(m_player_index <= 0xFFFF);
-      uint16_t saved_player_index = static_cast<uint16_t>(m_player_index);
-      net::ThisIsYouPacket this_is_you_packet(saved_player_index);
+      assert(m_player_idx >= 0);
+      assert(m_player_idx <= 0xFFFF);
+      uint16_t saved_player_idx = static_cast<uint16_t>(m_player_idx);
+      net::ThisIsYouPacket this_is_you_packet(saved_player_idx);
       net::GameSnapshotPacket game_snapshot_packet(*game.get());
       this->send_packet(this_is_you_packet);
       this->send_packet(game_snapshot_packet);
@@ -95,7 +101,7 @@ void ServerClient::handle_input_packet(int packet_id, std::istream &packet_ss)
 
     case packets::PROVIDE_INPUT: {
       // Set frame input.
-      //std::cout << "Provide input for player " << m_player_index << std::endl;
+      //std::cout << "Provide input for player " << m_player_idx << std::endl;
       assert(m_server != nullptr);
       PlayerInput player_input(packet_ss);
       m_player_input = player_input;

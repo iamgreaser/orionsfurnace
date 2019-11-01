@@ -11,8 +11,8 @@ vim: set sts=2 sw=2 et :
   * SOLVED: Player adds have been removed in favour of GameFrame.
 * [x] Handle non-contiguous player IDs (i.e. use a map instead of a vector)
 * [x] Now that we're using a map, don't crash when we load a save with extraneous players
-* [ ] Make it possible to remove players
-* [ ] Handle newlines in text properly
+* [x] Make it possible to remove players
+* [ ] Last stability touchups
 
 ----------------------------------------------------------------------------
 
@@ -24,6 +24,7 @@ Empty. THIS CODE IS BEAUTIFUL
 
 ## Bugfixes
 
+* [ ] Handle newlines in text properly
 * [ ] Recycle unused player IDs
 
 ## Features we'll need

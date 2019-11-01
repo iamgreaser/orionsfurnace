@@ -47,17 +47,20 @@ namespace net
     ServerClientStatus m_status;
     Server *m_server = nullptr;
     GameFrame m_game_frame;
-    int m_player_index;
+    int m_player_idx;
     PlayerInput m_player_input;
     bool m_disconnected = false;
   public:
-    ServerClient(Server *server, int player_index, std::shared_ptr<net::PipeEnd> pipe_end);
+    ServerClient(Server *server, int player_idx, std::shared_ptr<net::PipeEnd> pipe_end);
     ~ServerClient(void);
     PlayerInput get_player_input(void) {
       return m_player_input;
     }
-    int get_player_index(void) {
-      return m_player_index;
+    int get_player_idx(void) {
+      return m_player_idx;
+    }
+    bool is_disconnected(void) {
+      return m_disconnected;
     }
     void update(void) override;
     void handle_input_packet(int packet_id, std::istream &packet_ss) override;

@@ -127,13 +127,32 @@ void Server::update(void)
   // Form a frame
   GameFrame game_frame;
 
-  for (int i = 0; i < m_next_player_idx; i++) {
-    game_frame.player_set_all_inputs(
-      i, m_clients[i]->get_player_input());
+  for (std::shared_ptr<ServerClient> sc : m_clients) {
+    int player_idx = sc.get()->get_player_idx();
+    if (player_idx >= 0) {
+      game_frame.player_set_all_inputs(
+        player_idx, sc.get()->get_player_input());
+    }
   }
 
   this->game_tick(game_frame);
+
   for (std::shared_ptr<ServerClient> sc : m_clients) {
-    sc.get()->update();
+    sc->update();
+  }
+
+  for (auto sc_it = m_clients.begin(); sc_it != m_clients.end();) {
+    ServerClient *sc = (*sc_it).get();
+    if (sc->is_disconnected()) {
+      std::cout << "Removing player " << sc->get_player_idx() << std::endl;
+      // Remove from game
+      m_game.get()->remove_player(sc->get_player_idx());
+      // Remove from iterator and continue
+      m_clients.erase(sc_it);
+      continue;
+    } else {
+      // Otherwise, advance
+      sc_it++;
+    }
   }
 }
