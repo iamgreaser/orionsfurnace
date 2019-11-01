@@ -88,12 +88,6 @@ void Game::remove_player(int player_idx)
 
 void Game::spawn_player(int player_idx)
 {
-  // FIXME: accept any slot
-  int expected_player_idx = static_cast<int>(m_players.size());
-  assert(expected_player_idx == player_idx);
-  (void)expected_player_idx; // Shut the compiler up
-  (void)player_idx; // Shut the compiler up
-
   // TODO: Add spawn points
   // FIXME: This COULD spawn one player atop another, or atop a wall or something!
   // (but at least it terminates)
@@ -177,9 +171,9 @@ void Game::tick(const GameFrame &game_frame)
   //std::cout << "Players: Got " << game_frame.get_player_count() << ", Expected " << this->get_player_count() << std::endl;
   assert(game_frame.get_player_count() == this->get_player_count());
 
-  for (int i = 0; i < this->get_player_count(); i++) {
-    this->player_set_all_inputs(i,
-      game_frame.player_get_all_inputs(i));
+  for (std::pair<uint16_t, Player> pair : m_players) {
+    this->player_set_all_inputs(pair.first,
+      game_frame.player_get_all_inputs(pair.first));
   }
 
   for (std::pair<uint16_t, Player> pair : m_players) {

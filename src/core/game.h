@@ -49,6 +49,12 @@ namespace game
     Game(std::istream &ips);
     ~Game(void) override;
 
+    std::map<uint16_t, Player>::iterator player_begin(void) {
+      return m_players.begin();
+    }
+    std::map<uint16_t, Player>::iterator player_end(void) {
+      return m_players.end();
+    }
     int get_player_count(void) const {
       size_t count = m_players.size();
       assert(count < 0xFFFF);

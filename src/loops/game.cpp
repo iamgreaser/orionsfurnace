@@ -246,18 +246,21 @@ void GameLoop::draw_sidebar(void)
   if (m_client != nullptr) {
     std::shared_ptr<Game> game = m_client->game();
     if (game != nullptr) {
-      for (int pidx = 0; pidx < game->get_player_count(); pidx++) {
+      int row_idx = 0;
+      for (auto player_it = game.get()->player_begin(); player_it != game.get()->player_end(); player_it++) {
+        int pidx = (*player_it).first;
         Player *player = game.get()->get_player_ptr(pidx);
 
         std::stringstream ss;
-        ss << "Player pos: (";
+        ss << "Player " << pidx << " pos: (";
         ss << player->get_x() << ", ";
         ss << player->get_y() << ")";
         gfx::draw_text(
           SIDEBAR_X+1*8,
-          SIDEBAR_Y+(1+pidx*1)*12,
+          SIDEBAR_Y+(1+row_idx*1)*12,
           170, 170, 255,
           ss.str());
+        row_idx += 1;
       }
     }
   }
