@@ -24,7 +24,7 @@ Empty. THIS CODE IS BEAUTIFUL
 
 ## Bugfixes
 
-Empty. THIS CODE IS PERFECT
+* [ ] Recycle unused player IDs
 
 ## Features we'll need
 
