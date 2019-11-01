@@ -77,6 +77,15 @@ void Game::add_player(int player_idx, Player player)
   m_players.emplace(key, player);
 }
 
+void Game::remove_player(int player_idx)
+{
+  assert(player_idx >= 0 && player_idx < 0xFFFF);
+  uint16_t key = static_cast<uint16_t>(player_idx);
+  assert(m_players.find(key) != m_players.end());
+  m_players.erase(key);
+  assert(m_players.find(key) == m_players.end());
+}
+
 void Game::spawn_player(int player_idx)
 {
   // FIXME: accept any slot
@@ -149,11 +158,19 @@ bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
 
 void Game::tick(const GameFrame &game_frame)
 {
-  // TODO: Also remove players
+  // WARNING: This uses friend classes to get to m_player_inputs directly!
 
-  for (int i = 0; i < game_frame.get_player_count(); i++) {
-    if (this->get_player_ptr(i) == nullptr) {
-      this->spawn_player(i);
+  // Add new players
+  for (std::pair<uint16_t, PlayerInput> pair : game_frame.m_player_inputs) {
+    if (this->get_player_ptr(pair.first) == nullptr) {
+      this->spawn_player(pair.first);
+    }
+  }
+
+  // Remove extra players
+  for (std::pair<uint16_t, Player> pair : m_players) {
+    if (game_frame.m_player_inputs.find(pair.first) == game_frame.m_player_inputs.end()) {
+      this->remove_player(pair.first);
     }
   }
 

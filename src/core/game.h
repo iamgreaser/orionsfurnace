@@ -67,8 +67,9 @@ namespace game
     int get_height(void) const { return static_cast<int>(m_world.get()->get_height()); }
     Random &random(void) { return m_random; }
 
-    void spawn_player(int player_idx);
     void add_player(int player_idx, Player player);
+    void remove_player(int player_idx);
+    void spawn_player(int player_idx);
     void player_set_all_inputs(int player_idx,
       PlayerInput player_input);
 
@@ -84,6 +85,7 @@ namespace game
 
   class GameFrame : public Saveable
   {
+    friend Game;
   private:
     map<uint16_t, PlayerInput> m_player_inputs;
   public:

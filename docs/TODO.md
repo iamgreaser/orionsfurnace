@@ -10,7 +10,7 @@ vim: set sts=2 sw=2 et :
   * There's a workaround for this, but I'd like to see it fixed properly.
   * SOLVED: Player adds have been removed in favour of GameFrame.
 * [x] Handle non-contiguous player IDs (i.e. use a map instead of a vector)
-* [ ] Now that we're using a map, don't crash when we load a save with extraneous players
+* [x] Now that we're using a map, don't crash when we load a save with extraneous players
 * [ ] Make it possible to remove players
 * [ ] Handle newlines in text properly
 
