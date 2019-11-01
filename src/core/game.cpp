@@ -72,8 +72,8 @@ Game::~Game(void)
 void Game::add_player(int player_idx, Player player)
 {
   assert(player_idx >= 0 && player_idx < 0xFFFF);
-  assert(!m_players.contains(static_cast<uint16_t>(player_idx)));
   uint16_t key = static_cast<uint16_t>(player_idx);
+  assert(m_players.find(key) == m_players.end());
   m_players.emplace(key, player);
 }
 
