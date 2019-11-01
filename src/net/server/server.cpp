@@ -125,7 +125,7 @@ void Server::update(void)
   }
 
   // Form a frame
-  GameFrame game_frame(m_next_player_idx);
+  GameFrame game_frame;
 
   for (int i = 0; i < m_next_player_idx; i++) {
     game_frame.player_set_all_inputs(

@@ -18,8 +18,10 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef CORE_SAVE_H
 #define CORE_SAVE_H
 
+#include <cassert>
 #include <cstdint>
 #include <iostream>
+#include <map>
 
 class Saveable
 {
@@ -53,6 +55,31 @@ void save(std::ostream &ops, bool obj);
 
 void load(std::istream &ips, std::string &obj);
 void save(std::ostream &ops, const std::string &obj);
+
+template <class K, class V> void load(std::istream &ips, std::map<K, V> &obj)
+{
+  K count = 0;
+  load(ips, count);
+  obj.clear();
+  for (K i = 0; i < count; i++) {
+    K key = 0;
+    load(ips, key);
+    V value(ips); // FIXME: work out how to do this cleanly --GM
+    obj.emplace(key, value);
+  }
+}
+
+template <class K, class V> void save(std::ostream &ops, const std::map<K, V> &obj)
+{
+  size_t raw_count = obj.size();
+  assert(raw_count < ((1<<sizeof(K)*8)-1));
+  K count = static_cast<K>(raw_count);
+  save(ops, count);
+  for (auto pair : obj) {
+    save(ops, pair.first);
+    save(ops, pair.second);
+  }
+}
 
 void load(std::istream &ips, Saveable &obj);
 void save(std::ostream &ops, const Saveable &obj);

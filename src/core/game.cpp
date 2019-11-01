@@ -31,6 +31,14 @@ using std::ostream;
 #include <vector>
 using std::vector;
 
+#if 0
+// FIXME: How do you instantiate these again? --GM
+template <> void load<uint16_t, Player>(std::istream &ips, std::map<uint16_t, Player> &obj)
+template <> void save<uint16_t, Player>(std::ostream &ops, const std::map<uint16_t, Player> &obj);
+template <> void load<uint16_t, PlayerInput>(std::istream &ips, std::map<uint16_t, PlayerInput> &obj)
+template <> void save<uint16_t, PlayerInput>(std::ostream &ops, const std::map<uint16_t, PlayerInput> &obj);
+#endif
+
 namespace game
 {
 }
@@ -61,9 +69,12 @@ Game::~Game(void)
 {
 }
 
-void Game::add_player(Player player)
+void Game::add_player(int player_idx, Player player)
 {
-  m_players.push_back(player);
+  assert(player_idx >= 0 && player_idx < 0xFFFF);
+  assert(!m_players.contains(static_cast<uint16_t>(player_idx)));
+  uint16_t key = static_cast<uint16_t>(player_idx);
+  m_players.emplace(key, player);
 }
 
 void Game::spawn_player(int player_idx)
@@ -93,14 +104,14 @@ void Game::spawn_player(int player_idx)
   }
 
   // Add the player
-  this->add_player(Player(
-    this, cx, cy, direction::SOUTH));
+  this->add_player(player_idx,
+    Player(this, cx, cy, direction::SOUTH));
 }
 
 void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)
 {
-  assert(player_idx >= 0 && player_idx < this->get_player_count());
-  m_players[player_idx].set_all_inputs(player_input);
+  assert(player_idx >= 0 && player_idx < 0xFFFF);
+  m_players.at(static_cast<uint16_t>(player_idx)).set_all_inputs(player_input);
 }
 
 bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
@@ -141,10 +152,9 @@ void Game::tick(const GameFrame &game_frame)
   // TODO: Also remove players
 
   for (int i = 0; i < game_frame.get_player_count(); i++) {
-    if (i >= this->get_player_count()) {
+    if (this->get_player_ptr(i) == nullptr) {
       this->spawn_player(i);
     }
-    assert(i < this->get_player_count());
   }
 
   //std::cout << "Players: Got " << game_frame.get_player_count() << ", Expected " << this->get_player_count() << std::endl;
@@ -155,8 +165,8 @@ void Game::tick(const GameFrame &game_frame)
       game_frame.player_get_all_inputs(i));
   }
 
-  for (Player &p : m_players) {
-    p.tick();
+  for (std::pair<uint16_t, Player> pair : m_players) {
+    m_players.at(pair.first).tick();
   }
 }
 
@@ -185,19 +195,28 @@ void Game::draw(void)
   m_world.get()->draw_in_cell_range(
     cx_imin, cy_imin, cx_emax, cy_emax);
 
-  for (Player &p : m_players) {
-    p.draw();
+  for (std::pair<uint16_t, Player> pair : m_players) {
+    m_players.at(pair.first).draw();
   }
 }
 
 void Game::load_this(istream &ips)
 {
-  uint16_t player_count = 0;
-  load(ips, player_count);
+#if 0
+  load(ips, m_players);
+#else
+  // maps require us to instantiate the players with no extra arguments at this stage,
+  // and Player requires a Game * argument --GM
+  uint16_t count = 0;
+  load(ips, count);
   m_players.clear();
-  for (uint16_t i = 0; i < player_count; i++) {
-    m_players.push_back(Player(this, ips));
+  for (uint16_t i = 0; i < count; i++) {
+    uint16_t key = 0;
+    load(ips, key);
+    Player value(this, ips);
+    m_players.emplace(key, value);
   }
+#endif
 
   m_world = std::make_shared<World>(ips);
 
@@ -208,13 +227,7 @@ void Game::load_this(istream &ips)
 
 void Game::save_this(ostream &ops) const
 {
-  int raw_player_count = this->get_player_count();
-  assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
-  uint16_t player_count = static_cast<uint16_t>(raw_player_count);
-  save(ops, player_count);
-  for (uint16_t i = 0; i < player_count; i++) {
-    save(ops, m_players[i]);
-  }
+  save(ops, m_players);
 
   save(ops, *m_world.get());
 
@@ -224,21 +237,19 @@ void Game::save_this(ostream &ops) const
 
 Player *Game::get_player_at(int cx, int cy)
 {
-  for (Player &p : m_players) {
-    if (p.get_x() == cx && p.get_y() == cy) {
-      return &p;
+  for (std::pair<uint16_t, Player> pair : m_players) {
+    if (pair.second.get_x() == cx && pair.second.get_y() == cy) {
+      return &m_players.at(pair.first);
     }
   }
 
   return nullptr;
 }
 
-GameFrame::GameFrame(int player_count)
+GameFrame::GameFrame(void)
 {
-  for (int i = 0; i < player_count; i++) {
-    m_player_inputs.push_back(PlayerInput());
-  }
 }
+
 GameFrame::GameFrame(std::istream &ips)
 {
   load(ips, *this);
@@ -246,16 +257,21 @@ GameFrame::GameFrame(std::istream &ips)
 
 void GameFrame::load_this(istream &ips)
 {
+  load(ips, m_player_inputs);
+#if 0
   uint16_t player_count = 0;
   load(ips, player_count);
   m_player_inputs.clear();
   for (uint16_t i = 0; i < player_count; i++) {
     m_player_inputs.push_back(PlayerInput(ips));
   }
+#endif
 }
 
 void GameFrame::save_this(ostream &ops) const
 {
+  save(ops, m_player_inputs);
+#if 0
   int raw_player_count = this->get_player_count();
   assert(raw_player_count >= 0 && raw_player_count <= 0xFFFF);
   uint16_t player_count = static_cast<uint16_t>(raw_player_count);
@@ -263,4 +279,5 @@ void GameFrame::save_this(ostream &ops) const
   for (uint16_t i = 0; i < player_count; i++) {
     save(ops, m_player_inputs[i]);
   }
+#endif
 }

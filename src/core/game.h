@@ -29,18 +29,19 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 #include <cstdint>
 #include <iostream>
 #include <memory>
-#include <vector>
+#include <map>
+#include <stdexcept>
 
 namespace game
 {
   using std::istream;
   using std::ostream;
-  using std::vector;
+  using std::map;
 
   class Game final : public Saveable
   {
   private:
-    vector<Player> m_players;
+    map<uint16_t, Player> m_players;
     std::shared_ptr<World> m_world = nullptr;
     Random m_random;
   public:
@@ -53,10 +54,12 @@ namespace game
       assert(count < 0xFFFF);
       return static_cast<int>(count);
     }
-    Player *get_player_ptr(int pidx) {
-      if (pidx >= 0 && pidx < this->get_player_count()) {
-        return &m_players[pidx];
-      } else {
+    Player *get_player_ptr(int player_idx) {
+      assert(player_idx >= 0 && player_idx < 0xFFFF);
+      try {
+        return &m_players.at(static_cast<uint16_t>(player_idx));
+      } catch (std::out_of_range &e) {
+        (void)e;
         return nullptr;
       }
     }
@@ -64,8 +67,8 @@ namespace game
     int get_height(void) const { return static_cast<int>(m_world.get()->get_height()); }
     Random &random(void) { return m_random; }
 
-    void add_player(Player player);
     void spawn_player(int player_idx);
+    void add_player(int player_idx, Player player);
     void player_set_all_inputs(int player_idx,
       PlayerInput player_input);
 
@@ -82,9 +85,9 @@ namespace game
   class GameFrame : public Saveable
   {
   private:
-    vector<PlayerInput> m_player_inputs;
+    map<uint16_t, PlayerInput> m_player_inputs;
   public:
-    GameFrame(int player_count = 0);
+    GameFrame(void);
     GameFrame(std::istream &ips);
 
     int get_player_count(void) const {
@@ -93,21 +96,37 @@ namespace game
       return static_cast<int>(count);
     }
 
+#if 0
+    // FIXME: reinstate this once I've made some sense of move constructors --GM
     void player_set_all_inputs(int player_idx,
       PlayerInput &&player_input)
     {
-      m_player_inputs[player_idx] = std::move(player_input);
+      assert(player_idx >= 0 && player_idx < 0xFFFF);
+      uint16_t key = static_cast<uint16_t>(player_idx);
+      try {
+        m_player_inputs.at(key) = std::move(player_input);
+      } catch (std::out_of_range &e) {
+        m_player_inputs.emplace(key, std::move(player_input));
+      }
     }
+#endif
 
     void player_set_all_inputs(int player_idx,
       const PlayerInput &player_input)
     {
-      m_player_inputs[player_idx] = player_input;
+      assert(player_idx >= 0 && player_idx < 0xFFFF);
+      uint16_t key = static_cast<uint16_t>(player_idx);
+      try {
+        m_player_inputs.at(key) = std::move(player_input);
+      } catch (std::out_of_range &e) {
+        m_player_inputs.emplace(key, std::move(player_input));
+      }
     }
 
     const PlayerInput &player_get_all_inputs(int player_idx) const
     {
-      return m_player_inputs[player_idx];
+      assert(player_idx >= 0 && player_idx < 0xFFFF);
+      return m_player_inputs.at(static_cast<uint16_t>(player_idx));
     }
 
     void load_this(istream &ips) override;
