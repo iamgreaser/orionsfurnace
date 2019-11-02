@@ -144,9 +144,12 @@ void Server::update(void)
   for (auto sc_it = m_clients.begin(); sc_it != m_clients.end();) {
     ServerClient *sc = (*sc_it).get();
     if (sc->is_disconnected()) {
-      std::cout << "Removing player " << sc->get_player_idx() << std::endl;
-      // Remove from game
-      m_game.get()->remove_player(sc->get_player_idx());
+      // Remove from game if possible
+      if (sc->get_player_idx() >= 0) {
+        std::cout << "Removing player " << sc->get_player_idx() << std::endl;
+        m_game.get()->remove_player(sc->get_player_idx());
+      }
+
       // Remove from iterator and continue
       m_clients.erase(sc_it);
       continue;

@@ -2,18 +2,6 @@ vim: set sts=2 sw=2 et :
 
 # Milestones
 
-## Alpha 4
-
-* [x] Handle saves with mismatched player counts better
-  * SOLVED: Player counts are autodetected via GameFrame, which triggers respawns when players are missing.
-* [x] Don't send player adds on top of game snapshots
-  * There's a workaround for this, but I'd like to see it fixed properly.
-  * SOLVED: Player adds have been removed in favour of GameFrame.
-* [x] Handle non-contiguous player IDs (i.e. use a map instead of a vector)
-* [x] Now that we're using a map, don't crash when we load a save with extraneous players
-* [x] Make it possible to remove players
-* [x] Last stability touchups
-
 ----------------------------------------------------------------------------
 
 # Misc
@@ -24,6 +12,7 @@ Empty. THIS CODE IS BEAUTIFUL
 
 ## Bugfixes
 
+* [x] Don't crash when a player that hasn't joined disconnects
 * [ ] Handle newlines in text properly
 * [ ] Recycle unused player IDs
 
@@ -48,6 +37,18 @@ Empty. THIS CODE IS BEAUTIFUL
 ----------------------------------------------------------------------------
 
 # Completed milestones
+
+## Alpha 4
+
+* [x] Handle saves with mismatched player counts better
+  * SOLVED: Player counts are autodetected via GameFrame, which triggers respawns when players are missing.
+* [x] Don't send player adds on top of game snapshots
+  * There's a workaround for this, but I'd like to see it fixed properly.
+  * SOLVED: Player adds have been removed in favour of GameFrame.
+* [x] Handle non-contiguous player IDs (i.e. use a map instead of a vector)
+* [x] Now that we're using a map, don't crash when we load a save with extraneous players
+* [x] Make it possible to remove players
+* [x] Last stability touchups
 
 ## Alpha 3
 
