@@ -53,6 +53,12 @@ namespace world
 }
 using world::World;
 
+namespace entity
+{
+  class Entity;
+}
+using entity::Entity;
+
 class Player;
 class PlayerInput;
 class PlayerAdd;

@@ -20,6 +20,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "core/core.h"
 
+#include "core/entity.h"
 #include "core/player.h"
 #include "core/random.h"
 #include "core/save.h"
@@ -76,6 +77,7 @@ namespace game
         return &m_players.at(key);
       }
     }
+
     int get_width(void) const { return static_cast<int>(m_world.get()->get_width()); }
     int get_height(void) const { return static_cast<int>(m_world.get()->get_height()); }
     Random &random(void) { return m_random; }

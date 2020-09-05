@@ -20,6 +20,7 @@ along with Orion's Furnace.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "core/core.h"
 
+#include "core/entity.h"
 #include "core/save.h"
 
 #include <cassert>
@@ -46,51 +47,23 @@ public:
   void save_this(std::ostream &ops) const override;
 };
 
-namespace diagonal_fixer
-{
-  enum DiagonalFixer
-  {
-    // The next diagonal should be vertical.
-    NEXT_VERTICAL = 0,
-
-    // The next diagonal should be horizontal.
-    NEXT_HORIZONTAL,
-
-    // There is an active diagonal going horizontal.
-    ASSERTING_HORIZONTAL,
-
-    // There is an active diagonal going vertical.
-    ASSERTING_VERTICAL,
-  };
-}
-using diagonal_fixer::DiagonalFixer;
-
 class Player final : public Saveable
 {
 private:
   Game *m_game;
-  int32_t m_cx;
-  int32_t m_cy;
-  Direction m_dir;
-  DiagonalFixer m_diagonal_fixer;
-
-  int32_t m_pos_interp_x0;
-  int32_t m_pos_interp_y0;
-  int32_t m_pos_interp_x1;
-  int32_t m_pos_interp_y1;
-  int32_t m_pos_interp_remain = 0;
-  int32_t m_pos_interp_len = 0;
+  // TODO: Put World in charge of this --GM
+  Entity m_entity;
 
   PlayerInput m_input;
-  int32_t m_input_cooldown = 0;
 
 public:
   Player(Game *game, int cx, int cy, Direction dir);
   Player(Game *game, std::istream &ips);
 
-  int get_x(void) { return m_cx; }
-  int get_y(void) { return m_cy; }
-  Direction get_dir(void) { return m_dir; }
+  int get_x(void) { return m_entity.get_x(); }
+  int get_y(void) { return m_entity.get_y(); }
+  Entity *get_entity(void) { return &m_entity; }
+  Direction get_dir(void) { return m_entity.get_dir(); }
   bool get_input_move(Direction dir) {
     return m_input.get_input_move(dir);
   }
@@ -106,10 +79,7 @@ public:
   void load_this(std::istream &ips) override;
   void save_this(std::ostream &ops) const override;
 
-  bool attempt_move_by(int dx, int dy);
-  bool attempt_move_to(int cx, int cy);
-
-  void calc_interp_pos(int *px, int *py);
+  bool attempt_move_by(int dx, int dy); // FIXME: Remove this when possible --GM
 };
 
 #endif /* if !defined(CORE_PLAYER_H) */
