@@ -2,6 +2,13 @@ vim: set sts=2 sw=2 et :
 
 # Milestones
 
+## Alpha 5
+
+* [ ] Separate players from board objects
+* [ ] Implement mouse click events
+* [ ] Implement health
+* [ ] Implement items
+
 ----------------------------------------------------------------------------
 
 # Misc
@@ -19,7 +26,6 @@ Empty. THIS CODE IS BEAUTIFUL
 ## Features we'll need
 
 * [ ] Handle IPv4 *and* IPv6 for the same server
-* [ ] Separate players from board objects
 * [ ] Make it possible for a client to save
 * [ ] Make headless server builds a thing
 * [ ] Implement nicknames
