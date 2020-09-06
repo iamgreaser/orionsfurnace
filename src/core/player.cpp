@@ -58,8 +58,6 @@ void Player::tick(void)
   if (this->get_input_move(direction::EAST)) { dx += 1; }
 
   m_entity.set_walk_dir_this_tick(dx, dy);
-
-  m_entity.tick();
 }
 
 void Player::draw(void)

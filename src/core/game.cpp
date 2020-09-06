@@ -171,13 +171,23 @@ void Game::tick(const GameFrame &game_frame)
   //std::cout << "Players: Got " << game_frame.get_player_count() << ", Expected " << this->get_player_count() << std::endl;
   assert(game_frame.get_player_count() == this->get_player_count());
 
+  // Update player inputs
   for (std::pair<uint16_t, Player> pair : m_players) {
     this->player_set_all_inputs(pair.first,
       game_frame.player_get_all_inputs(pair.first));
   }
 
+  // Tick all players
   for (std::pair<uint16_t, Player> pair : m_players) {
     m_players.at(pair.first).tick();
+  }
+
+  // Tick all entities
+  for (std::pair<uint16_t, Player> pair : m_players) {
+    Entity *e = m_players.at(pair.first).get_entity();
+    if (e != nullptr) {
+      e->tick();
+    }
   }
 }
 
