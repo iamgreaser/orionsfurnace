@@ -79,11 +79,6 @@ void Player::save_this(ostream &ops) const
   save(ops, m_input);
 }
 
-bool Player::attempt_move_by(int dx, int dy)
-{
-  return m_entity.attempt_move_by(dx, dy);
-}
-
 PlayerInput::PlayerInput(void) {}
 PlayerInput::PlayerInput(std::istream &ips)
 {

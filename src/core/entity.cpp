@@ -166,11 +166,11 @@ bool Entity::attempt_move_by(int dx, int dy)
     return false;
   }
 
-  // Is there a player at the given cell?
-  Player *other = m_game->get_player_at(cx, cy);
+  // Is there an entity at the given cell?
+  Entity *other = m_game->get_entity_at(cx, cy);
   if (other != nullptr) {
     // Is it us?
-    if (other->get_entity() == this) {
+    if (other == this) {
       // Don't push ourselves, that causes stack overflows.
       // I've crashed ZZT enough times to know to do this. --GM
       return false;

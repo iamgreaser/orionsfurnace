@@ -88,8 +88,8 @@ namespace game
     void player_set_all_inputs(int player_idx,
       PlayerInput player_input);
 
-    bool can_step_into(int cx, int cy, bool players_are_blocking);
-    Player *get_player_at(int cx, int cy);
+    bool can_step_into(int cx, int cy, bool entities_are_blocking);
+    Entity *get_entity_at(int cx, int cy);
 
     void tick(const GameFrame &game_frame);
     void draw(void);

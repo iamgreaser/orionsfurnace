@@ -78,8 +78,6 @@ public:
 
   void load_this(std::istream &ips) override;
   void save_this(std::ostream &ops) const override;
-
-  bool attempt_move_by(int dx, int dy); // FIXME: Remove this when possible --GM
 };
 
 #endif /* if !defined(CORE_PLAYER_H) */

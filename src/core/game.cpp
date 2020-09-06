@@ -117,7 +117,7 @@ void Game::player_set_all_inputs(int player_idx, PlayerInput player_input)
   m_players.at(static_cast<uint16_t>(player_idx)).set_all_inputs(player_input);
 }
 
-bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
+bool Game::can_step_into(int cx, int cy, bool entities_are_blocking)
 {
   // Is this in range of the map?
   if (cx < 0 || cy < 0 || cx >= this->get_width() || cy >= this->get_height()) {
@@ -137,10 +137,10 @@ bool Game::can_step_into(int cx, int cy, bool players_are_blocking)
       return true;
   }
 
-  // Do we care to check for existing players?
-  if (players_are_blocking) {
-    // Is there a player at the given cell?
-    Player *other = this->get_player_at(cx, cy);
+  // Do we care to check for existing entities?
+  if (entities_are_blocking) {
+    // Is there an entity at the given cell?
+    Entity *other = this->get_entity_at(cx, cy);
     if (other != nullptr) {
       return false;
     }
@@ -246,11 +246,15 @@ void Game::save_this(ostream &ops) const
   save(ops, seed);
 }
 
-Player *Game::get_player_at(int cx, int cy)
+Entity *Game::get_entity_at(int cx, int cy)
 {
   for (std::pair<uint16_t, Player> pair : m_players) {
     if (pair.second.get_x() == cx && pair.second.get_y() == cy) {
-      return &m_players.at(pair.first);
+      Player *player = &m_players.at(pair.first);
+      Entity *entity = player->get_entity();
+      if (entity != nullptr) {
+        return entity;
+      }
     }
   }
 
